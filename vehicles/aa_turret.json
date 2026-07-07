@@ -1,0 +1,58 @@
+{
+  "key": "aa_turret",
+  "name": "AA Turret",
+  "cost": 1600,
+  "hp": 1600,
+  "speed": 0,
+  "description": "Base turret with a swivelling AA gun. Attacks aircraft only.",
+  "sprite": "aa_gun_base.png",
+  "barrel": "aa_gun_barrel.png",
+  "barrel_pivot": [0.5, 0.545],
+  "barrel_anchor": [0.212, 0.5],
+  "barrel_rest": 0.62,
+  "unit_type": "turret",
+  "display_w": 54,
+  "flip_player": false,
+  "flip_enemy": true,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "coastal",
+    "turret",
+    "aa"
+  ],
+  "turret_slot": "surface",
+  "fire_points": [
+    {
+      "x": 0.5,
+      "y": 0.5,
+      "dx": 0.0,
+      "dy": -1.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "AA MG",
+      "type": "bullet",
+      "fire_points": [
+        -1
+      ],
+      "damage": 15,
+      "speed": 500,
+      "interval": 0.12,
+      "range": 500,
+      "proj_w": 4,
+      "proj_h": 2,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true,
+      "max_lifetime": 1.8,
+      "omnidirectional": true,
+      "track_target": true,
+      "spread_deg": 3.0
+    }
+  ],
+  "cooldown": 16.0
+}

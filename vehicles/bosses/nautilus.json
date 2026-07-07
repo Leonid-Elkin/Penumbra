@@ -1,0 +1,116 @@
+{
+  "key": "nautilus",
+  "name": "Nautilus",
+  "cost": 0,
+  "hp": 10000,
+  "hp_easy": 8000,
+  "hp_normal": 10000,
+  "hp_hard": 14000,
+  "speed": 40,
+  "description": "Boss 10 - leviathan submarine. Seven torpedo tubes and nine anti-air missile launchers. Needs depth charges to crack open.",
+  "sprite": "penumbra_pixelart.png",
+  "unit_type": "submarine",
+  "boss": true,
+  "boss_type": "sub",
+  "display_w": 560,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "boss",
+    "sub"
+  ],
+  "fire_points": [
+    {
+      "x": 0.06,
+      "y": 0.46,
+      "dx": -1,
+      "dy": 0
+    },
+    {
+      "x": 0.09,
+      "y": 0.55,
+      "dx": -1,
+      "dy": 0
+    },
+    {
+      "x": 0.9,
+      "y": 0.55,
+      "dx": 1,
+      "dy": 0
+    },
+    {
+      "x": 0.3,
+      "y": 0.2,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.42,
+      "y": 0.12,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.52,
+      "y": 0.12,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.7,
+      "y": 0.1,
+      "dx": 0,
+      "dy": -1
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Torpedo Salvo",
+      "type": "torpedo",
+      "fire_points": [
+        0,
+        1,
+        2
+      ],
+      "damage": 36,
+      "speed": 230,
+      "interval": 0.6,
+      "range": 1000,
+      "proj_w": 20,
+      "proj_h": 6,
+      "homing": true,
+      "max_lifetime": 7.0,
+      "omnidirectional": true,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false
+    },
+    {
+      "name": "Anti-Air Missiles",
+      "type": "aa_missile",
+      "fire_points": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "damage": 20,
+      "speed": 200,
+      "interval": 1.0,
+      "range": 680,
+      "proj_w": 3,
+      "proj_h": 7,
+      "homing": true,
+      "homing_delay": 0.5,
+      "max_lifetime": 7.0,
+      "omnidirectional": true,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true
+    }
+  ],
+  "standoff_range": 460
+}

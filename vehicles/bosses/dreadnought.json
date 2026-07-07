@@ -1,0 +1,93 @@
+{
+  "key": "dreadnought",
+  "name": "Dreadnought",
+  "cost": 0,
+  "hp": 11000,
+  "hp_easy": 9000,
+  "hp_normal": 11000,
+  "hp_hard": 13000,
+  "speed": 28,
+  "description": "Boss 2 - all-big-gun battleship. Twin artillery batteries screened by anti-air machine guns.",
+  "sprite": "dreadnought_pixelart.png",
+  "unit_type": "ship",
+  "boss": true,
+  "boss_type": "surface",
+  "display_w": 800,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "boss",
+    "surface"
+  ],
+  "fire_points": [
+    {
+      "x": 0.15,
+      "y": 0.71,
+      "dx": -1,
+      "dy": -0.5
+    },
+    {
+      "x": 0.7,
+      "y": 0.61,
+      "dx": 1,
+      "dy": -0.5
+    },
+    {
+      "x": 0.33,
+      "y": 0.55,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.55,
+      "y": 0.6,
+      "dx": 0,
+      "dy": -1
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Artillery Battery",
+      "type": "shell",
+      "fire_points": [
+        0,
+        1
+      ],
+     "damage": 30,
+      "speed": 980,
+      "interval": 0.33,
+      "range": 500,
+      "proj_w": 7,
+      "proj_h": 5,
+      "max_lifetime": 9.0,
+      "gun_angle": 0.9,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false
+    },
+    {
+      "name": "Anti-Air Machine Gun",
+      "type": "bullet",
+      "fire_points": [
+        2,
+        3
+      ],
+      "damage": 8,
+      "speed": 520,
+      "interval": 0.16,
+      "range": 500,
+      "proj_w": 4,
+      "proj_h": 2,
+      "max_lifetime": 1.2,
+      "omnidirectional": true,
+      "track_target": true,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true
+    }
+  ],
+  "standoff_range": 500
+}

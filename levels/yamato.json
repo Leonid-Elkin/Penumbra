@@ -1,0 +1,34 @@
+{
+  "key": "yamato",
+  "name": "The Yamato",
+  "boss": "yamato",
+  "environment": "sea",
+  "order": 11,
+  "description": "Yamato, the largest battleship ever put to sea. Four gun batteries, three torpedo bays, five AA mounts, three flak cannons. It has an answer for everything.",
+  "boss_trigger": 0.25,
+  "counter_thresholds": [
+    0.9,
+    0.72,
+    0.55,
+    0.4,
+    0.3
+  ],
+  "waves": {
+    "counterattack": {
+      "peak": 5.5,
+      "rise_seconds": 2.5,
+      "fall_seconds": 8.0
+    },
+    "boss": {
+      "peak": 10.5,
+      "rise_seconds": 5.0,
+      "fall_seconds": 20.0
+    }
+  },
+  "spawn_rate": {
+    "base": 0.22,
+    "ramp": 0.34,
+    "ramp_seconds": 180,
+    "multiplier": 1.0
+  }
+}

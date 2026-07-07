@@ -1,0 +1,54 @@
+{
+  "key": "mlrs",
+  "name": "MLRS Boat",
+  "cost": 250,
+  "hp": 200,
+  "speed": 78,
+  "description": "Rocket artillery. Fires one loose, arcing salvo, then pulls back to base to reload.",
+  "sprite": "MLRS_Boat_preview.png",
+  "unit_type": "ship",
+  "display_w": 160,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": true,
+  "tags": [
+    "surface",
+    "artillery"
+  ],
+  "rearms": true,
+  "rearm_time": 10,
+  "burst_count": 12,
+  "burst_interval": 0.14,
+  "fire_points": [
+    {
+      "x": 0.5,
+      "y": 0.3,
+      "dx": 1,
+      "dy": -0.6
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Rocket Salvo",
+      "type": "rocket",
+      "fire_points": [
+        0
+      ],
+      "damage": 14,
+      "speed": 540,
+      "interval": 99.0,
+      "range": 820,
+      "proj_w": 6,
+      "proj_h": 5,
+      "max_lifetime": 9.0,
+      "scatter_spread": 300.0,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false
+    }
+  ],
+  "cooldown": 5.0,
+  "retreat_turn": true
+}

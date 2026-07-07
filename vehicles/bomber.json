@@ -1,0 +1,48 @@
+{
+  "key": "bomber",
+  "name": "Bomber",
+  "cost": 3000,
+  "hp": 1000,
+  "speed": 100,
+  "description": "Flies the full width of the map and carpets a wide strip of it with bombs.",
+  "sprite": "bomber.png",
+  "unit_type": "plane",
+  "display_w": 160,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "plane"
+  ],
+  "aircraft_type": "carpet",
+  "fire_points": [
+    {
+      "x": 0.5,
+      "y": 0.8,
+      "dx": 0.0,
+      "dy": 1.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Bomb Run",
+      "type": "bomb",
+      "fire_points": [
+        0
+      ],
+      "damage": 40,
+      "speed": 130,
+      "interval": 0.18,
+      "range": 200,
+      "proj_w": 10,
+      "proj_h": 14,
+      "can_hit_surface": true,
+      "can_hit_sub": true,
+      "can_hit_plane": false,
+      "max_lifetime": 5.0
+    }
+  ],
+  "cooldown": 18.0
+}

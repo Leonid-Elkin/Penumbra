@@ -1,0 +1,37 @@
+{
+  "_comment": "CAMPAIGN midfield income platforms (single-player only — multiplayer instead runs the single central boss-spawning platform). Three neutral rigs stand in the open water between the two bases. When only ONE side's mobile ships are in a rig's capture lane, it is slowly seized for that side; MORE ships nearby seize it faster. A rig must be dragged back through neutral before the other side can flip it. HOME-FIELD advantage means you hold the rig on YOUR half easily even when out-numbered, so the CENTRE rig is the real prize. Neither side snowballs: extra rigs give diminishing income and a side that's behind captures faster. Edit freely.",
+
+  "enabled_from_level": 5,
+  "count": 3,
+  "positions": [0.25, 0.5, 0.75],
+
+  "income_per_rig": 20,
+
+  "capture_seconds": 9.0,
+  "capture_radius": 320,
+  "ship_speedup": 0.35,
+  "max_ship_speedup": 3.0,
+  "decay_seconds": 0.0,
+
+  "home_advantage": 2.0,
+
+  "holdings_falloff": 0.55,
+  "comeback_per_rig": 0.6,
+  "max_comeback": 2.5,
+
+  "_field_notes": {
+    "enabled_from_level": "1-based campaign level the rigs first appear on (level 5 = the 5th level in the select grid).",
+    "count": "How many rigs to field. Positions come from `positions` when its length matches, else the rigs are spread evenly across the midfield.",
+    "positions": "Each rig's spot as a fraction (0..1) of the open water between the forts (0 = just off the player fort, 1 = just off the enemy fort). A rig in your half is a HOME rig; one near 0.5 is neutral ground.",
+    "income_per_rig": "Gold/sec for a side's FIRST held rig. Further rigs are worth `holdings_falloff`x the previous one.",
+    "capture_seconds": "Seconds for a SINGLE ship to seize a fully-neutral rig (or to drag it from one owner back to neutral).",
+    "capture_radius": "How close (world px, measured along the battle line) a ship must be to count toward a rig's capture.",
+    "ship_speedup": "Each extra ship beyond the first adds this fraction to the capture speed.",
+    "max_ship_speedup": "Cap on the ship-count speed multiplier, so a swarm can't seize instantly.",
+    "decay_seconds": "If > 0, a rig with NO ships nearby slowly bleeds back toward neutral over this many seconds. 0 = captures are permanent until contested.",
+    "home_advantage": "A side seizes/holds a rig on its OWN half this many times faster; the invader gets the reciprocal. Lets you keep your own rig when out-numbered and makes the centre rig the battleground. 1.0 disables it.",
+    "holdings_falloff": "ANTI-SNOWBALL. Each additional rig a side holds is worth this fraction of the previous for INCOME. <1 makes hoarding give little marginal value; 1.0 = linear.",
+    "comeback_per_rig": "ANTI-SNOWBALL. You capture this much faster per rig you hold FEWER than the opponent, so a team that lost the midfield can fight a rig back.",
+    "max_comeback": "Cap on the comeback capture-speed multiplier."
+  }
+}

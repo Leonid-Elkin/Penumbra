@@ -1,0 +1,77 @@
+{
+  "key": "frigate",
+  "name": "Frigate",
+  "cost": 120,
+  "hp": 300,
+  "speed": 65,
+  "description": "An all-round escort. Machine gun for ships and aircraft, ten depth charges for anything lurking below.",
+  "sprite": "frigate_pixelart.png",
+  "unit_type": "ship",
+  "display_w": 175,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "light",
+    "frigate"
+  ],
+  "fire_points": [
+    {
+      "x": 0.08,
+      "y": 0.48,
+      "dx": -1.0,
+      "dy": 0.0
+    },
+    {
+      "x": 0.5,
+      "y": 0.94,
+      "dx": 0.0,
+      "dy": 1.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "MG",
+      "type": "bullet",
+      "fire_points": [
+        0
+      ],
+      "damage": 8,
+      "speed": 440,
+      "interval": 0.24,
+      "range": 260,
+      "proj_w": 4,
+      "proj_h": 2,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": true,
+      "max_lifetime": 1.0,
+      "track_target": true
+    },
+    {
+      "name": "Depth Charge",
+      "type": "depth_charge",
+      "fire_points": [
+        1
+      ],
+      "damage": 16,
+      "speed": 300,
+      "interval": 4.0,
+      "range": 320,
+      "proj_w": 9,
+      "proj_h": 9,
+      "can_hit_surface": false,
+      "can_hit_sub": true,
+      "can_hit_plane": false,
+      "max_lifetime": 4.5,
+      "omnidirectional": true,
+      "scatter_count": 10,
+      "scatter_spread": 150.0,
+      "ballistic": true
+    }
+  ],
+  "cooldown": 2.0
+}

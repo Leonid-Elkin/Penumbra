@@ -1,0 +1,52 @@
+{
+  "key": "missile_battery",
+  "name": "Missile Bat.",
+  "cost": 1600,
+  "hp": 1600,
+  "speed": 0,
+  "description": "Surface turret that fires homing missiles at ships and aircraft.",
+  "sprite": "missile_launcher.png",
+  "unit_type": "turret",
+  "display_w": 54,
+  "flip_player": false,
+  "flip_enemy": true,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "coastal",
+    "turret"
+  ],
+  "turret_slot": "surface",
+  "fire_points": [
+    {
+      "x": 0.82,
+      "y": 0.05,
+      "dx": 1.0,
+      "dy": -0.4
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Homing Missile",
+      "type": "missile",
+      "fire_points": [
+        0
+      ],
+      "damage": 100,
+      "speed": 500,
+      "interval": 4.0,
+      "range": 700,
+      "proj_w": 12,
+      "proj_h": 4,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": true,
+      "homing": true,
+      "max_lifetime": 12.0,
+      "exhaust_smoke": true
+    }
+  ],
+  "cooldown": 4.0
+}

@@ -1,0 +1,99 @@
+{
+  "key": "battleship",
+  "name": "Battleship",
+  "cost": 2500,
+  "hp": 3500,
+  "speed": 34,
+  "description": "Heavily armoured gun platform. Three triple turrets fire at a fixed elevation, so range comes down to muzzle velocity alone.",
+  "sprite": "battleship.png",
+  "unit_type": "ship",
+  "display_w": 390,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "capital",
+    "brawler"
+  ],
+  "fire_points": [
+    {
+      "x": 0.259,
+      "y": 0.62,
+      "dx": -1.0,
+      "dy": -0.7
+    },
+    {
+      "x": 0.267,
+      "y": 0.64,
+      "dx": -1.0,
+      "dy": -0.7
+    },
+    {
+      "x": 0.275,
+      "y": 0.66,
+      "dx": -1.0,
+      "dy": -0.7
+    },
+    {
+      "x": 0.332,
+      "y": 0.6,
+      "dx": -1.0,
+      "dy": -0.7
+    },
+    {
+      "x": 0.34,
+      "y": 0.62,
+      "dx": -1.0,
+      "dy": -0.7
+    },
+    {
+      "x": 0.348,
+      "y": 0.64,
+      "dx": -1.0,
+      "dy": -0.7
+    },
+    {
+      "x": 0.907,
+      "y": 0.62,
+      "dx": -1.0,
+      "dy": -0.7
+    },
+    {
+      "x": 0.915,
+      "y": 0.64,
+      "dx": -1.0,
+      "dy": -0.7
+    },
+    {
+      "x": 0.923,
+      "y": 0.66,
+      "dx": -1.0,
+      "dy": -0.7
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Main Battery",
+      "type": "shell",
+      "fire_points": [
+        0,
+        1
+      ],
+      "damage": 53,
+      "speed": 560,
+      "interval": 0.33,
+      "range": 430,
+      "gun_angle": 0.62,
+      "proj_w": 6,
+      "proj_h": 4,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false,
+      "max_lifetime": 6.0
+    }
+  ],
+  "cooldown": 16.0
+}

@@ -1,0 +1,79 @@
+{
+  "key": "fighter_jet",
+  "name": "Fighter Jet",
+  "cost": 300,
+  "hp": 200,
+  "speed": 300,
+  "description": "Guns and AA missiles for clearing the skies. Attacks aircraft only.",
+  "sprite": "jet_pixelart.png",
+  "unit_type": "plane",
+  "display_w": 80,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "plane"
+  ],
+  "aircraft_type": "loop",
+  "fire_points": [
+    {
+      "x": 0.08,
+      "y": 0.44,
+      "dx": -1.0,
+      "dy": 0.0
+    },
+    {
+      "x": 0.08,
+      "y": 0.56,
+      "dx": -1.0,
+      "dy": 0.0
+    },
+    {
+      "x": 0.1,
+      "y": 0.5,
+      "dx": -1.0,
+      "dy": 0.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Dual Guns",
+      "type": "bullet",
+      "fire_points": [
+        0,
+        1
+      ],
+      "damage": 5,
+      "speed": 620,
+      "interval": 0.15,
+      "range": 360,
+      "proj_w": 4,
+      "proj_h": 2,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true,
+      "max_lifetime": 1.5
+    },
+    {
+      "name": "AA Missile",
+      "type": "missile",
+      "fire_points": [
+        2
+      ],
+      "damage": 75,
+      "speed": 500,
+      "interval": 5,
+      "range": 1000,
+      "proj_w": 12,
+      "proj_h": 4,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true,
+      "homing": true,
+      "max_lifetime": 5.0
+    }
+  ],
+  "cooldown": 5.0
+}

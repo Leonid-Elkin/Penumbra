@@ -1,0 +1,49 @@
+{
+  "key": "torpedo_bomber",
+  "name": "Torp Bomber",
+  "cost": 140,
+  "hp": 100,
+  "speed": 200,
+  "description": "Runs torpedoes at enemy ships, then peels away from the front to line up its next pass.",
+  "sprite": "plane_pixelart.png",
+  "unit_type": "plane",
+  "display_w": 45,
+  "flip_player": false,
+  "flip_enemy": true,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "plane"
+  ],
+  "aircraft_type": "standoff",
+  "fire_points": [
+    {
+      "x": 0.5,
+      "y": 0.85,
+      "dx": 0.0,
+      "dy": 1.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Air Torpedo",
+      "type": "torpedo",
+      "fire_points": [
+        0
+      ],
+      "damage": 46,
+      "speed": 210,
+      "interval": 2,
+      "range": 620,
+      "proj_w": 9,
+      "proj_h": 2.5,
+      "can_hit_surface": true,
+      "can_hit_sub": true,
+      "can_hit_plane": false,
+      "homing": true,
+      "max_lifetime": 7.0
+    }
+  ],
+  "cooldown": 3.0
+}

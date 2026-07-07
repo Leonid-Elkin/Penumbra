@@ -1,0 +1,52 @@
+{
+  "key": "hovercraft",
+  "name": "Hovercraft",
+  "cost": 90,
+  "hp": 140,
+  "speed": 118,
+  "description": "Fast amphibious raider. Drops homing torpedoes that hunt ships and subs, and seizes oil platforms at double speed.",
+  "sprite": "torpedo_boat_pixelart.png",
+  "capture_weight": 2.0,
+  "unit_type": "ship",
+  "display_w": 95,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "light",
+    "fast"
+  ],
+  "fire_points": [
+    {
+      "x": 0.5,
+      "y": 0.8,
+      "dx": 0,
+      "dy": 1
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Torpedo Drop",
+      "type": "torpedo",
+      "fire_points": [
+        0
+      ],
+      "damage": 30,
+      "speed": 230,
+      "interval": 1.1,
+      "range": 360,
+      "proj_w": 9,
+      "proj_h": 2.5,
+      "homing": true,
+      "homing_delay": 0.4,
+      "max_lifetime": 6.0,
+      "can_hit_surface": true,
+      "can_hit_sub": true,
+      "can_hit_plane": false
+    }
+  ],
+  "cooldown": 2.0
+}

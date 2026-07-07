@@ -1,0 +1,32 @@
+{
+  "key": "dreadnought",
+  "name": "All Big Guns",
+  "boss": "dreadnought",
+  "environment": "sea",
+  "order": 2,
+  "description": "HMS Dreadnought, the ship that made every other battleship obsolete overnight. Two artillery batteries, and AA guns to knock down your planes.",
+  "boss_trigger": 0.25,
+  "counter_thresholds": [
+    0.85,
+    0.65,
+    0.45
+  ],
+  "waves": {
+    "counterattack": {
+      "peak": 3.25,
+      "rise_seconds": 2.5,
+      "fall_seconds": 5.3
+    },
+    "boss": {
+      "peak": 6.45,
+      "rise_seconds": 2.0,
+      "fall_seconds": 6.4
+    }
+  },
+  "spawn_rate": {
+    "base": 0.05,
+    "ramp": 0.232,
+    "ramp_seconds": 180,
+    "multiplier": 1.0
+  }
+}

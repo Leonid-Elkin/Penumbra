@@ -1,0 +1,51 @@
+{
+  "key": "minelayer",
+  "name": "Minelayer",
+  "cost": 130,
+  "hp": 90,
+  "speed": 95,
+  "description": "Darts out, seeds a trail of naval mines across the water, then turns and steams off the map before it reaches the enemy.",
+  "sprite": "destroyer_pixelart.png",
+  "unit_type": "ship",
+  "display_w": 150,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "light",
+    "minelayer"
+  ],
+  "minelayer": true,
+  "retreat_turn": true,
+  "fire_points": [
+    {
+      "x": 0.5,
+      "y": 0.7,
+      "dx": 0,
+      "dy": 1
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Mine Drop",
+      "type": "mine",
+      "fire_points": [
+        0
+      ],
+      "damage": 75,
+      "speed": 0,
+      "interval": 0.75,
+      "range": 0,
+      "proj_w": 12,
+      "proj_h": 12,
+      "max_lifetime": 60.0,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false
+    }
+  ],
+  "cooldown": 20.0
+}

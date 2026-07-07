@@ -1,0 +1,78 @@
+{
+  "key": "carrier",
+  "name": "Carrier",
+  "cost": 4000,
+  "hp": 1800,
+  "speed": 15,
+  "description": "Fleet carrier. Barely armed itself, but it keeps launching bombers and helicopters.",
+  "sprite": "carrier.png",
+  "unit_type": "ship",
+  "display_w": 370,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "carrier"
+  ],
+  "spawn_units": [
+    "torpedo_bomber",
+    "helicopter"
+  ],
+  "spawn_interval": 11.0,
+  "fire_points": [
+    {
+      "x": 0.08,
+      "y": 0.7,
+      "dx": -1.0,
+      "dy": 0.0
+    },
+    {
+      "x": 0.5,
+      "y": 0.55,
+      "dx": -1.0,
+      "dy": 0.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Defensive MG",
+      "type": "bullet",
+      "fire_points": [
+        0
+      ],
+      "damage": 6,
+      "speed": 400,
+      "interval": 0.22,
+      "range": 300,
+      "proj_w": 4,
+      "proj_h": 2,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false,
+      "max_lifetime": 1.0
+    },
+    {
+      "name": "AA MG",
+      "type": "bullet",
+      "fire_points": [
+        1
+      ],
+      "damage": 6,
+      "speed": 480,
+      "interval": 0.15,
+      "range": 400,
+      "proj_w": 4,
+      "proj_h": 2,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true,
+      "max_lifetime": 1.0,
+      "omnidirectional": true,
+      "track_target": true
+    }
+  ],
+  "cooldown": 22.0
+}

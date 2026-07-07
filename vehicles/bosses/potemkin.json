@@ -1,0 +1,86 @@
+{
+  "key": "potemkin",
+  "name": "Potemkin",
+  "cost": 0,
+  "hp": 10000,
+  "hp_easy": 8000,
+  "hp_normal": 10000,
+  "hp_hard": 12000,
+  "speed": 28,
+  "description": "Boss 1 - Russian battleship. One ship-mounted artillery battery and two anti-air machine guns. No anti-submarine weapons.",
+  "sprite": "potemkin_pixelart.png",
+  "unit_type": "ship",
+  "boss": true,
+  "boss_type": "surface",
+  "display_w": 600,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "boss",
+    "surface"
+  ],
+  "fire_points": [
+    {
+      "x": 0.28,
+      "y": 0.66,
+      "dx": -1,
+      "dy": -0.5
+    },
+    {
+      "x": 0.38,
+      "y": 0.45,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.64,
+      "y": 0.42,
+      "dx": 0,
+      "dy": -1
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Artillery Battery",
+      "type": "shell",
+      "fire_points": [
+        0
+      ],
+      "damage": 30,
+      "speed": 980,
+      "interval": 0.5,
+      "range": 400,
+      "proj_w": 7,
+      "proj_h": 5,
+      "max_lifetime": 9.0,
+      "gun_angle": 0.9,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false
+    },
+    {
+      "name": "Anti-Air Machine Gun",
+      "type": "bullet",
+      "fire_points": [
+        1,
+        2
+      ],
+      "damage": 8,
+      "speed": 520,
+      "interval": 0.16,
+      "range": 300,
+      "proj_w": 4,
+      "proj_h": 2,
+      "max_lifetime": 1.0,
+      "omnidirectional": true,
+      "track_target": true,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true
+    }
+  ],
+  "standoff_range": 480
+}

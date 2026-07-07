@@ -1,0 +1,34 @@
+{
+  "key": "nimitz",
+  "name": "Flight Deck",
+  "boss": "nimitz",
+  "environment": "sea",
+  "order": 9,
+  "description": "The supercarrier Nimitz barely fires back on its own, but it launches aircraft without end. Bring fighters or drown in planes.",
+  "boss_trigger": 0.25,
+  "counter_thresholds": [
+    0.9,
+    0.72,
+    0.55,
+    0.4,
+    0.3
+  ],
+  "waves": {
+    "counterattack": {
+      "peak": 5.0,
+      "rise_seconds": 2.5,
+      "fall_seconds": 7.4
+    },
+    "boss": {
+      "peak": 9.6,
+      "rise_seconds": 2.0,
+      "fall_seconds": 9.2
+    }
+  },
+  "spawn_rate": {
+    "base": 0.2,
+    "ramp": 0.316,
+    "ramp_seconds": 180,
+    "multiplier": 1.0
+  }
+}
