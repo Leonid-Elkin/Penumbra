@@ -1,0 +1,36 @@
+{
+  "key": "nautilus",
+  "name": "Nautilus",
+  "boss": "nautilus",
+  "environment": "deep",
+  "order": 10,
+  "description": "The submarine Nautilus sits under the enemy base with seven torpedo tubes and nine AA launchers. Surface weapons cannot touch it, so pack depth charges.",
+  "sky_tint": "#3d6e94",
+  "water_tint": "#062a47",
+  "boss_trigger": 0.25,
+  "counter_thresholds": [
+    0.9,
+    0.72,
+    0.55,
+    0.4,
+    0.3
+  ],
+  "waves": {
+    "counterattack": {
+      "peak": 5.25,
+      "rise_seconds": 2.5,
+      "fall_seconds": 7.7
+    },
+    "boss": {
+      "peak": 10.05,
+      "rise_seconds": 2.0,
+      "fall_seconds": 9.6
+    }
+  },
+  "spawn_rate": {
+    "base": 0.21,
+    "ramp": 0.328,
+    "ramp_seconds": 180,
+    "multiplier": 1.0
+  }
+}
