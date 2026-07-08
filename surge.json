@@ -1,0 +1,6 @@
+{
+  "_comment": "Ctrl-to-surge rush. Hold CTRL in battle: unit prices rise to cost_mult, and any hull deployed while surging rebuilds in 1/cd_mult of its normal cooldown. Available from campaign level unlock_level (1-based). Delete/rename this file to fall back to the code defaults.",
+  "cost_mult": 1.5,
+  "cd_mult": 3.0,
+  "unlock_level": 5
+}

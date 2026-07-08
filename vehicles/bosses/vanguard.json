@@ -1,0 +1,128 @@
+{
+  "key": "vanguard",
+  "name": "Vanguard",
+  "cost": 0,
+  "hp": 7000,
+  "hp_easy": 6000,
+  "hp_normal": 7000,
+  "hp_hard": 8000,
+  "speed": 28,
+  "description": "Two artillery batteries, three anti-air machine guns and a long-range flak cannon.",
+  "sprite": "vanguard_pixelart.png",
+  "unit_type": "ship",
+  "boss": true,
+  "boss_type": "surface",
+  "display_w": 800,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "boss",
+    "surface"
+  ],
+  "fire_points": [
+    {
+      "x": 0.3,
+      "y": 0.7,
+      "dx": -1,
+      "dy": -0.5
+    },
+    {
+      "x": 0.25,
+      "y": 0.68,
+      "dx": 1,
+      "dy": -0.5
+    },
+    {
+      "x": 0.4,
+      "y": 0.42,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.5,
+      "y": 0.42,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.62,
+      "y": 0.48,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.55,
+      "y": 0.38,
+      "dx": 0,
+      "dy": -1
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Artillery Battery",
+      "type": "shell",
+      "fire_points": [
+        0,
+        1
+      ],
+      "damage": 62,
+      "speed": 628,
+      "interval": 0.5,
+      "range": 1300,
+      "proj_w": 10,
+      "proj_h": 8,
+      "max_lifetime": 9.0,
+      "gun_angle": 0.62,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false
+    },
+    {
+      "name": "Anti-Air Machine Gun",
+      "type": "bullet",
+      "fire_points": [
+        2,
+        3,
+        4
+      ],
+      "damage": 8,
+      "speed": 520,
+      "interval": 0.16,
+      "range": 440,
+      "proj_w": 4,
+      "proj_h": 2,
+      "max_lifetime": 1.2,
+      "omnidirectional": true,
+      "track_target": true,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true
+    },
+    {
+      "name": "Long-Range Flak Cannon",
+      "type": "flak",
+      "fire_points": [
+        5
+      ],
+      "damage": 0,
+      "speed": 460,
+      "interval": 1.6,
+      "range": 820,
+      "proj_w": 6,
+      "proj_h": 6,
+      "max_lifetime": 4.0,
+      "ballistic": true,
+      "omnidirectional": true,
+      "fuse": 1.5,
+      "frag_count": 12,
+      "frag_damage": 9,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true
+    }
+  ],
+  "standoff_range": 560
+}

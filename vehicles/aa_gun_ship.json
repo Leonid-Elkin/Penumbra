@@ -1,0 +1,52 @@
+{
+  "key": "aa_gun_ship",
+  "name": "AA machinegun corvette",
+  "cost": 80,
+  "hp": 50,
+  "speed": 50,
+  "description": "Cheap, nimble escort to provide short range aerial protection",
+  "sprite": "AA_Gunship(1).png",
+  "unit_type": "ship",
+  "display_w": 120,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "light",
+    "aa_gun"
+  ],
+  "fire_points": [
+    {
+      "x": 0.7,
+      "y": 0.5,
+      "dx": 0.0,
+      "dy": -1.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "AA MG",
+      "type": "bullet",
+      "fire_points": [
+        -1
+      ],
+      "damage": 9,
+      "speed": 480,
+      "interval": 0.18,
+      "range": 400,
+      "proj_w": 4,
+      "proj_h": 2,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true,
+      "max_lifetime": 1.0,
+      "omnidirectional": true,
+      "track_target": true,
+      "spread_deg": 3.5
+    }
+  ],
+  "cooldown": 1.5
+}

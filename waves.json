@@ -1,0 +1,15 @@
+{
+  "_comment": "Counterattacks and boss waves are spawn-rate PULSES, not instant bursts. When triggered, the enemy's spawn rate ramps UP to `peak`x normal over `rise_seconds`, then falls back to normal over `fall_seconds`. While a pulse is strong, spawns are free and ignore cooldowns so the rate is actually reached (the on-field unit cap still applies). Edit freely.",
+
+  "counterattack": {
+    "peak": 4.0,
+    "rise_seconds": 2.5,
+    "fall_seconds": 6.0
+  },
+
+  "boss": {
+    "peak": 8.0,
+    "rise_seconds": 2.0,
+    "fall_seconds": 8.0
+  }
+}

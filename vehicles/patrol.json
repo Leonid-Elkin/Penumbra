@@ -1,0 +1,54 @@
+{
+  "key": "patrol",
+  "name": "Patrol",
+  "cost": 30,
+  "hp": 40,
+  "speed": 75,
+  "description": "Cheap, fast patrol boat with a weak machine gun. Useful for early rushing and clearing mines",
+  "sprite": "patrol_boat_sprite_v3.png",
+  "unit_type": "ship",
+  "display_w": 80,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "light"
+  ],
+  "fire_points": [
+    {
+      "x": 0.08,
+      "y": 0.5,
+      "dx": -1.0,
+      "dy": 0.0
+    },
+    {
+      "x": 0.88,
+      "y": 0.5,
+      "dx": 1.0,
+      "dy": 0.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "MG",
+      "type": "bullet",
+      "fire_points": [
+        -1
+      ],
+      "damage": 8,
+      "speed": 460,
+      "interval": 0.24,
+      "range": 280,
+      "proj_w": 4,
+      "proj_h": 2,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false,
+      "max_lifetime": 2.0
+    }
+  ],
+  "cooldown": 1.0
+}

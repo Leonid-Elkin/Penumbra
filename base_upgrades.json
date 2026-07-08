@@ -1,0 +1,12 @@
+{
+  "_comment": "Editable tuning for the six base-upgrade tracks (see game/config.py). 'values' is indexed by upgrade level 0..5 (6 entries); 'costs' is the price of each of the 5 purchases, level 0->1 .. 4->5 (5 entries). 'research_time' is the seconds each purchase takes to come online (5 entries). Any track/field that is missing or the wrong length falls back to the code default, so you can override just what you want to retune. 'salvage' values are the fraction (0..1) of a lost mobile unit's cost refunded to its owner on death.",
+
+  "resource":  { "values": [7, 18, 34, 58, 72, 100],                 "costs": [100, 220, 450, 900, 1800] },
+  "fleet":     { "values": [10, 20, 40, 50, 75, 100],                "costs": [75, 150, 320, 650, 1300] },
+  "storage":   { "values": [400, 800, 1500, 2400, 4800, 7500],       "costs": [60, 130, 280, 560, 1100] },
+  "warehouse": { "values": [2.6, 2.1, 1.7, 1.4, 1.2, 1.0],           "costs": [100, 220, 450, 900, 1800] },
+  "health":    { "values": [5000, 7000, 10000, 14000, 19000, 25000], "costs": [50, 120, 260, 500, 1000] },
+  "salvage":   { "values": [0.0, 0.10, 0.18, 0.26, 0.34, 0.45],      "costs": [130, 280, 560, 1120, 2200] },
+
+  "research_time": [6.0, 9.0, 12.0, 16.0, 21.0]
+}

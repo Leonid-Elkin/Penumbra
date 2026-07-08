@@ -1,0 +1,93 @@
+{
+  "key": "richelieu",
+  "name": "Richelieu",
+  "cost": 0,
+  "hp": 12000,
+  "hp_easy": 10000,
+  "hp_normal": 12000,
+  "hp_hard": 14000,
+  "speed": 28,
+  "description": "Two ship-mounted artillery batteries and two anti-air machine guns.",
+  "sprite": "richelieu_pixelart.png",
+  "unit_type": "ship",
+  "boss": true,
+  "boss_type": "surface",
+  "display_w": 800,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "boss",
+    "surface"
+  ],
+  "fire_points": [
+    {
+      "x": 0.25,
+      "y": 0.71,
+      "dx": -1,
+      "dy": -0.5
+    },
+    {
+      "x": 0.40,
+      "y": 0.67,
+      "dx": -1,
+      "dy": -0.5
+    },
+    {
+      "x": 0.45,
+      "y": 0.7,
+      "dx": 0,
+      "dy": -1
+    },
+    {
+      "x": 0.63,
+      "y": 0.52,
+      "dx": 0,
+      "dy": -1
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Artillery Battery",
+      "type": "shell",
+      "fire_points": [
+        0,
+        1
+      ],
+      "damage": 54,
+      "speed": 628,
+      "interval": 0.33,
+      "range": 1150,
+      "proj_w": 10,
+      "proj_h": 8,
+      "max_lifetime": 9.0,
+      "gun_angle": 0.62,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false
+    },
+    {
+      "name": "Anti-Air Machine Gun",
+      "type": "bullet",
+      "fire_points": [
+        2,
+        3
+      ],
+      "damage": 8,
+      "speed": 520,
+      "interval": 0.16,
+      "range": 440,
+      "proj_w": 4,
+      "proj_h": 2,
+      "max_lifetime": 1.2,
+      "omnidirectional": true,
+      "track_target": true,
+      "can_hit_surface": false,
+      "can_hit_sub": false,
+      "can_hit_plane": true
+    }
+  ],
+  "standoff_range": 520
+}

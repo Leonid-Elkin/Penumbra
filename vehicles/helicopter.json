@@ -1,0 +1,51 @@
+{
+  "key": "helicopter",
+  "name": "Helicopter",
+  "cost": 180,
+  "hp": 120,
+  "speed": 200,
+  "description": "An all-purpose gunship. Its all-around but weak machine gun hits aircraft and ships from a safe distance",
+  "sprite": "helicopter2_pixelart.png",
+  "unit_type": "plane",
+  "display_w": 100,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "plane",
+    "helicopter"
+  ],
+  "aircraft_type": "hover",
+  "fire_points": [
+    {
+      "x": 0.2,
+      "y": 0.9,
+      "dx": 1.0,
+      "dy": 0.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "360\u00b0 MG",
+      "type": "bullet",
+      "fire_points": [
+        -1
+      ],
+      "damage": 8,
+      "speed": 800,
+      "interval": 0.6,
+      "range": 300,
+      "proj_w": 4,
+      "proj_h": 2,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": true,
+      "max_lifetime": 1.5,
+      "omnidirectional": true,
+      "track_target": true
+    }
+  ],
+  "cooldown": 3.0
+}

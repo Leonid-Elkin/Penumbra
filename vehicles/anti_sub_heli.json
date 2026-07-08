@@ -1,0 +1,53 @@
+{
+  "key": "anti_sub_heli",
+  "name": "ASW Helo",
+  "cost": 150,
+  "hp": 100,
+  "speed": 150,
+  "description": "Drops a string of depth charges onto any submarine it finds, but helpless in aerial combat",
+  "sprite": "helicopter_pixelart.png",
+  "unit_type": "plane",
+  "display_w": 140,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "plane",
+    "helicopter"
+  ],
+  "aircraft_type": "hover",
+  "fire_points": [
+    {
+      "x": 0.05,
+      "y": 0.9,
+      "dx": -0.5,
+      "dy": 0.5
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Depth Charge Salvo",
+      "type": "depth_charge",
+      "fire_points": [
+        0
+      ],
+      "damage": 16,
+      "speed": 220,
+      "interval": 5.0,
+      "range": 320,
+      "proj_w": 9,
+      "proj_h": 9,
+      "can_hit_surface": false,
+      "can_hit_sub": true,
+      "can_hit_plane": false,
+      "max_lifetime": 4.5,
+      "omnidirectional": true,
+      "scatter_count": 10,
+      "scatter_spread": 150.0,
+      "ballistic": true
+    }
+  ],
+  "cooldown": 3.0
+}

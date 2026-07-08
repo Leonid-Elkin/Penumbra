@@ -1,0 +1,48 @@
+{
+  "key": "submarine",
+  "name": "Submarine",
+  "cost": 140,
+  "hp": 100,
+  "speed": 50,
+  "description": "Fires homing torpedoes at surface ships.",
+  "sprite": "submarine_pixelart.png",
+  "unit_type": "submarine",
+  "display_w": 220,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "submarine"
+  ],
+  "fire_points": [
+    {
+      "x": 0.09,
+      "y": 0.55,
+      "dx": -1.0,
+      "dy": 0.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Torpedo",
+      "type": "torpedo",
+      "fire_points": [
+        -1
+      ],
+      "damage": 36,
+      "speed": 400,
+      "interval": 2.8,
+      "range": 400,
+      "proj_w": 18,
+      "proj_h": 5,
+      "can_hit_surface": true,
+      "can_hit_sub": true,
+      "can_hit_plane": false,
+      "homing": true,
+      "max_lifetime": 5.5
+    }
+  ],
+  "cooldown": 5.0
+}

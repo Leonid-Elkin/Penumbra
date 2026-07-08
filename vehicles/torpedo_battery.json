@@ -1,0 +1,51 @@
+{
+  "key": "torpedo_battery",
+  "name": "Torpedo Bat.",
+  "cost": 1600,
+  "hp": 1600,
+  "speed": 0,
+  "description": "Underwater turret that fires homing torpedoes at ships and subs.",
+  "sprite": "torpedo_launcher.png",
+  "unit_type": "turret",
+  "display_w": 46,
+  "flip_player": false,
+  "flip_enemy": true,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "coastal",
+    "turret"
+  ],
+  "turret_slot": "underwater",
+  "fire_points": [
+    {
+      "x": 0.95,
+      "y": 0.35,
+      "dx": 1.0,
+      "dy": 0.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Torpedo",
+      "type": "torpedo",
+      "fire_points": [
+        0
+      ],
+      "damage": 100,
+      "speed": 300,
+      "interval": 2.5,
+      "range": 1500,
+      "proj_w": 18,
+      "proj_h": 5,
+      "can_hit_surface": true,
+      "can_hit_sub": true,
+      "can_hit_plane": false,
+      "homing": true,
+      "max_lifetime": 5.0
+    }
+  ],
+  "cooldown": 4.0
+}

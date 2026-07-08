@@ -1,0 +1,30 @@
+{
+  "_comment": "Controls when each unit/turret unlocks, by number of campaign levels cleared (0 = available from the start). Edit freely; entries here override the code defaults in game/progression.py.",
+  "units": {
+    "patrol": 0,
+    "frigate": 0,
+    "submarine": 0,
+    "helicopter": 0,
+    "aa_gun_ship": 0,
+    "cruiser": 7,
+    "hovercraft": 1,
+    "torpedo_bomber": 1,
+    "anti_sub_heli": 3,
+    "fighter_jet": 4,
+    "coastal_artillery": 0,
+    "destroyer": 5,
+    "battleship": 6,
+    "mlrs": 6,
+    "atomic_submarine": 7,
+    "bomber": 8,
+    "carrier": 9,
+    "minelayer": 2,
+    "oilrig": 5
+  },
+  "turrets": {
+    "torpedo_battery": 3,
+    "aa_turret": 2,
+    "missile_battery": 4,
+    "oil_rig": 5
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "key": "oil_rig",
+  "name": "Oil Rig",
+  "cost": 2000,
+  "hp": 500,
+  "speed": 0,
+  "income": 20,
+  "description": "A drilling platform for any spare turret node. It raises your income while it stands, but is unarmed and vulnurable",
+  "sprite": "oil_rig_pixelart.png",
+  "unit_type": "turret",
+  "display_w": 60,
+  "flip_player": false,
+  "flip_enemy": true,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": ["surface", "coastal", "turret", "economy"],
+  "turret_slot": "surface",
+  "fire_points": [],
+  "attacks": [],
+  "cooldown": 16.0
+}

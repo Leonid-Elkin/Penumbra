@@ -1,0 +1,50 @@
+{
+  "key": "torpedo_boat",
+  "name": "Torpedo Boat",
+  "cost": 20,
+  "hp": 60,
+  "speed": 90,
+  "description": "Fast raider that drops a homing torpedo and runs. Tracks both surface ships and subs",
+  "sprite": "torpedo_boat_pixelart.png",
+  "unit_type": "ship",
+  "display_w": 90,
+  "flip_player": true,
+  "flip_enemy": false,
+  "player_tint": "#0a0a0a",
+  "enemy_tint": "#cc1111",
+  "remove_white": false,
+  "tags": [
+    "surface",
+    "light",
+    "torpedo_boat"
+  ],
+  "fire_points": [
+    {
+      "x": 0.5,
+      "y": 0.95,
+      "dx": 0.0,
+      "dy": 1.0
+    }
+  ],
+  "attacks": [
+    {
+      "name": "Torpedo",
+      "type": "torpedo",
+      "fire_points": [
+        0
+      ],
+      "damage": 40,
+      "speed": 220,
+      "interval": 5.0,
+      "range": 300,
+      "proj_w": 18,
+      "proj_h": 5,
+      "can_hit_surface": true,
+      "can_hit_sub": false,
+      "can_hit_plane": false,
+      "homing": true,
+      "max_lifetime": 6.0
+    }
+  ],
+  "cooldown": 1.0
+}
