@@ -7,7 +7,7 @@
   "hp_normal": 7000,
   "hp_hard": 8000,
   "speed": 28,
-  "description": "Boss 5 - Britain's last battleship. Two artillery batteries, three anti-air machine guns and a long-range flak cannon.",
+  "description": "Two artillery batteries, three anti-air machine guns and a long-range flak cannon.",
   "sprite": "vanguard_pixelart.png",
   "unit_type": "ship",
   "boss": true,

@@ -7,7 +7,7 @@
   "hp_normal": 13000,
   "hp_hard": 15000,
   "speed": 28,
-  "description": "Boss 4 - Japanese battleship. Two artillery batteries, anti-air machine guns and a long-range flak cannon.",
+  "description": "Two artillery batteries, anti-air machine guns and a long-range flak cannon.",
   "sprite": "nagato_pixelart.png",
   "unit_type": "ship",
   "boss": true,

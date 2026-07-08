@@ -7,7 +7,7 @@
   "hp_normal": 12000,
   "hp_hard": 15000,
   "speed": 32,
-  "description": "Boss 9 - supercarrier. No artillery: a single anti-ship machine gun and two long-range flak cannons behind an endless air wing.",
+  "description": "Supercarrier. No artillery: a single anti-ship machine gun and two long-range flak cannons behind an endless air wing.",
   "sprite": "nimitz_pixelart.png",
   "unit_type": "ship",
   "boss": true,
@@ -28,7 +28,7 @@
     "torpedo_bomber",
     "helicopter"
   ],
-  "spawn_interval": 3.0,
+  "spawn_interval": 2.5,
   "fire_points": [
     {
       "x": 0.16,

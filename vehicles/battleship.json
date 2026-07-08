@@ -4,7 +4,7 @@
   "cost": 2500,
   "hp": 3500,
   "speed": 34,
-  "description": "Heavily armoured gun platform. Three triple turrets fire at a fixed elevation, so range comes down to muzzle velocity alone.",
+  "description": "Heavily armoured gun platform. Good for shielding your backline.",
   "sprite": "battleship.png",
   "unit_type": "ship",
   "display_w": 390,

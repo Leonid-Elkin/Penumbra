@@ -4,7 +4,7 @@
   "cost": 140,
   "hp": 100,
   "speed": 50,
-  "description": "Runs silent and fires homing torpedoes at surface ships.",
+  "description": "Fires homing torpedoes at surface ships.",
   "sprite": "submarine_pixelart.png",
   "unit_type": "submarine",
   "display_w": 220,

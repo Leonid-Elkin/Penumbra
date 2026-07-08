@@ -4,7 +4,7 @@
   "cost": 4000,
   "hp": 1800,
   "speed": 15,
-  "description": "Fleet carrier. Barely armed itself, but it keeps launching bombers and helicopters.",
+  "description": "Fleet carrier. Barely armed itself, but provides vital aerial support for the front line.",
   "sprite": "carrier.png",
   "unit_type": "ship",
   "display_w": 370,

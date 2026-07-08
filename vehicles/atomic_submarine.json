@@ -4,7 +4,7 @@
   "cost": 1600,
   "hp": 1000,
   "speed": 25,
-  "description": "Sits on the seabed firing dual torpedoes and anti-air missiles, safe from most attacks.",
+  "description": "Sits on the seabed torpedo salvos and anti-air missiles, safe from most attacks.",
   "sprite": "atomic_submarine_pixelart.png",
   "unit_type": "submarine",
   "display_w": 350,

@@ -7,7 +7,7 @@
   "hp_normal": 10000,
   "hp_hard": 12000,
   "speed": 28,
-  "description": "Boss 1 - Russian battleship. One ship-mounted artillery battery and two anti-air machine guns. No anti-submarine weapons.",
+  "description": "One ship-mounted artillery battery and two anti-air machine guns. No anti-submarine weapons.",
   "sprite": "potemkin_pixelart.png",
   "unit_type": "ship",
   "boss": true,

@@ -4,7 +4,7 @@
   "cost": 20,
   "hp": 60,
   "speed": 90,
-  "description": "Fast raider that drops a homing torpedo and runs. Tracks surface ships.",
+  "description": "Fast raider that drops a homing torpedo and runs. Tracks both surface ships and subs",
   "sprite": "torpedo_boat_pixelart.png",
   "unit_type": "ship",
   "display_w": 90,

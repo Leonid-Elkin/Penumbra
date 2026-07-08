@@ -7,7 +7,7 @@
   "hp_normal": 12000,
   "hp_hard": 14000,
   "speed": 28,
-  "description": "Boss 3 - French battleship. Two ship-mounted artillery batteries and two anti-air machine guns.",
+  "description": "Two ship-mounted artillery batteries and two anti-air machine guns.",
   "sprite": "richelieu_pixelart.png",
   "unit_type": "ship",
   "boss": true,

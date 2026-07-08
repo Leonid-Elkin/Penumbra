@@ -7,7 +7,7 @@
   "hp_normal": 10000,
   "hp_hard": 12000,
   "speed": 28,
-  "description": "Boss 7 - fast battleship. Two artillery batteries, four anti-air machine guns, two long-range flak cannons and two torpedo bays - the first flagship able to strike air, sea and undersea.",
+  "description": "A fast battleship. Two artillery batteries, four anti-air machine guns, two long-range flak cannons and two torpedo bays",
   "sprite": "iowa_pixelart.png",
   "unit_type": "ship",
   "boss": true,

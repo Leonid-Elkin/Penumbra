@@ -7,7 +7,7 @@
   "hp_normal": 10000,
   "hp_hard": 14000,
   "speed": 40,
-  "description": "Boss 10 - leviathan submarine. Seven torpedo tubes and nine anti-air missile launchers. Needs depth charges to crack open.",
+  "description": "Seven torpedo tubes and nine anti-air missile launchers. Needs depth charges to crack open.",
   "sprite": "penumbra_pixelart.png",
   "unit_type": "submarine",
   "boss": true,

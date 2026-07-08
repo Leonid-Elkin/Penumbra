@@ -4,7 +4,7 @@
   "cost": 80,
   "hp": 50,
   "speed": 50,
-  "description": "Cheap, nimble escort built to knock aircraft out of the sky.",
+  "description": "Cheap, nimble escort to provide short range aerial protection",
   "sprite": "AA_Gunship(1).png",
   "unit_type": "ship",
   "display_w": 120,

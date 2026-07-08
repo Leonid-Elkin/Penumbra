@@ -7,7 +7,7 @@
   "hp_normal": 11000,
   "hp_hard": 13000,
   "speed": 28,
-  "description": "Boss 2 - all-big-gun battleship. Twin artillery batteries screened by anti-air machine guns.",
+  "description": "Twin artillery batteries screened by anti-air machine guns.",
   "sprite": "dreadnought_pixelart.png",
   "unit_type": "ship",
   "boss": true,

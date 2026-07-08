@@ -4,7 +4,7 @@
   "cost": 300,
   "hp": 200,
   "speed": 300,
-  "description": "Guns and AA missiles for clearing the skies. Attacks aircraft only.",
+  "description": "Guns and missiles for clearing the skies, fast enough to dodge most machine gun fire",
   "sprite": "jet_pixelart.png",
   "unit_type": "plane",
   "display_w": 80,

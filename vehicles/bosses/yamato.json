@@ -7,7 +7,7 @@
   "hp_normal": 26000,
   "hp_hard": 30000,
   "speed": 28,
-  "description": "Boss 11 - the largest battleship ever built. Four artillery batteries, three torpedo bays, an anti-ship machine gun, five anti-air machine guns and three long-range flak cannons.",
+  "description": "The largest battleship ever built. Four artillery batteries, three torpedo bays, an anti-ship machine gun, five anti-air machine guns and three long-range flak cannons.",
   "sprite": "yamato_pixelart.png",
   "unit_type": "ship",
   "boss": true,

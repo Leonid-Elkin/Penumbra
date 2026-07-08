@@ -4,7 +4,7 @@
   "cost": 250,
   "hp": 200,
   "speed": 78,
-  "description": "Rocket artillery. Fires one loose, arcing salvo, then pulls back to base to reload.",
+  "description": "Rocket artillery. Fires one loose, arcing salvo, then pulls back to base to reload. Useful during retreats or when supporting the front",
   "sprite": "MLRS_Boat_preview.png",
   "unit_type": "ship",
   "display_w": 160,

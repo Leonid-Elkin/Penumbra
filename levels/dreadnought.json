@@ -1,6 +1,6 @@
 {
   "key": "dreadnought",
-  "name": "All Big Guns",
+  "name": "Dreadnought",
   "boss": "dreadnought",
   "environment": "sea",
   "order": 2,

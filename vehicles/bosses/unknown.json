@@ -7,7 +7,7 @@
   "hp_normal": 90000,
   "hp_hard": 110000,
   "speed": 20,
-  "description": "Final boss - a floating fortress. A heavy artillery battery, four artillery batteries, six anti-air machine guns, three long-range flak cannons and three torpedo bays.",
+  "description": "A floating fortress. A heavy artillery battery, four artillery batteries, six anti-air machine guns, three long-range flak cannons and three torpedo bays.",
   "sprite": "unknown_pixelart.png",
   "unit_type": "ship",
   "boss": true,

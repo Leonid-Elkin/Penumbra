@@ -5,7 +5,7 @@
   "hp": 500,
   "speed": 0,
   "income": 20,
-  "description": "A drilling platform for any empty turret node. It raises your income while it stands, but it is unarmed and the enemy will target it, so screen it with real turrets.",
+  "description": "A drilling platform for any spare turret node. It raises your income while it stands, but is unarmed and vulnurable",
   "sprite": "oil_rig_pixelart.png",
   "unit_type": "turret",
   "display_w": 60,

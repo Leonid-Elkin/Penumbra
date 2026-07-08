@@ -4,7 +4,7 @@
   "cost": 30,
   "hp": 40,
   "speed": 75,
-  "description": "Cheap, fast patrol boat with twin machine guns.",
+  "description": "Cheap, fast patrol boat with a weak machine gun. Useful for early rushing and clearing mines",
   "sprite": "patrol_boat_sprite_v3.png",
   "unit_type": "ship",
   "display_w": 80,

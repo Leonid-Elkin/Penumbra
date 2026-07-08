@@ -4,7 +4,7 @@
   "cost": 1600,
   "hp": 200,
   "speed": 0,
-  "description": "A base gun you aim by hand. Set the elevation with the up and down arrows and it lobs heavy shells in an arc.",
+  "description": "A base gun you aim by hand.",
   "sprite": "coastal_artillery_base.png",
   "barrel": "coastal_artillery_barrel.png",
   "barrel_pivot": [0.5, 0.52],
@@ -38,9 +38,9 @@
       "fire_points": [
         0
       ],
-      "damage": 60,
+      "damage": 100,
       "speed": 750,
-      "interval": 1.8,
+      "interval": 3,
       "range": 2000,
       "proj_w": 5,
       "proj_h": 4,

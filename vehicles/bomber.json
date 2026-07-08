@@ -4,7 +4,7 @@
   "cost": 3000,
   "hp": 1000,
   "speed": 100,
-  "description": "Flies the full width of the map and carpets a wide strip of it with bombs.",
+  "description": "Covers a large area with bombs while soaking up enemy fire. ",
   "sprite": "bomber.png",
   "unit_type": "plane",
   "display_w": 160,

@@ -4,7 +4,7 @@
   "cost": 140,
   "hp": 100,
   "speed": 200,
-  "description": "Runs torpedoes at enemy ships, then peels away from the front to line up its next pass.",
+  "description": "Runs torpedoes at enemy ships, then peels away from the front to line up its next pass. Can target both subs and ships." ,
   "sprite": "plane_pixelart.png",
   "unit_type": "plane",
   "display_w": 45,

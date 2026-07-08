@@ -4,7 +4,7 @@
   "cost": 120,
   "hp": 300,
   "speed": 65,
-  "description": "An all-round escort. Machine gun for ships and aircraft, ten depth charges for anything lurking below.",
+  "description": "An all-round escort. Machine gun for ships and aircraft, ten depth charges for anything lurking below",
   "sprite": "frigate_pixelart.png",
   "unit_type": "ship",
   "display_w": 175,

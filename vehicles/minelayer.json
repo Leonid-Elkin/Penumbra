@@ -4,7 +4,7 @@
   "cost": 130,
   "hp": 90,
   "speed": 95,
-  "description": "Darts out, seeds a trail of naval mines across the water, then turns and steams off the map before it reaches the enemy.",
+  "description": "Darts out, seeds a trail of naval mines across the water, then turns and steams off the map before it reaches the enemy. Good for securing ground in preparation for an enemy counterattack.",
   "sprite": "destroyer_pixelart.png",
   "unit_type": "ship",
   "display_w": 150,
@@ -35,7 +35,7 @@
       "fire_points": [
         0
       ],
-      "damage": 75,
+      "damage": 100,
       "speed": 0,
       "interval": 0.75,
       "range": 0,

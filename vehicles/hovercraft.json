@@ -4,7 +4,7 @@
   "cost": 90,
   "hp": 140,
   "speed": 118,
-  "description": "Fast amphibious raider. Drops homing torpedoes that hunt ships and subs, and seizes oil platforms at double speed.",
+  "description": "Fast amphibious raider. Drops homing torpedoes that hunt ships and subs, and seizes all capture points at double speed",
   "sprite": "torpedo_boat_pixelart.png",
   "capture_weight": 2.0,
   "unit_type": "ship",

@@ -7,7 +7,7 @@
   "hp_normal": 8000,
   "hp_hard": 10000,
   "speed": 28,
-  "description": "Boss 6 - pride of the Kriegsmarine. Two artillery batteries, three anti-air machine guns and a long-range flak cannon, all reaching further than earlier bosses.",
+  "description": "Two artillery batteries, three anti-air machine guns and a long-range flak cannon, all reaching further and hitting harder",
   "sprite": "bismarck_pixelart.png",
   "unit_type": "ship",
   "boss": true,

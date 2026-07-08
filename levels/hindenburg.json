@@ -1,6 +1,6 @@
 {
   "key": "hindenburg",
-  "name": "The Airship",
+  "name": "Hindenburg",
   "boss": "hindenburg",
   "environment": "air",
   "order": 8,
