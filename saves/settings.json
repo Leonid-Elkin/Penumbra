@@ -1,0 +1,33 @@
+{
+  "no_effects": false,
+  "night_silhouette": true,
+  "player_name": "DR PLACEHOLDER",
+  "keybinds": {
+    "deploy": [
+      32
+    ],
+    "pan_left": [
+      16777234,
+      65
+    ],
+    "pan_right": [
+      16777236,
+      68
+    ],
+    "aim_up": [
+      16777235
+    ],
+    "aim_down": [
+      16777237
+    ],
+    "restart": [
+      82
+    ],
+    "main_menu": [
+      81
+    ],
+    "fullscreen": [
+      16777274
+    ]
+  }
+}
