@@ -47,8 +47,7 @@
       "name": "Artillery Battery",
       "type": "shell",
       "fire_points": [
-        0,
-        1
+        0
       ],
      "damage": 60,
       "speed": 980,
