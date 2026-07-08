@@ -12,7 +12,7 @@
   "unit_type": "ship",
   "boss": true,
   "boss_type": "surface",
-  "display_w": 520,
+  "display_w": 800,
   "flip_player": true,
   "flip_enemy": false,
   "player_tint": "#0a0a0a",
@@ -30,8 +30,8 @@
       "dy": -0.5
     },
     {
-      "x": 0.72,
-      "y": 0.72,
+      "x": 0.25,
+      "y": 0.68,
       "dx": 1,
       "dy": -0.5
     },
@@ -70,7 +70,7 @@
       ],
       "damage": 62,
       "speed": 628,
-      "interval": 3.0,
+      "interval": 0.5,
       "range": 1300,
       "proj_w": 10,
       "proj_h": 8,

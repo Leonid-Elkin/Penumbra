@@ -12,7 +12,7 @@
   "unit_type": "ship",
   "boss": true,
   "boss_type": "surface",
-  "display_w": 700,
+  "display_w": 1200,
   "flip_player": true,
   "flip_enemy": false,
   "player_tint": "#0a0a0a",
@@ -108,13 +108,11 @@
       "type": "shell",
       "fire_points": [
         0,
-        1,
-        2,
-        3
+        1
       ],
-      "damage": 56,
+      "damage": 70,
       "speed": 640,
-      "interval": 0.33,
+      "interval": 0.25,
       "range": 900,
       "proj_w": 10,
       "proj_h": 8,
@@ -201,7 +199,7 @@
       "damage": 34,
       "speed": 240,
       "interval": 1,
-      "range": 900,
+      "range": 1200,
       "proj_w": 20,
       "proj_h": 6,
       "homing": true,
@@ -212,5 +210,5 @@
       "can_hit_plane": false
     }
   ],
-  "standoff_range": 700
+  "standoff_range": 600
 }

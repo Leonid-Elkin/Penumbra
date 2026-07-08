@@ -6,7 +6,7 @@
   "hp_easy": 9000,
   "hp_normal": 11000,
   "hp_hard": 13000,
-  "speed": 28,
+  "speed": 20,
   "description": "Twin artillery batteries screened by anti-air machine guns.",
   "sprite": "dreadnought_pixelart.png",
   "unit_type": "ship",
@@ -24,26 +24,20 @@
   ],
   "fire_points": [
     {
-      "x": 0.15,
+      "x": 0.18,
       "y": 0.71,
       "dx": -1,
       "dy": -0.5
     },
     {
-      "x": 0.7,
-      "y": 0.61,
-      "dx": 1,
-      "dy": -0.5
-    },
-    {
       "x": 0.33,
-      "y": 0.55,
+      "y": 0.65,
       "dx": 0,
       "dy": -1
     },
     {
       "x": 0.55,
-      "y": 0.6,
+      "y": 0.65,
       "dx": 0,
       "dy": -1
     }
@@ -56,9 +50,9 @@
         0,
         1
       ],
-     "damage": 30,
+     "damage": 60,
       "speed": 980,
-      "interval": 0.33,
+      "interval": 0.25,
       "range": 500,
       "proj_w": 7,
       "proj_h": 5,

@@ -6,13 +6,13 @@
   "hp_easy": 8000,
   "hp_normal": 10000,
   "hp_hard": 12000,
-  "speed": 28,
+  "speed": 20,
   "description": "A fast battleship. Two artillery batteries, four anti-air machine guns, two long-range flak cannons and two torpedo bays",
   "sprite": "iowa_pixelart.png",
   "unit_type": "ship",
   "boss": true,
   "boss_type": "surface",
-  "display_w": 580,
+  "display_w": 800,
   "flip_player": true,
   "flip_enemy": false,
   "player_tint": "#0a0a0a",
@@ -24,14 +24,14 @@
   ],
   "fire_points": [
     {
-      "x": 0.27,
-      "y": 0.68,
+      "x": 0.25,
+      "y": 0.66,
       "dx": -1,
       "dy": -0.5
     },
     {
-      "x": 0.76,
-      "y": 0.7,
+      "x": 0.29,
+      "y": 0.66,
       "dx": 1,
       "dy": -0.5
     },
@@ -74,14 +74,14 @@
     {
       "x": 0.36,
       "y": 0.76,
-      "dx": -1,
-      "dy": 0
+      "dx": 0,
+      "dy": -1
     },
     {
       "x": 0.6,
       "y": 0.76,
-      "dx": 1,
-      "dy": 0
+      "dx": 0,
+      "dy": -1
     }
   ],
   "attacks": [
@@ -92,9 +92,9 @@
         0,
         1
       ],
-      "damage": 72,
+      "damage": 60,
       "speed": 662,
-      "interval": 2.8,
+      "interval": 0.5,
       "range": 1500,
       "proj_w": 10,
       "proj_h": 8,
@@ -170,5 +170,5 @@
       "can_hit_plane": false
     }
   ],
-  "standoff_range": 640
+  "standoff_range": 440
 }

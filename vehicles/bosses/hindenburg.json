@@ -6,7 +6,7 @@
   "hp_easy": 10000,
   "hp_normal": 14000,
   "hp_hard": 17000,
-  "speed": 95,
+  "speed": 40,
   "description": "A colossal airship. Rains heavy bombs, screens itself with anti-air shrapnel and rakes the sky with machine guns. Never stops moving.",
   "sprite": "hindenburg_pixelart.png",
   "unit_type": "plane",

@@ -6,13 +6,13 @@
   "hp_easy": 7000,
   "hp_normal": 8000,
   "hp_hard": 10000,
-  "speed": 28,
+  "speed": 20,
   "description": "Two artillery batteries, three anti-air machine guns and a long-range flak cannon, all reaching further and hitting harder",
   "sprite": "bismarck_pixelart.png",
   "unit_type": "ship",
   "boss": true,
   "boss_type": "surface",
-  "display_w": 600,
+  "display_w": 800,
   "flip_player": true,
   "flip_enemy": false,
   "player_tint": "#0a0a0a",
@@ -24,38 +24,38 @@
   ],
   "fire_points": [
     {
-      "x": 0.21,
+      "x": 0.19,
       "y": 0.65,
       "dx": -1,
       "dy": -0.5
     },
     {
-      "x": 0.72,
-      "y": 0.66,
-      "dx": 1,
+      "x": 0.22,
+      "y": 0.65,
+      "dx": -1,
       "dy": -0.5
     },
     {
-      "x": 0.44,
-      "y": 0.35,
+      "x": 0.5,
+      "y": 0.6,
       "dx": 0,
       "dy": -1
     },
     {
-      "x": 0.5,
-      "y": 0.45,
+      "x": 0.4,
+      "y": 0.6,
       "dx": 0,
       "dy": -1
     },
     {
       "x": 0.62,
-      "y": 0.42,
+      "y": 0.6,
       "dx": 0,
       "dy": -1
     },
     {
       "x": 0.46,
-      "y": 0.28,
+      "y": 0.5,
       "dx": 0,
       "dy": -1
     }
@@ -70,7 +70,7 @@
       ],
       "damage": 68,
       "speed": 660,
-      "interval": 2.9,
+      "interval": 0.5,
       "range": 1500,
       "proj_w": 10,
       "proj_h": 8,

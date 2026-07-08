@@ -6,13 +6,13 @@
   "hp_easy": 10000,
   "hp_normal": 12000,
   "hp_hard": 15000,
-  "speed": 32,
+  "speed": 20,
   "description": "Supercarrier. No artillery: a single anti-ship machine gun and two long-range flak cannons behind an endless air wing.",
   "sprite": "nimitz_pixelart.png",
   "unit_type": "ship",
   "boss": true,
   "boss_type": "carrier",
-  "display_w": 600,
+  "display_w": 1000,
   "flip_player": true,
   "flip_enemy": false,
   "player_tint": "#0a0a0a",
@@ -28,12 +28,12 @@
     "torpedo_bomber",
     "helicopter"
   ],
-  "spawn_interval": 2.5,
+  "spawn_interval": 3,
   "fire_points": [
     {
       "x": 0.16,
       "y": 0.66,
-      "dx": -1,
+      "dx": 1,
       "dy": 0
     },
     {
@@ -70,8 +70,8 @@
       "proj_w": 4,
       "proj_h": 2,
       "max_lifetime": 1.6,
-      "omnidirectional": true,
-      "track_target": true,
+      "omnidirectional": false,
+      "track_target": false,
       "can_hit_surface": true,
       "can_hit_sub": false,
       "can_hit_plane": false
@@ -100,5 +100,5 @@
       "can_hit_plane": true
     }
   ],
-  "standoff_range": 560
+  "standoff_range": 1000
 }
