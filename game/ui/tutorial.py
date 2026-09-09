@@ -20,7 +20,7 @@ _DOMAINS = [
     ("torpedo_bomber", "#6aa3c4", "AIR",        "Aircraft fly over the sea.",
      "Only ANTI-AIR units can hit them."),
     ("patrol",         "#2a6f97", "SURFACE",    "Ships fight on the waterline.",
-     "The backbone — hit by most guns."),
+     "The backbone: hit by most guns."),
     ("submarine",      "#15384f", "UNDERWATER", "Submarines hide below.",
      "Only DEPTH CHARGES / TORPEDOES reach them."),
 ]
@@ -127,10 +127,10 @@ class TutorialOverlay(QWidget):
         p.restore()
 
         p.setPen(QColor(theme.ACCENT)); p.setFont(theme.head(22, 4))
-        p.drawText(0, 74, W, 30, Qt.AlignmentFlag.AlignHCenter, "BATTLE GUIDE")
+        p.drawText(0, 74, W, 30, Qt.AlignmentFlag.AlignHCenter, "CAMPAIGN GUIDE")
         p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.font(10))
         p.drawText(0, 104, W, 18, Qt.AlignmentFlag.AlignHCenter,
-                   "Destroy the enemy fortress on the right. Match your fleet to what they field.")
+                   "Destroy the RED fort")
 
         # Two fixed briefing bands, centred and reserved so nothing else can land on
         # them: the unit-type chart (what the enemy fields) and, below it, notes on
@@ -156,11 +156,10 @@ class TutorialOverlay(QWidget):
         items = [
             ("YOUR BASE",
              "The fort on the left. It earns income every second, builds your whole "
-             "fleet and mounts your guns — hold it, and sink the enemy fort on the "
-             "right to win."),
+             "fleet and mounts your guns. Dont let it be destroyed"),
             ("COASTAL GUNS",
              "Fixed artillery built onto the fort. They shell the enemy line on "
-             "their own; set how far they lob with the ↑ / ↓ keys."),
+             "their own; set how far they lob with the ↑ / ↓ keys. Unlock new mounted weapons over time."),
         ]
         gap = 28
         bw = min(430, (W - 140 - gap) // 2)
@@ -399,21 +398,14 @@ class RulesOverlay(QWidget):
     # (icon, tag, heading, body) for each mechanic card, laid left→right.
     CARDS = [
         ("oilrig", "OBJECTIVE", "CAPTURE THE PLATFORM",
-         "One oil platform stands dead-centre between the two bases. Steer your "
+         "One oil platform stands between the two bases. Steer your "
          "SURFACE ships into its ring to seize it — submarines run too deep and "
-         "aircraft too high to plant a boarding crew. Ownership is one meter "
-         "running ENEMY → NEUTRAL → YOURS, so a platform the enemy holds must be "
-         "dragged back through neutral before it can flip to you. Crowd the ring "
-         "with more ships to seize it faster. Hold it and it pays you SCORE every "
-         "second."),
+         "aircraft too high to plant a boarding crew. Capture and hold the objective for longer than your opponent and you will be rewarded."),
         ("boss", "ESCALATION", "FLAGSHIP BOSSES",
-         "Score buys firepower. The first flagship sails in about three minutes; "
+         "Once in a while the player with the most score gets to spawn a flagship, the first flagship sails in about three minutes; "
          "after that, every 90 seconds the side LEADING on score is awarded the "
-         "next flagship from the fleet ladder — Potemkin first, then ever-stronger "
-         "battleships — and both scores reset. It fights on YOUR side and marches "
-         "on the enemy base. Match your guns to its type: an airborne flagship "
-         "falls only to anti-air, a submerged one only to anti-sub. Only one sails "
-         "at a time — sink it to restart the countdown."),
+         "next flagship from the fleet ladder: Potemkin first, then ever-stronger "
+         "battleships"),
     ]
 
     PANEL_W = 760
@@ -502,7 +494,7 @@ class RulesOverlay(QWidget):
                              w - 2 * self.PAD, theme.stencil(22, 2), color=theme.ACCENT)
         p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.font(11))
         p.drawText(QRect(x + self.PAD, y + 74, w - 2 * self.PAD, 24),
-                   self._WRAP, "Sink the enemy base to win — and win the midfield to "
+                   self._WRAP, "Destroy the enemy fort to win, and win the midfield to "
                    "get there faster.")
 
         for card, (icon, tag, heading, body) in zip(cards, self.CARDS):

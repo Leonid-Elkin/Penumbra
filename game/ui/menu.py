@@ -354,8 +354,8 @@ class MainMenuScreen(_Scene):
         lx = 72; ty = 66
         p.fillRect(lx - 18, ty - 4, 4, 128, QColor(theme.ACCENT))   # command rule
         p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.head(12, 6))
-        p.drawText(lx, ty - 26, 600, 18, int(Qt.AlignmentFlag.AlignLeft), "NAVAL WARFARE")
-        theme.engraved_label(p, "PENUMBRA", lx, ty, 900, theme.head(58, 4), theme.TEXT)
+        p.drawText(lx, ty - 26, 600, 18, int(Qt.AlignmentFlag.AlignLeft), "NAVAL STRATEGY GAME")
+        theme.engraved_label(p, "PENUMBRA V1.0", lx, ty, 900, theme.head(58, 4), theme.TEXT)
         # "FLEET COMMAND" subtitle with a trailing rule, well below the title
         sy = ty + 84
         tx = lx
@@ -370,18 +370,6 @@ class MainMenuScreen(_Scene):
         p.setPen(QColor(theme.TEXT_FAINT)); p.setFont(theme.head(11, 4))
         p.drawText(lx, cy, 400, 16, int(Qt.AlignmentFlag.AlignVCenter), "SELECT COMMAND")
         p.setPen(QPen(QColor(theme.LINE), 1)); p.drawLine(lx, cy + 20, lx + 340, cy + 20)
-
-        # ── Telemetry footer: world flavour on the war-room's steel floor sill ───
-        # A real diamond tread-plate kick-plate runs the width of the readout, an
-        # amber caution rail across its top edge — the plotting-room floor you stand on.
-        fy = H - 40
-        band = QRectF(lx, fy - 16, W - 72 - lx, 34)
-        theme.tread_band(p, band, tint="#0c1217", strength=0.92,
-                         hazard=QColor(theme.ACCENT))
-        p.setFont(theme.mono(10)); p.setPen(QColor(theme.TEXT_DIM))
-        p.drawText(int(band.left() + 12), int(band.top()), int(band.width() - 12),
-                   int(band.height()), int(Qt.AlignmentFlag.AlignVCenter),
-                   "THEATRE  NORTH ATLANTIC     READINESS  DEFCON 2     FLEET  STANDING BY")
 
 
 # ─── Multiplayer lobby (online room browser + LAN direct) ────────────────────────
@@ -443,8 +431,7 @@ class MultiplayerScreen(_Scene):
         v = QVBoxLayout(panel); v.setContentsMargins(30, 26, 30, 26); v.setSpacing(12)
 
         v.addWidget(_title("HEAD-TO-HEAD BATTLE", 24, theme.TEXT, 4.0))
-        sub = QLabel("Two commanders. Create a room and wait in-game for an opponent, "
-                     "browse open rooms to join one, or connect directly on a LAN.")
+        sub = QLabel(" ")
         sub.setWordWrap(True)
         sub.setStyleSheet(f"color:{theme.TEXT_DIM};font-family:'{theme.MONO_FAMILY}';"
                           f"font-size:12px;background:transparent;")
@@ -468,7 +455,7 @@ class MultiplayerScreen(_Scene):
         # Whoever you are — host or joiner, online or LAN — this is the name that
         # rides on your health bar in the battle. Required before either action;
         # remembered between launches so it need only be typed once.
-        v.addWidget(self._hdr("COMMANDER NAME  ·  SHOWN ON YOUR HEALTH BAR"))
+        v.addWidget(self._hdr("NAME"))
         self.pname_field = QLineEdit(); self.pname_field.setStyleSheet(self._FIELD_CSS)
         self.pname_field.setPlaceholderText("your name  (required)")
         self.pname_field.setMaxLength(16)
@@ -486,7 +473,7 @@ class MultiplayerScreen(_Scene):
         # share a time-of-day band render an identical backdrop, so we keep just the
         # first of each and key it back to that representative level (see backdrop).
         from . import backdrop
-        v.addWidget(self._hdr("BATTLE MAP  ·  THE TIME OF DAY BOTH FLEETS FIGHT UNDER"))
+        v.addWidget(self._hdr("BATTLE MAP"))
         self.theme_combo = QComboBox(); self.theme_combo.setStyleSheet(self._COMBO_CSS)
         _seen_tod = set()
         for lv in self.data.levels_sorted():
@@ -498,7 +485,7 @@ class MultiplayerScreen(_Scene):
         v.addWidget(self.theme_combo)
 
         # ── Host / create (shared) ───────────────────────────────────────────
-        self.host_hdr = self._hdr("HOST A MATCH  ·  YOU COMMAND THE PLAYER FLEET")
+        self.host_hdr = self._hdr("")
         v.addWidget(self.host_hdr)
         # Online only: name the room others see in the browser, and optionally lock
         # it behind a password. Meaningless for a direct LAN link, so it hides in LAN.
@@ -523,7 +510,7 @@ class MultiplayerScreen(_Scene):
         v.addLayout(row)
 
         # ── Join header (text swaps per mode) ────────────────────────────────
-        self.join_hdr = self._hdr("JOIN A MATCH  ·  YOU COMMAND THE ENEMY FLEET")
+        self.join_hdr = self._hdr("JOIN A MATCH")
         v.addWidget(self.join_hdr)
 
         # Online join: a browsable, auto-refreshing list of open rooms.
@@ -593,7 +580,7 @@ class MultiplayerScreen(_Scene):
                                f"font-family:'{theme.MONO_FAMILY}';font-size:11px;"
                                f"background:transparent;")
         bot_row.addWidget(bot_hint, 1)
-        self.bot_btn = QPushButton("PLAY vs CAPTAIN BOB")
+        self.bot_btn = QPushButton("FIGHT CAPTAIN BOB")
         self.bot_btn.setStyleSheet(theme.BTN); self.bot_btn.setFixedWidth(200)
         self.bot_btn.clicked.connect(self._on_play_bot)
         bot_row.addWidget(self.bot_btn)
@@ -718,12 +705,12 @@ class MultiplayerScreen(_Scene):
         self.lan_join_box.setVisible(not online)
         self.create_meta_box.setVisible(online)   # name/password: online rooms only
         if online:
-            self.host_hdr.setText("CREATE A ROOM  ·  YOU COMMAND THE PLAYER FLEET")
-            self.join_hdr.setText("OPEN ROOMS  ·  PICK ONE TO COMMAND THE ENEMY FLEET")
+            self.host_hdr.setText("CREATE A ROOM")
+            self.join_hdr.setText("OPEN ROOMS")
             self.host_btn.setText("CREATE")
         else:
-            self.host_hdr.setText("HOST A MATCH  ·  YOU COMMAND THE PLAYER FLEET")
-            self.join_hdr.setText("JOIN A MATCH  ·  YOU COMMAND THE ENEMY FLEET")
+            self.host_hdr.setText("HOST A MATCH")
+            self.join_hdr.setText("JOIN A MATCH")
             self.host_btn.setText("HOST")
         self._sync_browser()
 
@@ -788,7 +775,7 @@ class MultiplayerScreen(_Scene):
         if self._browser.error and not rooms:
             self.browse_hint.setText(self._browser.error)
         elif not rooms:
-            self.browse_hint.setText("No open rooms — create one, or wait for a host.")
+            self.browse_hint.setText("No open rooms yet...")
         else:
             self.browse_hint.setText(f"{len(rooms)} open room(s) — select one and JOIN.")
 
@@ -1029,15 +1016,13 @@ class _SlotRow(QFrame):
         p.drawText(38, 12, 200, 14, int(Qt.AlignmentFlag.AlignLeft), f"PROFILE {self.slot}")
         if self.save is None:
             p.setPen(QColor(theme.TEXT_FAINT)); p.setFont(theme.stencil(22, 2))
-            p.drawText(38, 34, 320, 34, int(Qt.AlignmentFlag.AlignLeft), "EMPTY BAY")
-            p.setPen(QColor(theme.TEXT_FAINT)); p.setFont(theme.mono(9))
-            p.drawText(38, 62, 320, 14, int(Qt.AlignmentFlag.AlignLeft), "NO PROFILE ON RECORD")
+            p.drawText(38, 34, 320, 34, int(Qt.AlignmentFlag.AlignLeft), "EMPTY SAVE")
         else:
             theme.engraved_label(p, self.save.difficulty.upper(), 38, 30, 330,
                                  theme.head(22, 2), theme.ACCENT)
             p.setPen(QColor(theme.TEXT)); p.setFont(theme.mono(10))
             p.drawText(38, 58, 200, 16, int(Qt.AlignmentFlag.AlignVCenter),
-                       f"{self.save.cleared_count()}/12 CLEARED")
+                       f"{self.save.cleared_count()}/12 COMPLETED")
             # star tally as a vector glyph so it never depends on a font's ★
             sx = 200
             theme.draw_stars(p, sx, 56, 13, 1, total=1)
@@ -1057,7 +1042,7 @@ class _DifficultyOverlay(QWidget):
                     alignment=Qt.AlignmentFlag.AlignCenter)
         warn = _title("LOCKED FOR THIS PROFILE", 9, theme.ACCENT, 3)
         v.addWidget(warn, alignment=Qt.AlignmentFlag.AlignCenter); v.addSpacing(10)
-        desc = {"easy": "Light resistance", "normal": "Standard engagement", "hard": "Total war"}
+        desc = {"easy": "Weaker more timid enemies", "normal": "Standard engagement", "hard": "More health, more enemies"}
         for d in DIFFICULTY_ORDER:
             b = QPushButton(f"{d.upper()}    {desc[d]}"); b.setStyleSheet(theme.BTN); b.setFixedWidth(360)
             b.clicked.connect(lambda _=False, dd=d: self.chosen.emit(dd))
@@ -1083,9 +1068,8 @@ class SaveSelectScreen(_Scene):
         # The same face and point size as the main menu's painted lockup, so the
         # two titles match as the screens slide past each other.
         lay.addWidget(_title("PENUMBRA", 58, theme.TEXT, 4))
-        lay.addWidget(_title("FLEET COMMAND", 15, theme.ACCENT, 6))
-        lay.addSpacing(34)
-        lay.addWidget(_title("SELECT PROFILE", 11, theme.TEXT_DIM, 4))
+        lay.addSpacing(40)
+        lay.addWidget(_title("SELECT SAVE", 11, theme.TEXT_DIM, 4))
         lay.addSpacing(10)
 
         self.rows = []
@@ -1286,7 +1270,7 @@ class _Dossier(QWidget):
         if self.state == "cleared":
             self._stamp(p, W, H, "DECLASSIFIED", theme.PHOSPHOR)
             p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.head(11, 4))
-            p.drawText(M, ty, W - 2*M, 14, int(Qt.AlignmentFlag.AlignLeft), "HOSTILE CAPITAL SHIP")
+            p.drawText(M, ty, W - 2*M, 14, int(Qt.AlignmentFlag.AlignLeft), "HOSTILE FLAGSHIP")
             theme.engraved_label(p, (self.info.get("name") or self.level.boss).upper(),
                                  M, ty + 16, W - 2*M, theme.stencil(40, 2), theme.TEXT)
             theme.draw_stars(p, M, ty + 74, 22, self.info.get("stars", 0), total=3)
@@ -1487,7 +1471,7 @@ class CampaignScreen(_Scene):
 
     def set_save(self, save):
         self.save = save
-        self.diff_lbl.setText(f"PROFILE {save.slot}  ·  {save.difficulty.upper()}")
+        self.diff_lbl.setText(f" SAVE {save.slot}  ·  {save.difficulty.upper()}")
         self.catalog.set_cleared(save.cleared_count())
         sel = None
         for k in self.ordered:
