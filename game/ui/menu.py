@@ -431,7 +431,8 @@ class MultiplayerScreen(_Scene):
         v = QVBoxLayout(panel); v.setContentsMargins(30, 26, 30, 26); v.setSpacing(12)
 
         v.addWidget(_title("HEAD-TO-HEAD BATTLE", 24, theme.TEXT, 4.0))
-        sub = QLabel(" ")
+        sub = QLabel("Create a room and wait for an opponent, join an open one, "
+                     "or connect directly on a LAN.")
         sub.setWordWrap(True)
         sub.setStyleSheet(f"color:{theme.TEXT_DIM};font-family:'{theme.MONO_FAMILY}';"
                           f"font-size:12px;background:transparent;")
