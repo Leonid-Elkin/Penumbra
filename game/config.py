@@ -6,7 +6,7 @@ here (or the per-vehicle JSON under vehicles/) rather than hunting through code.
 """
 
 from __future__ import annotations
-import os, json
+import os, sys, json
 
 # ─── Debug ──────────────────────────────────────────────────────────────────
 DEBUG_INFINITE_MONEY = False      # True = player resources never run out (dev only)
@@ -130,13 +130,24 @@ UPGRADE_COSTS = {
 }
 
 # ─── Asset paths ────────────────────────────────────────────────────────────
+# When packaged by PyInstaller the code + bundled data live in a read-only
+# extraction dir (sys._MEIPASS); __file__ resolves inside it, so _HERE finds the
+# bundled JSON / textures exactly as it does from source — no path change needed.
 _HERE        = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_FROZEN      = getattr(sys, "frozen", False)
 TEXTURE_DIR  = os.path.join(_HERE, "Textures")
 BOSS_DIR     = os.path.join(TEXTURE_DIR, "Bosses")
 VEHICLE_DIR  = os.path.join(_HERE, "vehicles")
 BOSS_CFG_DIR = os.path.join(VEHICLE_DIR, "bosses")
 LEVEL_DIR    = os.path.join(_HERE, "levels")
-SAVE_DIR     = os.path.join(_HERE, "saves")
+# Saves + settings must go somewhere writable AND persistent. In a frozen one-file
+# build the bundle dir is a temp folder wiped on exit, so redirect writes to the
+# per-user profile; from source they stay next to the project as before.
+if _FROZEN:
+    _APPROOT = os.environ.get("APPDATA") or os.path.expanduser("~")
+    SAVE_DIR = os.path.join(_APPROOT, "Penumbra", "saves")
+else:
+    SAVE_DIR = os.path.join(_HERE, "saves")
 # Editable config controlling at which cleared-level count each unit/powerup
 # unlocks (see game/progression.py). Missing entries fall back to code defaults.
 UNLOCKS_FILE = os.path.join(_HERE, "unlocks.json")
