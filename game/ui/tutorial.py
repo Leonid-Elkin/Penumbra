@@ -311,43 +311,213 @@ class TutorialOverlay(QWidget):
                     fallback = (cover, box)
         return fallback[1] if fallback else QRect(clampx(cx), clampy(cy), lw, lh)
 
-    def _leader(self, p, box: QRect, r: QRect):
+    def _leader(self, p, box: QRect, r: QRect, obstacles=None):
         """Draw the line from a callout box back to its section.
 
-        A straight run when the two line up. When the box had to be shifted along
-        the row to fit, the line turns square corners instead — a dogleg out of
-        the box, across, and down into the section. A long diagonal would cut
-        across the other sections and read as pointing at whatever it crossed."""
-        tc = r.center()
-        pen = QPen(QColor(theme.ACCENT), 2)
-        p.setPen(pen)
+        A straight run when the two line up, square corners when the box had to
+        be shifted along the row to fit. The route is chosen to miss `obstacles`
+        — the other sections, the briefing bands and the callout boxes already
+        down — because a line that crosses the minimap reads as pointing at the
+        minimap, whichever box it started from. Only the elbow positions move;
+        the ends stay pinned to the box and its own section."""
+        p.setPen(QPen(QColor(theme.ACCENT), 2))
+        route = self._route(box, r, obstacles or [])
+        p.drawPolyline(QPolygon(route))
 
-        def run(sx, sy, ex, ey, vertical):
-            if abs((sx - ex) if vertical else (sy - ey)) < 6:
-                p.drawLine(sx, sy, ex, ey)
-                return
-            if vertical:
-                mid = (sy + ey) // 2
-                p.drawPolyline(QPolygon([QPoint(sx, sy), QPoint(sx, mid),
-                                         QPoint(ex, mid), QPoint(ex, ey)]))
-            else:
-                mid = (sx + ex) // 2
-                p.drawPolyline(QPolygon([QPoint(sx, sy), QPoint(mid, sy),
-                                         QPoint(mid, ey), QPoint(ex, ey)]))
+    @staticmethod
+    def _seg_hits(a: QPoint, b: QPoint, rect: QRect) -> bool:
+        """Does an axis-aligned segment touch a rect?"""
+        if a.x() == b.x():
+            return (rect.left() <= a.x() <= rect.right()
+                    and max(a.y(), b.y()) >= rect.top()
+                    and min(a.y(), b.y()) <= rect.bottom())
+        return (rect.top() <= a.y() <= rect.bottom()
+                and max(a.x(), b.x()) >= rect.left()
+                and min(a.x(), b.x()) <= rect.right())
 
+    def _route(self, box: QRect, r: QRect, obstacles) -> list:
+        """Pick the simplest elbow route from box to section that hits nothing.
+
+        Candidates are tried cheapest-first — a straight run, then one dogleg
+        with its crossbar at a range of offsets, then routes that leave the box
+        from a different point along its edge. If every candidate is blocked the
+        least-blocked one is drawn, so there is always a line."""
         clamp = lambda v, lo, hi: min(max(v, lo), hi)
-        if box.bottom() <= r.top():                                  # box above
-            run(clamp(tc.x(), box.left() + 14, box.right() - 14), box.bottom(),
-                tc.x(), r.top() - 3, True)
-        elif box.top() >= r.bottom():                                # box below
-            run(clamp(tc.x(), box.left() + 14, box.right() - 14), box.top(),
-                tc.x(), r.bottom() + 3, True)
-        elif box.right() <= r.left():                                # box left
-            run(box.right(), clamp(tc.y(), box.top() + 14, box.bottom() - 14),
-                r.left() - 3, tc.y(), False)
-        else:                                                        # box right
-            run(box.left(), clamp(tc.y(), box.top() + 14, box.bottom() - 14),
-                r.right() + 3, tc.y(), False)
+        tc = r.center()
+        W, H = self.width(), self.height()
+
+        def channels(lo, hi, edges, limit):
+            """Crossbar positions to try: the direct ones between the two ends
+            first, then the clear lanes that run between the obstacles. On a
+            small window every lane straight between box and section can be
+            blocked, and the only way across is round the outside of a band."""
+            out = [int(lo + (hi - lo) * f) for f in (0.5, 0.72, 0.28, 0.88, 0.12)]
+            out += [e for e in edges if 8 <= e <= limit - 8]
+            return out
+
+        if box.bottom() <= r.top() or box.top() >= r.bottom():        # vertical
+            down = box.bottom() <= r.top()
+            sy = box.bottom() if down else box.top()
+            ey = (r.top() - 3) if down else (r.bottom() + 3)
+            starts = [clamp(tc.x(), box.left() + 14, box.right() - 14),
+                      box.center().x(), box.left() + 14, box.right() - 14]
+            ends = [tc.x(), r.left() + r.width() // 4, r.right() - r.width() // 4,
+                    r.left() + 10, r.right() - 10]
+            lanes = channels(sy, ey,
+                             [e for ob in obstacles
+                              for e in (ob.top() - 14, ob.bottom() + 14)], H)
+            cands = []
+            for sx in starts:
+                for ex in ends:
+                    if abs(sx - ex) < 6:
+                        cands.append([QPoint(sx, sy), QPoint(ex, ey)])
+                    for mid in lanes:
+                        cands.append([QPoint(sx, sy), QPoint(sx, mid),
+                                      QPoint(ex, mid), QPoint(ex, ey)])
+        else:                                                          # horizontal
+            right = box.right() <= r.left()
+            sx = box.right() if right else box.left()
+            ex = (r.left() - 3) if right else (r.right() + 3)
+            starts = [clamp(tc.y(), box.top() + 14, box.bottom() - 14),
+                      box.center().y(), box.top() + 14, box.bottom() - 14]
+            ends = [tc.y(), r.top() + r.height() // 4, r.bottom() - r.height() // 4,
+                    r.top() + 10, r.bottom() - 10]
+            lanes = channels(sx, ex,
+                             [e for ob in obstacles
+                              for e in (ob.left() - 14, ob.right() + 14)], W)
+            cands = []
+            for sy in starts:
+                for ey in ends:
+                    if abs(sy - ey) < 6:
+                        cands.append([QPoint(sx, sy), QPoint(ex, ey)])
+                    for mid in lanes:
+                        cands.append([QPoint(sx, sy), QPoint(mid, sy),
+                                      QPoint(mid, ey), QPoint(ex, ey)])
+
+        # Last resort before giving up: leave the box from a side edge instead of
+        # the one facing the section, run out to a clear channel, and come back
+        # in. On a small window the direct approaches can all be blocked, and a
+        # line that goes the long way round still beats one drawn over the HUD.
+        if box.bottom() <= r.top() or box.top() >= r.bottom():
+            down = box.bottom() <= r.top()
+            ey = (r.top() - 3) if down else (r.bottom() + 3)
+            for sy0 in (box.center().y(), box.top() + 14, box.bottom() - 14):
+                for sx0 in (box.left(), box.right()):
+                    for chx in (box.left() - 34, box.right() + 34, tc.x(),
+                                r.left() - 24, r.right() + 24,
+                                (box.center().x() + tc.x()) // 2):
+                        for ex2 in (tc.x(), r.left() + 10, r.right() - 10):
+                            cands.append([QPoint(sx0, sy0), QPoint(chx, sy0),
+                                          QPoint(chx, ey), QPoint(ex2, ey)])
+        else:
+            right = box.right() <= r.left()
+            ex = (r.left() - 3) if right else (r.right() + 3)
+            for sx0 in (box.center().x(), box.left() + 14, box.right() - 14):
+                for sy0 in (box.top(), box.bottom()):
+                    for chy in (box.top() - 34, box.bottom() + 34, tc.y(),
+                                r.top() - 24, r.bottom() + 24,
+                                (box.center().y() + tc.y()) // 2):
+                        for ey2 in (tc.y(), r.top() + 10, r.bottom() - 10):
+                            cands.append([QPoint(sx0, sy0), QPoint(sx0, chy),
+                                          QPoint(ex, chy), QPoint(ex, ey2)])
+
+        def onscreen(pts):
+            return all(4 <= q.x() <= W - 4 and 4 <= q.y() <= H - 4 for q in pts)
+
+        def length(pts):
+            return sum(abs(pts[i].x() - pts[i + 1].x()) + abs(pts[i].y() - pts[i + 1].y())
+                       for i in range(len(pts) - 1))
+
+        best = clean = None
+        for pts in cands:
+            if not onscreen(pts):
+                continue
+            hits = sum(1 for i in range(len(pts) - 1)
+                       for ob in obstacles
+                       if self._seg_hits(pts[i], pts[i + 1], ob))
+            if hits == 0:
+                # Clean route: keep the shortest, so the line only takes the long
+                # way round when the short way is genuinely blocked.
+                if clean is None or length(pts) < clean[0]:
+                    clean = (length(pts), pts)
+            elif clean is None and (best is None or hits < best[0]):
+                best = (hits, pts)
+        if clean is not None:
+            return clean[1]
+
+        # None of the ready-made shapes fits. Fall back to searching the lanes
+        # that run between the obstacles for any clear path at all.
+        grid = self._grid_route(cands[0][0], cands[0][-1], obstacles, W, H)
+        if grid is not None:
+            return grid
+        return best[1] if best else [QPoint(box.center().x(), box.center().y()),
+                                     QPoint(tc.x(), tc.y())]
+
+    def _grid_route(self, start: QPoint, end: QPoint, obstacles, W, H):
+        """Search for an orthogonal path from start to end that touches nothing.
+
+        The lanes worth using are the ones just outside each obstacle, so the
+        candidate lines are the obstacle edges plus a gap, and the two endpoints.
+        That is a small enough lattice to walk exhaustively, preferring paths
+        that turn the fewest corners."""
+        import heapq
+
+        gap = 14
+        xs = {start.x(), end.x(), 8, W - 8}
+        ys = {start.y(), end.y(), 8, H - 8}
+        for ob in obstacles:
+            xs.update((ob.left() - gap, ob.right() + gap))
+            ys.update((ob.top() - gap, ob.bottom() + gap))
+        xs = sorted(x for x in xs if 4 <= x <= W - 4)
+        ys = sorted(y for y in ys if 4 <= y <= H - 4)
+        if start.x() not in xs or start.y() not in ys:
+            return None
+        if end.x() not in xs or end.y() not in ys:
+            return None
+
+        xi = {x: i for i, x in enumerate(xs)}
+        yi = {y: i for i, y in enumerate(ys)}
+
+        def open_seg(a, b):
+            return not any(self._seg_hits(a, b, ob) for ob in obstacles)
+
+        s = (xi[start.x()], yi[start.y()])
+        t = (xi[end.x()], yi[end.y()])
+        # (bends, length, node, incoming axis) — fewest corners first.
+        pq = [(0, 0, s, -1, [s])]
+        seen = {}
+        while pq:
+            bends, dist, node, axis, path = heapq.heappop(pq)
+            if node == t:
+                pts = [QPoint(xs[i], ys[j]) for i, j in path]
+                # Drop the intermediate points of any straight run, so the drawn
+                # line has only the corners it actually turns.
+                out = [pts[0]]
+                for k in range(1, len(pts) - 1):
+                    a, b, c = pts[k - 1], pts[k], pts[k + 1]
+                    if not ((a.x() == b.x() == c.x()) or (a.y() == b.y() == c.y())):
+                        out.append(b)
+                out.append(pts[-1])
+                return out
+            if seen.get((node, axis), 1 << 30) <= bends:
+                continue
+            seen[(node, axis)] = bends
+            i, j = node
+            for ax, (di, dj) in enumerate(((1, 0), (-1, 0), (0, 1), (0, -1))):
+                ni, nj = i + di, j + dj
+                if not (0 <= ni < len(xs) and 0 <= nj < len(ys)):
+                    continue
+                a = QPoint(xs[i], ys[j])
+                b = QPoint(xs[ni], ys[nj])
+                if not open_seg(a, b):
+                    continue
+                naxis = 0 if di else 1
+                nb = bends + (1 if axis != -1 and naxis != axis else 0)
+                nd = dist + abs(b.x() - a.x()) + abs(b.y() - a.y())
+                if nb > 4:
+                    continue
+                heapq.heappush(pq, (nb, nd, (ni, nj), naxis, path + [(ni, nj)]))
+        return None
 
     def _draw_callout(self, p, r: QRect, label, desc, placed, prefer_above=False):
         # amber box fit tightly around the whole section
@@ -361,10 +531,19 @@ class TutorialOverlay(QWidget):
         needed = p.fontMetrics().boundingRect(QRect(0, 0, lw - 16, 400), wrap, desc)
         lh = 24 + needed.height() + 7
         box = self._place_box(lw, lh, r, placed, prefer_above=prefer_above)
+
+        # Everything the leader line has to miss: its own section is excluded
+        # (the line ends on it) and so is the box (it starts there). Anything
+        # already overlapping the section goes too — on a short window a HUD
+        # section can sit across the briefing chart, and a line cannot reach a
+        # target inside a rect without entering that rect.
+        tpad = r.adjusted(-6, -6, 6, 6)
+        obstacles = [pb for pb in placed
+                     if pb != tpad and pb != box and not pb.intersects(tpad)]
         placed.append(QRect(box))
 
         p.setBrush(QColor(theme.PANEL_HI)); p.setPen(QPen(QColor(theme.ACCENT), 1)); p.drawRect(box)
-        self._leader(p, box, r)
+        self._leader(p, box, r, obstacles)
         p.setPen(QColor(theme.ACCENT)); p.setFont(theme.head(10, 1))
         p.drawText(box.adjusted(8, 5, -8, 0), Qt.AlignmentFlag.AlignLeft, label)
         p.setPen(QColor(theme.TEXT)); p.setFont(theme.font(8))
