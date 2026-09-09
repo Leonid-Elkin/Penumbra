@@ -11,7 +11,8 @@ button to start fighting; re-arm it from the campaign's "HOW TO PLAY" button.
 from __future__ import annotations
 from PyQt6.QtWidgets import QWidget, QPushButton
 from PyQt6.QtCore import Qt, QPoint, QRect, QRectF
-from PyQt6.QtGui import QPainter, QColor, QPen, QRegion, QFontMetrics
+from PyQt6.QtGui import (QPainter, QColor, QPen, QRegion, QFontMetrics,
+                         QPolygon)
 
 from . import theme
 
@@ -84,15 +85,23 @@ class TutorialOverlay(QWidget):
         h = self.hud
         vals = lambda d: list(getattr(h, d, {}).values())
         res = [w for w in (getattr(h, 'gauge', None),) if w is not None]
+        # The trailing flag asks for the box to sit ABOVE its section. The unit
+        # rail and the upgrade cards run along the bottom of the HUD, so a label
+        # under them would hang off the screen — and the player is looking at the
+        # row itself, so the explanation belongs directly over it.
         return [
             (vals('unit_btns'),    "DEPLOY UNITS",
-             "Click / hotkey to build. Press again while cooling down to queue (max 10)."),
+             "Click / hotkey to build. Press again while cooling down to queue (max 10).",
+             True),
             (vals('upg_cards'),    "UPGRADE BASE",
-             "Income · Factory (faster cooldowns) · Storage · Armor · Salvage. They take time to research."),
+             "Income · Factory (faster cooldowns) · Storage · Armor · Salvage. They take time to research.",
+             True),
             (res,                  "RESOURCES",
-             "Earn income each second; spend it to build. Grow it with upgrades."),
+             "Earn income each second; spend it to build. Grow it with upgrades.",
+             False),
             ([getattr(h, 'minimap', None)], "MINIMAP",
-             "The whole battle line. Click it to jump the camera."),
+             "The whole battle line. Click it to jump the camera.",
+             False),
         ]
 
     def _section_rect(self, widgets):
@@ -112,15 +121,15 @@ class TutorialOverlay(QWidget):
         W = self.width()
 
         sections = []
-        for widgets, label, desc in self._targets():
+        for widgets, label, desc, above in self._targets():
             r = self._section_rect(widgets)
             if r is not None and r.width() > 0:
-                sections.append((r, label, desc))
+                sections.append((r, label, desc, above))
 
         # Dim EVERYTHING except the spotlighted HUD sections (which stay bright so
         # the player can see what each label points at).
         region = QRegion(self.rect())
-        for r, _, _ in sections:
+        for r, _, _, _ in sections:
             region = region.subtracted(QRegion(r.adjusted(-3, -3, 3, 3)))
         p.save(); p.setClipRegion(region)
         p.fillRect(self.rect(), QColor(6, 9, 12, 210))
@@ -130,7 +139,7 @@ class TutorialOverlay(QWidget):
         p.drawText(0, 74, W, 30, Qt.AlignmentFlag.AlignHCenter, "CAMPAIGN GUIDE")
         p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.font(10))
         p.drawText(0, 104, W, 18, Qt.AlignmentFlag.AlignHCenter,
-                   "Destroy the RED fort")
+                   "Sink the enemy fort on the right. Match your fleet to what they field.")
 
         # Two fixed briefing bands, centred and reserved so nothing else can land on
         # them: the unit-type chart (what the enemy fields) and, below it, notes on
@@ -146,8 +155,18 @@ class TutorialOverlay(QWidget):
         placed = [QRect((W - hw) // 2, 60, hw, 62)]   # leaving the corners free for callouts
         placed.append(domain_rect)              # reserve the AIR/SURFACE/UNDERWATER chart
         placed.append(fort_rect)                # reserve the BASE / COASTAL GUNS notes
-        for r, label, desc in sections:
-            self._draw_callout(p, r, label, desc, placed)
+
+        # Reserve every spotlit section too, before a single box is placed. The
+        # sections are the one thing the player must be able to see — a box laid
+        # over the minimap or the resource gauge hides exactly what its own text
+        # is describing.
+        for r, _, _, _ in sections:
+            placed.append(r.adjusted(-6, -6, 6, 6))
+
+        # Boxes that must sit above go down first, so they get the clear air over
+        # their row before anything else can take it.
+        for r, label, desc, above in sorted(sections, key=lambda s: not s[3]):
+            self._draw_callout(p, r, label, desc, placed, prefer_above=above)
 
     def _draw_fort_info(self, p, W, top):
         """Two side-by-side notes on the player's own fort — what the base is and
@@ -156,10 +175,12 @@ class TutorialOverlay(QWidget):
         items = [
             ("YOUR BASE",
              "The fort on the left. It earns income every second, builds your whole "
-             "fleet and mounts your guns. Dont let it be destroyed"),
+             "fleet and mounts your guns — hold it, and sink the enemy fort on the "
+             "right to win."),
             ("COASTAL GUNS",
              "Fixed artillery built onto the fort. They shell the enemy line on "
-             "their own; set how far they lob with the ↑ / ↓ keys. Unlock new mounted weapons over time."),
+             "their own; set how far they lob with the ↑ / ↓ keys. New mounts "
+             "unlock as you go."),
         ]
         gap = 28
         bw = min(430, (W - 140 - gap) // 2)
@@ -214,11 +235,17 @@ class TutorialOverlay(QWidget):
                        int(Qt.AlignmentFlag.AlignHCenter) | int(Qt.TextFlag.TextWordWrap), line2)
         return chart_rect
 
-    def _place_box(self, lw, lh, target, placed):
+    def _place_box(self, lw, lh, target, placed, prefer_above=False):
         """Find a slot for a callout box: try just above its target, then below,
         then to either side, and fall back to stacking clear above everything it
         would touch. The chosen box never overlaps anything already in `placed`,
-        so no two callouts (nor a callout and the header / chart) share pixels."""
+        so no two callouts (nor a callout and the header / chart) share pixels.
+
+        With `prefer_above` the box has to end up over its section, so instead of
+        giving up on the first blocked slot it sweeps sideways along the row and
+        then upward a row at a time. The leader line is drawn with elbows, so a
+        box that ends up shifted well off to one side still reads as belonging to
+        its section."""
         W, H = self.width(), self.height()
         clampx = lambda x: min(max(x, 6), W - lw - 6)
         clampy = lambda y: min(max(y, 6), H - lh - 6)
@@ -230,6 +257,16 @@ class TutorialOverlay(QWidget):
                 return False
             return not any(box.intersects(pb.adjusted(-6, -6, 6, 6)) for pb in placed)
 
+        if prefer_above:
+            for row in range(6):
+                y = target.top() - lh - 18 - row * (lh + 10)
+                if y < 6:
+                    break
+                for dx in (0, -70, 70, -150, 150, -240, 240, -340, 340):
+                    box = QRect(clampx(cx + dx), y, lw, lh)
+                    if clear(box):
+                        return box
+
         candidates = (
             QRect(cx, target.top() - lh - 18, lw, lh),      # above
             QRect(cx, target.bottom() + 18, lw, lh),        # below
@@ -239,17 +276,80 @@ class TutorialOverlay(QWidget):
         for box in candidates:
             if clear(box):
                 return box
-        # Nowhere clean around it: stack upward until it stops colliding.
-        box = QRect(cx, target.top() - lh - 18, lw, lh)
-        for _ in range(len(placed) + 1):
-            hit = next((pb for pb in placed
-                        if box.intersects(pb.adjusted(-6, -6, 6, 6))), None)
-            if hit is None:
-                break
-            box.moveTop(hit.top() - lh - 8)
-        return box
 
-    def _draw_callout(self, p, r: QRect, label, desc, placed):
+        # Nothing free in the obvious four places. Sweep the whole screen and take
+        # the clear slot closest to the target. The old code stacked upward from
+        # the target instead, which walked the box off the top of the window as
+        # soon as the space above was busy.
+        tc = target.center()
+        step = 24
+        best = None
+        for y in range(6, max(7, H - lh - 6), step):
+            for x in range(6, max(7, W - lw - 6), step):
+                box = QRect(x, y, lw, lh)
+                if not clear(box):
+                    continue
+                d = (box.center().x() - tc.x()) ** 2 + (box.center().y() - tc.y()) ** 2
+                if best is None or d < best[0]:
+                    best = (d, box)
+        if best is not None:
+            return best[1]
+
+        # Genuinely no free space (a very small window). Take the least-covered
+        # spot rather than anything off-screen — on-screen and overlapping beats
+        # invisible.
+        fallback = None
+        for y in range(6, max(7, H - lh - 6), step):
+            for x in range(6, max(7, W - lw - 6), step):
+                box = QRect(x, y, lw, lh)
+                cover = 0
+                for pb in placed:
+                    o = box.intersected(pb)
+                    if not o.isEmpty():
+                        cover += o.width() * o.height()
+                if fallback is None or cover < fallback[0]:
+                    fallback = (cover, box)
+        return fallback[1] if fallback else QRect(clampx(cx), clampy(cy), lw, lh)
+
+    def _leader(self, p, box: QRect, r: QRect):
+        """Draw the line from a callout box back to its section.
+
+        A straight run when the two line up. When the box had to be shifted along
+        the row to fit, the line turns square corners instead — a dogleg out of
+        the box, across, and down into the section. A long diagonal would cut
+        across the other sections and read as pointing at whatever it crossed."""
+        tc = r.center()
+        pen = QPen(QColor(theme.ACCENT), 2)
+        p.setPen(pen)
+
+        def run(sx, sy, ex, ey, vertical):
+            if abs((sx - ex) if vertical else (sy - ey)) < 6:
+                p.drawLine(sx, sy, ex, ey)
+                return
+            if vertical:
+                mid = (sy + ey) // 2
+                p.drawPolyline(QPolygon([QPoint(sx, sy), QPoint(sx, mid),
+                                         QPoint(ex, mid), QPoint(ex, ey)]))
+            else:
+                mid = (sx + ex) // 2
+                p.drawPolyline(QPolygon([QPoint(sx, sy), QPoint(mid, sy),
+                                         QPoint(mid, ey), QPoint(ex, ey)]))
+
+        clamp = lambda v, lo, hi: min(max(v, lo), hi)
+        if box.bottom() <= r.top():                                  # box above
+            run(clamp(tc.x(), box.left() + 14, box.right() - 14), box.bottom(),
+                tc.x(), r.top() - 3, True)
+        elif box.top() >= r.bottom():                                # box below
+            run(clamp(tc.x(), box.left() + 14, box.right() - 14), box.top(),
+                tc.x(), r.bottom() + 3, True)
+        elif box.right() <= r.left():                                # box left
+            run(box.right(), clamp(tc.y(), box.top() + 14, box.bottom() - 14),
+                r.left() - 3, tc.y(), False)
+        else:                                                        # box right
+            run(box.left(), clamp(tc.y(), box.top() + 14, box.bottom() - 14),
+                r.right() + 3, tc.y(), False)
+
+    def _draw_callout(self, p, r: QRect, label, desc, placed, prefer_above=False):
         # amber box fit tightly around the whole section
         p.setPen(QPen(QColor(theme.ACCENT), 2)); p.setBrush(Qt.BrushStyle.NoBrush)
         p.drawRect(r.adjusted(-3, -3, 3, 3))
@@ -260,23 +360,11 @@ class TutorialOverlay(QWidget):
         wrap = int(Qt.AlignmentFlag.AlignLeft) | int(Qt.TextFlag.TextWordWrap)
         needed = p.fontMetrics().boundingRect(QRect(0, 0, lw - 16, 400), wrap, desc)
         lh = 24 + needed.height() + 7
-        box = self._place_box(lw, lh, r, placed)
+        box = self._place_box(lw, lh, r, placed, prefer_above=prefer_above)
         placed.append(QRect(box))
 
         p.setBrush(QColor(theme.PANEL_HI)); p.setPen(QPen(QColor(theme.ACCENT), 1)); p.drawRect(box)
-        # Leader line from the box edge that faces the target back to the target —
-        # vertical when the box sits above/below it, horizontal when off to a side.
-        p.setPen(QPen(QColor(theme.ACCENT), 2))
-        bc, tc = box.center(), r.center()
-        if abs(tc.y() - bc.y()) >= abs(tc.x() - bc.x()):
-            if bc.y() <= tc.y():
-                p.drawLine(bc.x(), box.bottom(), tc.x(), r.top() - 3)
-            else:
-                p.drawLine(bc.x(), box.top(), tc.x(), r.bottom() + 3)
-        elif bc.x() <= tc.x():
-            p.drawLine(box.right(), bc.y(), r.left() - 3, tc.y())
-        else:
-            p.drawLine(box.left(), bc.y(), r.right() + 3, tc.y())
+        self._leader(p, box, r)
         p.setPen(QColor(theme.ACCENT)); p.setFont(theme.head(10, 1))
         p.drawText(box.adjusted(8, 5, -8, 0), Qt.AlignmentFlag.AlignLeft, label)
         p.setPen(QColor(theme.TEXT)); p.setFont(theme.font(8))
@@ -400,12 +488,14 @@ class RulesOverlay(QWidget):
         ("oilrig", "OBJECTIVE", "CAPTURE THE PLATFORM",
          "One oil platform stands between the two bases. Steer your "
          "SURFACE ships into its ring to seize it — submarines run too deep and "
-         "aircraft too high to plant a boarding crew. Capture and hold the objective for longer than your opponent and you will be rewarded."),
+         "aircraft too high to plant a boarding crew. Crowd the ring to take it "
+         "faster. Hold it and it pays you SCORE every second."),
         ("boss", "ESCALATION", "FLAGSHIP BOSSES",
-         "Once in a while the player with the most score gets to spawn a flagship, the first flagship sails in about three minutes; "
+         "Score buys firepower. The first flagship sails in about three minutes; "
          "after that, every 90 seconds the side LEADING on score is awarded the "
-         "next flagship from the fleet ladder: Potemkin first, then ever-stronger "
-         "battleships"),
+         "next from the fleet ladder — Potemkin first, then ever-stronger "
+         "battleships. Match your guns to its type: an airborne flagship falls "
+         "only to anti-air, a submerged one only to anti-sub."),
     ]
 
     PANEL_W = 760
