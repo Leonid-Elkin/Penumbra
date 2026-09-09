@@ -5,7 +5,7 @@
   "hp": 90,
   "speed": 95,
   "description": "Darts out, seeds a trail of naval mines across the water, then turns and steams off the map before it reaches the enemy. Good for securing ground in preparation for an enemy counterattack.",
-  "sprite": "destroyer_pixelart.png",
+  "sprite": "boat_pixelart_1.png",
   "unit_type": "ship",
   "display_w": 150,
   "flip_player": true,

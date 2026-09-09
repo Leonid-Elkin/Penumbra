@@ -5,7 +5,7 @@
   "hp": 180,
   "speed": 60,
   "description": "Launches missiles from a safe distance - a vital backline supporter",
-  "sprite": "frigate_pixelart.png",
+  "sprite": "cruiser_pixelart.png",
   "unit_type": "ship",
   "display_w": 205  ,
   "flip_player": true,

@@ -5,7 +5,7 @@
   "hp": 500,
   "speed": 0,
   "income": 20,
-  "description": "A drilling platform for any spare turret node. It raises your income while it stands, but is unarmed and vulnurable",
+  "description": "A drilling platform for any spare turret node. It raises your income while it stands, but is unarmed and vulnerable",
   "sprite": "oil_rig_pixelart.png",
   "unit_type": "turret",
   "display_w": 60,

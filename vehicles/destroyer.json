@@ -5,7 +5,7 @@
   "hp": 580,
   "speed": 55,
   "description": "Twin machine guns for surface ships, plus flak shells that burst into shrapnel against aircraft.",
-  "sprite": "cruiser_pixelart.png",
+  "sprite": "destroyer_pixelart.png",
   "unit_type": "ship",
   "display_w": 210,
   "flip_player": true,
