@@ -1,5 +1,5 @@
 """
-game.ui.app — AppWindow: the shell that moves between the save-select screen, the
+game.ui.app – AppWindow: the shell that moves between the save-select screen, the
 campaign screen and an active battle, owning the shared data, sprites and saves.
 """
 
@@ -76,8 +76,8 @@ class BattleScreen(QWidget):
         elif state.startswith("strike:"):
             self._show_alarm(state.split(":", 1)[1].strip())
         else:
-            self._show_banner("WARNING — BOSS INCOMING" if state == "incoming"
-                              else "BOSS DOWN — FINISH THEM")
+            self._show_banner("WARNING: BOSS INCOMING" if state == "incoming"
+                              else "BOSS DOWN: FINISH THEM")
 
     # ── Banner ──────────────────────────────────────────────────────────────────
     _ALARM_BRIGHT = ("color:%s;background:rgba(30,9,9,225);border:2px solid %s;"
@@ -108,7 +108,7 @@ class BattleScreen(QWidget):
         self.banner.hide()
 
     def _show_banner(self, text):
-        # A plain (non-flashing) banner — restore the default amber styling in case a
+        # A plain (non-flashing) banner – restore the default amber styling in case a
         # previous alarm left the flashing red style on the shared QLabel.
         self._flash_timer.stop()
         self.banner.setStyleSheet(
@@ -185,7 +185,7 @@ class AppWindow(QMainWindow):
         self.stack.addWidget(self.multiplayer)   # 3
         self.battle_screen: BattleScreen | None = None
 
-        # The full-screen keys toggle from any screen — window-level shortcuts so
+        # The full-screen keys toggle from any screen – window-level shortcuts so
         # they fire even mid-battle, when the canvas holds keyboard focus. The keys
         # are rebindable (see SETTINGS.keybinds); refresh_keybinds rebuilds them live.
         self._fs_shortcuts = []
@@ -223,7 +223,7 @@ class AppWindow(QMainWindow):
             self.showNormal()
         else:
             self.showFullScreen()
-        # Keep every screen's toggle glyph (expand ↔ restore) in sync — the button
+        # Keep every screen's toggle glyph (expand ↔ restore) in sync – the button
         # lives on all of them now, so whichever one is up shows the right state.
         on = self.isFullScreen()
         self.main_menu.set_fullscreen(on)
@@ -236,12 +236,12 @@ class AppWindow(QMainWindow):
     def keyPressEvent(self, ev):
         # Escape backs out one step on the menu screens: full screen → windowed,
         # campaign → saves, saves → main menu. (A battle consumes Escape itself,
-        # opening its pause menu — that's intentional.)
+        # opening its pause menu – that's intentional.)
         if ev.key() == Qt.Key.Key_Escape:
             cur = self.stack.currentWidget()
             # In a battle, Escape must always open/close the pause menu, no matter
             # which sub-widget holds keyboard focus. The canvas handles Escape
-            # itself, but only receives it while focused — and clicking a HUD
+            # itself, but only receives it while focused – and clicking a HUD
             # button steals that focus. Key events bubble up here when the canvas
             # isn't focused, so forward Escape to the canvas's own handler (which
             # also cancels placement / dismisses game-over as appropriate). The
@@ -273,7 +273,7 @@ class AppWindow(QMainWindow):
 
     def _to_howto(self):
         """Replay the in-game battle guide: the exact overlay a fresh profile sees on
-        its first battle — the real HUD with its sections spotlighted, boxed and
+        its first battle – the real HUD with its sections spotlighted, boxed and
         explained. Starts the opening level so the guide has a live battle to point
         at; exit via the HUD's menu button returns to the campaign."""
         if self.active_save is None:
@@ -400,7 +400,7 @@ class AppWindow(QMainWindow):
         cleared = self.active_save.cleared_count()
         unlocked = progression.unlocked_keys(cleared)
         # The enemy economy is pinned to THIS level's place in the campaign, not
-        # the player's global progress — so replaying an early level with the
+        # the player's global progress – so replaying an early level with the
         # whole roster unlocked still faces a period-appropriate enemy.
         stage = self.data.campaign_stage(key)
         enemy_unlocked = progression.unlocked_keys(stage)
@@ -437,12 +437,12 @@ class AppWindow(QMainWindow):
                 TipOverlay(
                     self.battle_screen, canvas, "OIL PLATFORMS",
                     "Neutral oil platforms now dot the open water. Hold one with your "
-                    "SURFACE SHIPS — submarines and aircraft can't board — to capture "
-                    "it. Every platform you hold pays EXTRA INCOME each second on top "
+                    "SURFACE SHIPS to capture it. Submarines and aircraft can't board. "
+                    "Every platform you hold pays EXTRA INCOME each second on top "
                     "of your base, so seize and defend them to out-build the enemy.",
                     icon="oilrig")
 
-        # Fade to black and reveal the battle rather than snapping in — the canvas
+        # Fade to black and reveal the battle rather than snapping in – the canvas
         # timer is already running, so the fight fades up already underway.
         self._fade_swap(lambda: self.stack.setCurrentWidget(self.battle_screen),
                         on_finish=_revealed)
@@ -517,7 +517,7 @@ class AppWindow(QMainWindow):
 
     def _start_bot_match(self, level_key, name=""):
         """Launch a solo head-to-head against Captain Bob. This is a full PvP battle
-        — symmetric economy, the one-turret opening, the central score platform — but
+        – symmetric economy, the one-turret opening, the central score platform – but
         with no networking: the enemy faction is commanded by a local bot (net_role
         stays None; vs_bot flips on the PvP ruleset). No campaign save is touched."""
         self._teardown_battle()
@@ -555,7 +555,7 @@ class AppWindow(QMainWindow):
 
     def _exit_to_main_menu(self):
         """Pause-menu withdraw (Q) / HUD MENU: straight to the main menu, campaign or
-        not — unless the opponent has dropped from an active PvP match, in which case
+        not – unless the opponent has dropped from an active PvP match, in which case
         leaving forfeits rather than exits cleanly (you take the loss, not a free bail)."""
         c = self.battle_screen.canvas if self.battle_screen is not None else None
         if c is not None and c.opponent_gone:
@@ -569,7 +569,7 @@ class AppWindow(QMainWindow):
             self.stack.setCurrentWidget(dest); return
 
         # Fade to black, swap in the destination screen and dispose the battle at
-        # full black, then fade up to reveal it — the reverse of the entry fade. The
+        # full black, then fade up to reveal it – the reverse of the entry fade. The
         # battle's tick is frozen the moment we start leaving.
         self.battle_screen = None                # the fade owns `leaving` now
         leaving.canvas._timer.stop()

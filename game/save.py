@@ -1,5 +1,5 @@
 """
-game.save — persistent campaign profiles, scoring and unlock logic.
+game.save – persistent campaign profiles, scoring and unlock logic.
 
 Three save slots live as saves/slot{1,2,3}.json. A slot fixes its difficulty at
 creation and records, per level, whether it's been completed plus the best stars,

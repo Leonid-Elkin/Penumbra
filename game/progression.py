@@ -1,5 +1,5 @@
 """
-game.progression — which vehicles a profile has unlocked.
+game.progression – which vehicles a profile has unlocked.
 
 Vehicles unlock as the campaign is cleared: a unit at stage N becomes available
 once the player has cleared N levels. Stage-0 units (and base turrets) are
@@ -12,7 +12,7 @@ import json
 from . import config
 
 # Ordered roster shown in the catalog: (vehicle_key, unlock_stage, label).
-# NOTE: the unlock_stage values below are DEFAULTS — the editable config file
+# NOTE: the unlock_stage values below are DEFAULTS – the editable config file
 # `unlocks.json` (config.UNLOCKS_FILE) overrides them, so designers can retune
 # the unlock ladder without touching code. The label/order here still drive how
 # the catalog is displayed.
@@ -74,21 +74,21 @@ for _k in TURRET_STAGE:
 
 # Short "how to use it" tips shown in the ship catalog.
 TIPS = {
-    "patrol":           "Cheap and fast — spam early to pressure the line and screen your capital ships.",
+    "patrol":           "Cheap and fast. Spam them early to pressure the line and screen your capital ships.",
     "frigate":          "All-rounder. Its depth charges make it your first real answer to submarines.",
     "submarine":        "Submerged: only depth-charge units can touch it. Slip past and torpedo surface ships.",
-    "helicopter":       "Flexible 360° gun hits ships AND aircraft — good glue when you're unsure what's coming.",
+    "helicopter":       "A flexible 360° gun that hits ships AND aircraft. Good glue when you're unsure what's coming.",
     "aa_gun_ship":      "Pure anti-air. Park it behind the line to swat enemy planes; useless against ships.",
-    "hovercraft":       "Very fast raider that drops homing torpedoes straight down — they hunt both surface ships and submarines, so it's flexible glue against mixed threats.",
-    "torpedo_bomber":   "Circle enemy ships and drop torpedoes near them — they only home once they hit the water.",
+    "hovercraft":       "A very fast raider that drops homing torpedoes straight down. They hunt surface ships and submarines alike, so it covers mixed threats.",
+    "torpedo_bomber":   "Circle enemy ships and drop torpedoes near them. They only home once they hit the water.",
     "anti_sub_heli":    "Dedicated sub-hunter; scatters a salvo of depth charges over detected submarines.",
     "fighter_jet":      "Air-superiority interceptor. Mass it when the enemy floods the sky with aircraft.",
-    "destroyer":        "Twin guns for ships plus flak that air-bursts on planes — a solid mid-game backbone.",
+    "destroyer":        "Twin guns for ships, plus flak that air-bursts on planes. A solid mid-game backbone.",
     "battleship":       "A tanky mid-range artillery platform: huge HP and three triple-gun turrets that lob a heavy shell salvo. Wade it into the front line and soak fire.",
     "atomic_submarine": "Heavy sub: torpedoes surface ships and fires AA missiles. Still needs depth charges to kill.",
-    "bomber":           "Flies the whole map laying a carpet of bombs — devastating against clustered ships and bases.",
+    "bomber":           "Flies the whole map laying a carpet of bombs. Devastating against clustered ships and bases.",
     "carrier":          "A mobile airbase that launches wave after wave of aircraft. Protect it and let the air wing work.",
-    "cruiser":          "Homing missiles that hit ships AND aircraft, and it locks the newest threat first — a superb escort.",
+    "cruiser":          "Homing missiles that hit ships AND aircraft, and it locks the newest threat first. A superb escort.",
     "mlrs":             "Lobs one wild rocket salvo over a wide area, then pulls back to base to rearm. Time its bursts.",
     "coastal_artillery":"A base battery you aim by hand: ↑/↓ set the elevation, and it auto-lobs heavy shells at that range.",
     "minelayer":        "Runs out ahead of the line dropping a trail of naval mines, then turns about and steams off the map. Mines blow up ships and submarines that wander into them.",

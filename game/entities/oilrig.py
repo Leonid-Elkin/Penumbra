@@ -1,9 +1,9 @@
 """
-game.entities.oilrig — the Bastion: a deployable auxiliary sea-fort.
+game.entities.oilrig – the Bastion: a deployable auxiliary sea-fort.
 
 Despite the module name (kept so the campaign/unlock key `oilrig` is stable), this
 structure no longer produces income. It is a heavily-armoured BULWARK moored to the
-base pier, seaward of the main fort, so enemy fire strikes it first — an auxiliary
+base pier, seaward of the main fort, so enemy fire strikes it first – an auxiliary
 fortress that SHIELDS the main one. It is extremely tanky, and its wide deck carries
 TWO surface-turret nodes to bristle with guns.
 
@@ -15,7 +15,7 @@ import math
 from PyQt6.QtCore import Qt, QRect, QRectF
 from PyQt6.QtGui  import QColor, QPen, QFont
 
-RIG_HP   = 3000          # very tanky — it exists to soak fire for the main fort
+RIG_HP   = 3000          # very tanky – it exists to soak fire for the main fort
 NODE_DX  = 34            # horizontal offset of each deck turret node from centre
 
 BUILD_TIME     = 6.0     # seconds to raise the platform out of the sea
@@ -77,7 +77,7 @@ def render_bastion(p, cx: float, wy: float, disp_w: float, disp_h: float, team: 
     p.fillRect(int(cx - half_w), deck_y, half_w * 2, 5,  cap)
     p.setPen(QPen(acc, 2)); p.drawLine(int(cx - half_w), deck_y, int(cx + half_w), deck_y)
     p.setPen(Qt.PenStyle.NoPen)
-    # Hazard chevrons along the deck fascia — the same waterline marking the fort
+    # Hazard chevrons along the deck fascia – the same waterline marking the fort
     # apron carries, so the bulwark reads as part of the base works.
     fascia = QRect(int(cx - half_w), deck_y + 9, half_w * 2, 6)
     p.save(); p.setClipRect(fascia)
@@ -89,7 +89,7 @@ def render_bastion(p, cx: float, wy: float, disp_w: float, disp_h: float, team: 
         x0 += 15
     p.restore()
     p.setPen(Qt.PenStyle.NoPen)
-    # Two turret-node pads — bright caps with a signal edge, matching the fort mounts.
+    # Two turret-node pads – bright caps with a signal edge, matching the fort mounts.
     for dx in (-NODE_DX, NODE_DX):
         px0 = int(cx + dx - 16)
         p.fillRect(px0, deck_y - 7, 32, 8, cap)
@@ -107,7 +107,7 @@ def render_bastion(p, cx: float, wy: float, disp_w: float, disp_h: float, team: 
         p.fillRect(int(cx - tw // 2 + c * (tw // 2 - 1)), keep_y - 7, 7, 7, body)
         p.fillRect(int(cx - tw // 2 + c * (tw // 2 - 1)), keep_y - 7, 7, 2, cap)
     p.setPen(QPen(acc, 1)); p.drawLine(int(cx - tw // 2), keep_y, int(cx + tw // 2 - 1), keep_y)
-    # Beacon lamp on the keep — signal-colour point with a soft halo.
+    # Beacon lamp on the keep – signal-colour point with a soft halo.
     p.setPen(Qt.PenStyle.NoPen)
     halo = QColor(acc); halo.setAlpha(70); p.setBrush(halo)
     p.drawEllipse(int(cx - 4), keep_y - 15, 9, 9)
@@ -151,7 +151,7 @@ class OilRig:
         # TWO surface-turret nodes on the platform deck.
         self.node_turrets = [None, None]
         # Construction: the platform is RAISED over `build_time` seconds. While it
-        # rises it takes 400% damage — defend it as it builds.
+        # rises it takes 400% damage – defend it as it builds.
         self.build_time    = float(getattr(self.sdef, 'build_time', BUILD_TIME) or BUILD_TIME)
         self.construction_t = self.build_time
 
@@ -183,7 +183,7 @@ class OilRig:
     @property
     def mid_y(self): return self.water_y - self.disp_h * 0.25
 
-    # Aim point for homing rounds — the rig has no hitmask centre-of-mass, so
+    # Aim point for homing rounds – the rig has no hitmask centre-of-mass, so
     # fall back to (x, mid_y) like the fort does. Steers missiles into the deck.
     @property
     def hit_com(self): return self.x, self.mid_y
@@ -206,7 +206,7 @@ class OilRig:
         wy = self.water_y
         cx = self.x - cam_x
         acc = QColor("#f0a81e") if self.team == "player" else QColor("#d24338")
-        # The structure itself — kept in a shared routine so the catalog portrait
+        # The structure itself – kept in a shared routine so the catalog portrait
         # (assets.bastion_portrait) renders the exact same fort-style artwork.
         # The paint device's height is the seabed (screen bottom), so the caisson
         # legs run all the way down into the sea.
@@ -228,7 +228,7 @@ class OilRig:
             p.drawText(bx - 12, by - 10, 88, 10, Qt.AlignmentFlag.AlignCenter,
                        f"BUILDING {int(frac * 100)}%")
         else:
-            # HP bar — lifted clear of the keep and of any turret mounted on a
+            # HP bar – lifted clear of the keep and of any turret mounted on a
             # deck node, so it never overlaps a unit sitting on the Bastion.
             top = float(by)
             positions = self.node_positions()

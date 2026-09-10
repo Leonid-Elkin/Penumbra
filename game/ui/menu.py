@@ -1,11 +1,11 @@
 """
-game.ui.menu — front-end screens over a procedural navy backdrop.
+game.ui.menu – front-end screens over a procedural navy backdrop.
 
 Designed as a naval command terminal: asymmetric layouts, an industrial heading
 face, hard 1px rules and a single amber accent.
 
-  SaveSelectScreen — three profile bays (create / continue / erase).
-  CampaignScreen   — a dominant boss dossier on the left, an ordered operations
+  SaveSelectScreen – three profile bays (create / continue / erase).
+  CampaignScreen   – a dominant boss dossier on the left, an ordered operations
                      list on the right; bosses are redacted until defeated.
 """
 
@@ -35,7 +35,7 @@ _LOCK_ICON_CACHE: dict = {}
 
 
 def _lock_pixmap(size: int, color: str) -> QPixmap:
-    """A crisp painted lock (theme.draw_icon 'lock'), cached per size/colour —
+    """A crisp painted lock (theme.draw_icon 'lock'), cached per size/colour –
     used in place of the 🔒 emoji so protected rooms read in the war-room style."""
     key = (size, color)
     px = _LOCK_ICON_CACHE.get(key)
@@ -58,7 +58,7 @@ def _boss_pixmap(sprites, boss_key, w, h):
                      Qt.TransformationMode.SmoothTransformation)
 
 
-# Player sprites are near-black silhouettes (#0a0a0a) — right on bright water, but
+# Player sprites are near-black silhouettes (#0a0a0a) – right on bright water, but
 # nearly invisible on the dark war-room plate. For the menu we recolour the hull to
 # a light gunmetal so it reads clearly against the panel. The in-game sprite is left
 # untouched, so this only affects the catalog display.
@@ -88,7 +88,7 @@ class _Scene(QOpenGLWidget):
     scene + wash always render underneath."""
     # ~60 fps redraw. The scene clock (_t) is wall-clock time, not a per-tick
     # increment: coarse QTimer slack and event-loop delays then show up as a
-    # slightly late frame at the *right* position instead of a position jump —
+    # slightly late frame at the *right* position instead of a position jump –
     # which is what made fast motion (the flagship's shell) look laggy.
     _FRAME_MS = 16
 
@@ -144,7 +144,7 @@ class _Scene(QOpenGLWidget):
     def paintGL(self):
         p = QPainter(self)
         self._paint_scene(p)
-        # darken for legibility — flat wash, no vignette/glow
+        # darken for legibility – flat wash, no vignette/glow
         p.fillRect(self.rect(), QColor(7, 10, 13, 150))
         self._paint_overlay(p)
 
@@ -154,13 +154,13 @@ class _Scene(QOpenGLWidget):
         paint_navy_scene(p, self.width(), self.height(), self.sprites, self._t)
 
     def _paint_overlay(self, p):
-        """Foreground drawn over the navy scene — overridden by subclasses."""
+        """Foreground drawn over the navy scene – overridden by subclasses."""
         pass
 
 
 def _title(text, size, color=theme.TEXT, spacing=4.0):
     """A heading label set with the SAME QFont the painted headings use
-    (theme.head, point-sized) — so a label title and a painted title of the
+    (theme.head, point-sized) – so a label title and a painted title of the
     same size render identically, e.g. either side of a screen slide."""
     lbl = QLabel(text)
     lbl.setFont(theme.head(size, spacing))
@@ -213,7 +213,7 @@ class MainMenuScreen(_Scene):
         self.settings_btn.setParent(self)
         self.settings_panel = SettingsOverlay(self)
         self.settings_btn.clicked.connect(self.settings_panel.open)
-        # Live muzzle-smoke clouds — the SAME particle burst the guns throw in
+        # Live muzzle-smoke clouds – the SAME particle burst the guns throw in
         # battle (game.entities.explosion.MuzzleSmoke), spawned once per salvo and
         # then ticked/drawn each frame. `_last_salvo` gates one spawn per firing;
         # `_prev_t` gives us a per-frame dt off the scene's wall-clock `_t`.
@@ -259,10 +259,10 @@ class MainMenuScreen(_Scene):
         vx = -SHELL_SPEED * math.cos(_a)             # forward / left
         vy0 = -SHELL_SPEED * math.sin(_a)            # up (screen y grows down)
 
-        # ── Muzzle smoke — the real battle particle burst ───────────────────
+        # ── Muzzle smoke – the real battle particle burst ───────────────────
         # Advance any live clouds by this frame's dt (clamped, since `_t` is
         # wall-clock and jumps after the screen is hidden), then spawn a fresh
-        # MuzzleSmoke at the muzzle the instant a new salvo fires — identical to
+        # MuzzleSmoke at the muzzle the instant a new salvo fires – identical to
         # what the ships throw in game.entities.ship._muzzle_smoke.
         dt = min(0.05, max(0.0, self._t - self._prev_t)); self._prev_t = self._t
         salvo = int(self._t / self.FIRE_PERIOD)
@@ -277,7 +277,7 @@ class MainMenuScreen(_Scene):
         for s in self._smoke:                        # menu coords are screen-space
             s.draw(p, 0.0)                            # → no camera offset
 
-        # ── Muzzle flash — a brief bright bloom firing forward/left ──────────
+        # ── Muzzle flash – a brief bright bloom firing forward/left ──────────
         if phase < 0.16:
             f = 1.0 - phase / 0.16                   # 1 → 0
             p.setPen(Qt.PenStyle.NoPen)
@@ -289,7 +289,7 @@ class MainMenuScreen(_Scene):
             p.drawEllipse(QPointF(mx - 26, my), 26 * f + 8, 6 * f + 3)
             p.setOpacity(1.0)
 
-        # ── Shell — a steep ballistic arc at the barrel's 61° elevation ──────
+        # ── Shell – a steep ballistic arc at the barrel's 61° elevation ──────
         # It climbs, arcs over, and falls back down toward the sea. The waterline
         # is the scene's horizon (paint_navy_scene's default horizon_frac=0.62);
         # the round splashes down and vanishes the instant it reaches it, rather
@@ -297,7 +297,7 @@ class MainMenuScreen(_Scene):
         st = phase                                   # seconds into flight
         g = 520.0                                    # px/s² (vx, vy0 set above)
         water_y = H * 0.62                           # sea surface (scene horizon)
-        # Solve my + vy0·t + ½g·t² = water_y for the descending crossing — the
+        # Solve my + vy0·t + ½g·t² = water_y for the descending crossing – the
         # larger (later) root. my sits above the water, so the discriminant is
         # always positive and t_hit is real.
         t_hit = (-vy0 + math.sqrt(vy0 * vy0 + 2.0 * g * (water_y - my))) / g
@@ -343,7 +343,7 @@ class MainMenuScreen(_Scene):
             hx = W - self._hero.width() + 70
             hy = int(H * 0.60) - self._hero.height() // 2 + int(math.sin(self._t * 0.5) * 3)
             p.setOpacity(0.9); p.drawPixmap(hx, hy, self._hero); p.setOpacity(1.0)
-            # The flagship fires its main battery every 20 seconds — a muzzle
+            # The flagship fires its main battery every 20 seconds – a muzzle
             # flash, a ballistic shell arcing forward (leftward), and drifting
             # smoke. self._t advances ~1.0 per real second, so t % 20 is a clean
             # 20s cadence and the sub-second phase drives the animation.
@@ -377,15 +377,15 @@ class MultiplayerScreen(_Scene):
     """Host or join a head-to-head battle.
 
     Online: CREATE a room and you drop straight into the battle, held behind an
-    "awaiting player" overlay until someone joins — no codes to share. The other
+    "awaiting player" overlay until someone joins – no codes to share. The other
     player picks OPEN ROOMS from a live, auto-refreshing list and clicks to join.
-    LAN: the classic direct path — host on a port, the joiner types the address.
+    LAN: the classic direct path – host on a port, the joiner types the address.
 
     Either way the host announces the chosen level so both sides build the same
-    battle; `launch` then fires (with a live NetLink, or — for an online host — a
+    battle; `launch` then fires (with a live NetLink, or – for an online host – a
     still-pending NetRelayHost the battle adopts once paired)."""
     launch   = pyqtSignal(str, object, str, str, str, str)   # role, NetLink|NetRelayHost, level, session, my_name, opp_name
-    play_bot = pyqtSignal(str, str)                          # level_key, commander_name — solo match vs Captain Bob
+    play_bot = pyqtSignal(str, str)                          # level_key, commander_name – solo match vs Captain Bob
     back     = pyqtSignal()
 
     def _paint_scene(self, p):
@@ -440,8 +440,8 @@ class MultiplayerScreen(_Scene):
 
         # ── Mode: Online (relay) vs LAN (direct) ─────────────────────────────
         mode_row = QHBoxLayout(); mode_row.setSpacing(18)
-        self.rb_online = QRadioButton("Online — over the internet")
-        self.rb_lan    = QRadioButton("LAN — same network")
+        self.rb_online = QRadioButton("Online, over the internet")
+        self.rb_lan    = QRadioButton("LAN, same network")
         for rb in (self.rb_online, self.rb_lan):
             rb.setStyleSheet(self._RADIO_CSS)
         self.rb_online.setChecked(True)
@@ -453,7 +453,7 @@ class MultiplayerScreen(_Scene):
         v.addLayout(mode_row)
 
         # ── Commander name (shared, required) ────────────────────────────────
-        # Whoever you are — host or joiner, online or LAN — this is the name that
+        # Whoever you are – host or joiner, online or LAN – this is the name that
         # rides on your health bar in the battle. Required before either action;
         # remembered between launches so it need only be typed once.
         v.addWidget(self._hdr("NAME"))
@@ -464,11 +464,11 @@ class MultiplayerScreen(_Scene):
         v.addWidget(self.pname_field)
 
         # ── Battle map theme (shared) ────────────────────────────────────────
-        # Whoever starts a match — online CREATE, LAN HOST, or the bot game —
+        # Whoever starts a match – online CREATE, LAN HOST, or the bot game –
         # picks the map both fleets fight on. The joiner never chooses; the host
         # announces this level's key in its hello and the client rebuilds the
         # very same backdrop from it. The two fleets fight on the same arena whatever
-        # is picked — the only thing a map choice changes is the sky/sea skin — so we
+        # is picked – the only thing a map choice changes is the sky/sea skin – so we
         # list the choices by *time of day* (Day ‥ Dead of Night), not by campaign
         # operation: a boss dossier means nothing to two duelling players. Levels that
         # share a time-of-day band render an identical backdrop, so we keep just the
@@ -525,7 +525,7 @@ class MultiplayerScreen(_Scene):
         self.room_list.currentItemChanged.connect(lambda *_: self._update_pw_box())
         ob.addWidget(self.room_list)
         # Selecting a locked room reveals this inline password box directly under the
-        # list; the JOIN request only fires once a password is typed here — see
+        # list; the JOIN request only fires once a password is typed here – see
         # _update_pw_box / _on_browse_join. Hidden for open rooms and until selected.
         self.pw_box = QWidget()
         pw = QHBoxLayout(self.pw_box); pw.setContentsMargins(0, 2, 0, 0); pw.setSpacing(8)
@@ -570,8 +570,8 @@ class MultiplayerScreen(_Scene):
 
         # ── Solo: fight the bot ──────────────────────────────────────────────
         # No opponent around? Take the enemy fleet's usual seat against Captain Bob,
-        # a local commander that plays the very same head-to-head ruleset — identical
-        # purse, income, upgrades and turret slots — defending with turrets and
+        # a local commander that plays the very same head-to-head ruleset – identical
+        # purse, income, upgrades and turret slots – defending with turrets and
         # pressing back with a fleet, all paid out of its own bank.
         v.addWidget(self._hdr("NO OPPONENT?  ·  FIGHT THE COMPUTER"))
         bot_row = QHBoxLayout(); bot_row.setSpacing(8)
@@ -600,7 +600,7 @@ class MultiplayerScreen(_Scene):
         foot.addWidget(self.back_btn)
         foot.addStretch(1)
         # New commanders can read up on the two things that decide a head-to-head
-        # match — capturing the midfield platform and the flagship bosses it buys —
+        # match – capturing the midfield platform and the flagship bosses it buys –
         # in a briefing overlay drawn over this screen (see RulesOverlay).
         self.rules_btn = QPushButton("HOW TO PLAY"); self.rules_btn.setStyleSheet(theme.BTN_SMALL)
         self.rules_btn.setFixedWidth(150); self.rules_btn.clicked.connect(self._show_rules)
@@ -609,7 +609,7 @@ class MultiplayerScreen(_Scene):
 
         self.panel = panel
 
-        # Handshake poll (LAN host wait / any client connect) — separate from the
+        # Handshake poll (LAN host wait / any client connect) – separate from the
         # scene's render clock so it never blocks the UI.
         self._net_timer = QTimer(self); self._net_timer.setInterval(80)
         self._net_timer.timeout.connect(self._poll)
@@ -620,7 +620,7 @@ class MultiplayerScreen(_Scene):
         self._on_mode_changed()          # show the right join UI for the default mode
 
     def _paint_scene(self, p):
-        # Match the campaign (save-select) sky: panned up off the water — no sea,
+        # Match the campaign (save-select) sky: panned up off the water – no sea,
         # just clouds and a lone bomber crossing behind the title.
         paint_bomber_scene(p, self.width(), self.height(), self.sprites, self._t)
 
@@ -678,7 +678,7 @@ class MultiplayerScreen(_Scene):
         it's pre-filled next time."""
         name = " ".join(self.pname_field.text().split())[:16]
         if not name:
-            self.status.setText("enter your commander name first — it's shown on your health bar")
+            self.status.setText("enter your commander name first. it's shown on your health bar")
             self.pname_field.setFocus()
             return None
         self.pname_field.setText(name)
@@ -691,7 +691,7 @@ class MultiplayerScreen(_Scene):
         self._reset(); self.back.emit()
 
     def _show_rules(self):
-        """Open the head-to-head briefing over this screen — how the midfield
+        """Open the head-to-head briefing over this screen – how the midfield
         platform is captured and how the flagship bosses work."""
         from .tutorial import RulesOverlay
         RulesOverlay(self)
@@ -778,7 +778,7 @@ class MultiplayerScreen(_Scene):
         elif not rooms:
             self.browse_hint.setText("No open rooms yet...")
         else:
-            self.browse_hint.setText(f"{len(rooms)} open room(s) — select one and JOIN.")
+            self.browse_hint.setText(f"{len(rooms)} open room(s). Select one and JOIN.")
 
     def _update_pw_box(self):
         """Show the inline password box directly under the list iff the selected
@@ -789,7 +789,7 @@ class MultiplayerScreen(_Scene):
         locked = bool(item.data(Qt.ItemDataRole.UserRole + 1)) if item is not None else False
         armed = rid if locked else None
         if armed == getattr(self, "_pw_room", None):
-            return          # same room + state (e.g. a refresh tick) — leave the field alone
+            return          # same room + state (e.g. a refresh tick) – leave the field alone
         self._pw_room = armed
         self.pw_box.setVisible(locked)
         self.pw_input.clear()
@@ -841,7 +841,7 @@ class MultiplayerScreen(_Scene):
 
     # ── Solo vs the bot ─────────────────────────────────────────────────────
     def _on_play_bot(self):
-        """Start a solo head-to-head against Captain Bob — no networking at all,
+        """Start a solo head-to-head against Captain Bob – no networking at all,
         just the PvP battle with the enemy fleet driven by the local bot."""
         if self._commander_name() is None:
             return
@@ -863,14 +863,14 @@ class MultiplayerScreen(_Scene):
         room_label = item.data(Qt.ItemDataRole.UserRole + 2) or item.text()
         password = ""
         if locked:
-            # The join only fires once a password is typed into the inline box —
+            # The join only fires once a password is typed into the inline box –
             # reveal it and hold if it's still empty.
             self._update_pw_box()
             password = self.pw_input.text()
             if not password:
                 self.pw_box.setVisible(True)
                 self.pw_input.setFocus()
-                self.status.setText("this room is locked — enter its password to join")
+                self.status.setText("this room is locked. enter its password to join")
                 return
         self._stop_browsing()
         host, port = net.relay_endpoint()
@@ -901,7 +901,7 @@ class MultiplayerScreen(_Scene):
 
     @staticmethod
     def _make_room_code() -> str:
-        # 4 chars from an unambiguous alphabet (no 0/O, 1/I) — a friendly room label.
+        # 4 chars from an unambiguous alphabet (no 0/O, 1/I) – a friendly room label.
         return "".join(random.choice("ABCDEFGHJKLMNPQRSTUVWXYZ23456789")
                         for _ in range(4))
 
@@ -938,7 +938,7 @@ class MultiplayerScreen(_Scene):
                     self._reset(); return
                 if msg.get("t") == "hello":
                     self._client = None
-                    # The hello carries the host's commander name — the client learns
+                    # The hello carries the host's commander name – the client learns
                     # its opponent here; its own name it sends back once in-battle.
                     self._launch("client", link, msg.get("level"),
                                  msg.get("session", ""), name=self._local_name,
@@ -1153,7 +1153,7 @@ class _LevelCard(QFrame):
                     accent_side="top",
                     border=theme.ACCENT if on else None)
 
-        # Stencilled operation number, top-left — a stamped hull marking
+        # Stencilled operation number, top-left – a stamped hull marking
         num_col = theme.ACCENT if on else (theme.TEXT_DIM if cleared else theme.TEXT_FAINT)
         p.setPen(QColor(num_col)); p.setFont(theme.stencil(21, 1))
         p.drawText(11, 8, 60, 26, int(Qt.AlignmentFlag.AlignLeft), f"{self.order_n:02d}")
@@ -1167,7 +1167,7 @@ class _LevelCard(QFrame):
             p.setPen(QColor(theme.TEXT_FAINT)); p.setFont(theme.head(12, 3))
             p.drawText(11, H - 30, W - 20, 18, int(Qt.AlignmentFlag.AlignLeft), "CLASSIFIED")
             p.setFont(theme.mono(8)); p.setPen(QColor(theme.TEXT_FAINT))
-            p.drawText(11, H - 16, W - 20, 12, int(Qt.AlignmentFlag.AlignLeft), "LOCKED — NO INTEL")
+            p.drawText(11, H - 16, W - 20, 12, int(Qt.AlignmentFlag.AlignLeft), "LOCKED: NO INTEL")
             return
         if self.state == "new":
             p.setPen(QColor(theme.PHOSPHOR)); p.setFont(theme.head(15, 2))
@@ -1177,7 +1177,7 @@ class _LevelCard(QFrame):
             p.setFont(theme.mono(8)); p.setPen(QColor(theme.TEXT_DIM))
             p.drawText(11, H - 22, W - 20, 12, int(Qt.AlignmentFlag.AlignLeft), "TARGET UNIDENTIFIED")
             return
-        # cleared — boss revealed as a dark recon silhouette (kept clear of the
+        # cleared – boss revealed as a dark recon silhouette (kept clear of the
         # status lamp in the top-right corner)
         bp = _boss_pixmap(self.sprites, self.level.boss, W - 84, 30)
         if bp:
@@ -1204,7 +1204,7 @@ class _Dossier(QWidget):
         self.level = level; self.state = state; self.info = info; self.update()
 
     def _stamp(self, p, W, H, text, color):
-        """A rubber-stamped classification marking, lower-right, slightly rotated —
+        """A rubber-stamped classification marking, lower-right, slightly rotated –
         as if pressed onto the file after filing."""
         p.save()
         f = theme.head(16, 3); p.setFont(f)
@@ -1220,7 +1220,7 @@ class _Dossier(QWidget):
     def paintEvent(self, _):
         p = QPainter(self); p.setRenderHint(QPainter.RenderHint.Antialiasing)
         W, H = self.width(), self.height()
-        # The whole dossier is one riveted steel plate — an intelligence folder.
+        # The whole dossier is one riveted steel plate – an intelligence folder.
         theme.plate(p, 0, 0, W, H, base=theme.PANEL, cut=14,
                     corners=(True, False, True, False), riveted=True,
                     accent=theme.ACCENT, accent_side="top", textured=True)
@@ -1231,7 +1231,7 @@ class _Dossier(QWidget):
         p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.mono(11))
         p.drawText(M, 22, W - 2*M, 16, int(Qt.AlignmentFlag.AlignLeft),
                    f"INTELLIGENCE DOSSIER  //  FILE N-{self.level.order:02d}")
-        theme.engraved_label(p, f"OPERATION {self.level.order:02d} — {self.level.name.upper()}",
+        theme.engraved_label(p, f"OPERATION {self.level.order:02d}: {self.level.name.upper()}",
                              M, 40, W - 2*M, theme.head(20, 2), theme.TEXT)
         p.setPen(QPen(QColor(theme.LINE), 1)); p.drawLine(M, 74, W - M, 74)
 
@@ -1258,7 +1258,7 @@ class _Dossier(QWidget):
             p.setPen(QColor(theme.LINE_HI)); p.setFont(theme.stencil(150, 0))
             p.drawText(fx, fy, fw, fh, int(Qt.AlignmentFlag.AlignCenter), "?")
             p.setPen(QColor(theme.ACCENT)); p.setFont(theme.mono(9))
-            p.drawText(fx + 10, fy + 8, fw - 20, 14, int(Qt.AlignmentFlag.AlignLeft), "◉ NO VISUAL — INBOUND")
+            p.drawText(fx + 10, fy + 8, fw - 20, 14, int(Qt.AlignmentFlag.AlignLeft), "◉ NO VISUAL – INBOUND")
         else:
             theme.draw_icon(p, "lock", QRectF(cx_center - 30, cy_center - 34, 60, 60), QColor(theme.TEXT_FAINT))
             p.setPen(QColor(theme.TEXT_FAINT)); p.setFont(theme.mono(9))
@@ -1372,7 +1372,7 @@ class _CatalogPanel(QWidget):
         p.setPen(QColor(theme.TEXT)); p.setFont(theme.head(16, 1))
         p.drawText(tx, dy + 2, W - tx - 10, 22, Qt.AlignmentFlag.AlignVCenter, label.upper())
         typ = "AIRCRAFT" if getattr(sdef, 'unit_type', 'ship') == 'plane' else "SHIP"
-        status = "READY" if unlocked else f"LOCKED — UNLOCKS AT LEVEL {stg + 1}"
+        status = "READY" if unlocked else f"LOCKED. UNLOCKS AT LEVEL {stg + 1}"
         p.setPen(QColor(theme.GOOD if unlocked else theme.ACCENT)); p.setFont(theme.head(9, 1))
         p.drawText(tx, dy + 26, W - tx - 10, 14, Qt.AlignmentFlag.AlignVCenter, f"{typ}  ·  {status}")
 
@@ -1388,7 +1388,7 @@ class _CatalogPanel(QWidget):
                 # 15px line box: a 9pt line needs room for descenders (g, y).
                 p.drawText(tx, yy, W - tx - 10, 15, Qt.AlignmentFlag.AlignLeft, ln); yy += 15
 
-        # tip — below the sprite, full width. Locked units stay classified.
+        # tip – below the sprite, full width. Locked units stay classified.
         ty = max(dy + 6 + sh if (spr and not spr.isNull()) else dy + 90, yy + 8)
         if unlocked:
             p.setPen(QColor(theme.ACCENT)); p.setFont(theme.head(9, 1))
@@ -1402,7 +1402,7 @@ class _CatalogPanel(QWidget):
             p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.font(10))
             p.drawText(QRectF(14, ty + 14, W - 28, H - ty - 18),
                        int(Qt.TextFlag.TextWordWrap),
-                       f"Locked — unlocks at Level {stg + 1}. Clear operations to declassify.")
+                       f"Locked. Unlocks at Level {stg + 1}. Clear operations to declassify.")
 
 
 class CampaignScreen(_Scene):
@@ -1412,7 +1412,7 @@ class CampaignScreen(_Scene):
     tutorial   = pyqtSignal()
 
     def _paint_scene(self, p):
-        # Open sky only over the campaign operations — no moon, no sea, horizon
+        # Open sky only over the campaign operations – no moon, no sea, horizon
         # or drifting ships; the sky gradient fills the whole frame.
         paint_navy_scene(p, self.width(), self.height(), self.sprites, self._t, sea=False)
 

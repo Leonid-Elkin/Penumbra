@@ -1,9 +1,9 @@
 """
-game.icon — the application / taskbar icon, drawn in-engine.
+game.icon – the application / taskbar icon, drawn in-engine.
 
 Rather than ship a stray .png, the launcher icon is composited from the same parts
 the game already owns: the actual in-game **battleship** sprite, tinted to signal
-amber, riding a sonar-green waterline on a gunmetal steel tile with corner rivets —
+amber, riding a sonar-green waterline on a gunmetal steel tile with corner rivets –
 all in the "plotting-table" material language of game/ui/theme.py. Rendered fresh at
 every icon size so it stays crisp from 16 px (taskbar) to 256 px (Alt-Tab).
 
@@ -56,7 +56,7 @@ def _battleship(target_w: float) -> QPixmap | None:
 
 
 def _draw_vector_ship(p: QPainter, S: int, water_y: float):
-    """Fallback warship, drawn from vectors — used only if the sprite is missing."""
+    """Fallback warship, drawn from vectors – used only if the sprite is missing."""
     def poly(pts):
         path = QPainterPath(); path.moveTo(pts[0][0] * S, pts[0][1] * S)
         for x, y in pts[1:]:
@@ -118,7 +118,7 @@ def _paint(p: QPainter, S: int):
     else:
         _draw_vector_ship(p, S, water_y)
 
-    # phosphor waterline — the one 'live telemetry' note, drawn over the hull
+    # phosphor waterline – the one 'live telemetry' note, drawn over the hull
     p.setPen(QPen(QColor(theme.PHOSPHOR), max(1.0, S * 0.012)))
     p.setOpacity(0.5)
     p.drawLine(QPointF(S * 0.06, water_y), QPointF(S * 0.94, water_y))

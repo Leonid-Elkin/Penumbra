@@ -1,5 +1,5 @@
 """
-game.settings — player-facing options, shared by every screen and persisted.
+game.settings – player-facing options, shared by every screen and persisted.
 
 One global SETTINGS object the whole game reads each frame, so a toggle applies
 everywhere at once (menus and a live battle alike). Options are written to
@@ -19,7 +19,7 @@ _FILE = os.path.join(SAVE_DIR, "settings.json")
 
 # ── Rebindable controls ───────────────────────────────────────────────────────
 # Each entry is (action id, human label, [default Qt key codes]). Every action
-# can carry MORE THAN ONE key — the whole game reads its controls through
+# can carry MORE THAN ONE key – the whole game reads its controls through
 # SETTINGS.keys_for(action), so a key rebound in the SETTINGS panel takes effect
 # everywhere at once and is remembered across launches. Beyond these fixed
 # controls, every deployable ship gets its own "deploy:<unit>" action (defaults
@@ -37,13 +37,13 @@ KEYBINDS = [
 ]
 _KEY_DEFAULTS = {a: list(keys) for a, _lbl, keys in KEYBINDS}
 
-# The deploy hotkeys handed out in roster order — a ship with no custom binding
+# The deploy hotkeys handed out in roster order – a ship with no custom binding
 # gets the one at its deploy-order index (mirrors the classic 1..0, Q,E,T… run).
 DEPLOY_HOTKEYS = list("1234567890") + list("QETYUIOPFGHJKL")
 
 # Escape is reserved as the universal cancel/back key and can never be bound.
 _RESERVED = int(Qt.Key.Key_Escape)
-# QKeySequence maps unparseable text to Key_unknown — never store that.
+# QKeySequence maps unparseable text to Key_unknown – never store that.
 _UNKNOWN = int(Qt.Key.Key_unknown)
 
 
@@ -56,7 +56,7 @@ def key_display(keycode: int) -> str:
     return QKeySequence(int(keycode)).toString() or "?"
 
 
-def keys_display(codes, empty: str = "—") -> str:
+def keys_display(codes, empty: str = "–") -> str:
     """Render a list of key codes as a comma-separated name string."""
     return ", ".join(key_display(c) for c in codes) if codes else empty
 
@@ -136,7 +136,7 @@ class Settings:
         """True once `action` has been explicitly set (even to no keys)."""
         return action in self.keybinds
 
-    def keys_display_for(self, action: str, empty: str = "—") -> str:
+    def keys_display_for(self, action: str, empty: str = "–") -> str:
         """Comma-separated names of every key bound to `action`."""
         return keys_display(self.keys_for(action), empty)
 
@@ -154,7 +154,7 @@ class Settings:
         self.save()
 
     def reset_keys(self) -> None:
-        """Back to defaults — fixed controls reset and every per-ship override
+        """Back to defaults – fixed controls reset and every per-ship override
         cleared (ships fall back to their deploy-order hotkey)."""
         self.keybinds = {a: list(v) for a, v in _KEY_DEFAULTS.items()}
         self.save()

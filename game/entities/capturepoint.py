@@ -1,5 +1,5 @@
 """
-game.entities.capturepoint — a capturable midfield oil platform.
+game.entities.capturepoint – a capturable midfield oil platform.
 
 Three of these neutral derricks stand in the open water between the two bases
 (from the campaign level set in capture_points.json). Ownership is a single
@@ -9,7 +9,7 @@ more ships nearby drag it faster (up to a cap). Because the meter is a single ba
 through zero, a rig always has to be neutralised before the other side can flip
 it. A rig you hold pays out `income_per_rig` gold/sec to your economy.
 
-These stand OUTSIDE the ship list — they are objectives, not targets — so no
+These stand OUTSIDE the ship list – they are objectives, not targets – so no
 weapon fires on them and no AI/collision code has to know they exist. The battle
 canvas owns the list, ticks their capture state, feeds income to each owner and
 paints them (see BattleCanvas._update_capture / _draw_capture_points).
@@ -53,12 +53,12 @@ class CapturePoint:
         self.water_y  = float(water_y)
         self.water_deep = water_deep
         self.home     = home                 # "player" | "enemy" | "neutral" home water
-        self.alive    = True                 # never destroyed — an objective, not a target
+        self.alive    = True                 # never destroyed – an objective, not a target
 
         self.progress = 0.0                  # -1 (enemy) … 0 (neutral) … +1 (player)
         # Sticky income holder: whoever last drove the meter fully to their side keeps
         # earning until it is dragged ALL THE WAY back through neutral. Decapping a rig
-        # only stops paying its old owner once the meter reaches 0 — not the instant a
+        # only stops paying its old owner once the meter reaches 0 – not the instant a
         # rival ship starts prying it back. Set at full capture, cleared at neutral.
         self._income_owner = "neutral"
         self.contested = False
@@ -88,7 +88,7 @@ class CapturePoint:
     def income_owner(self) -> str:
         """Who this rig PAYS. Unlike `owner` (which flips to neutral the instant the
         meter leaves ±1), this stays with the last side to fully capture the rig until
-        it is decapped all the way back through neutral — so partial decapping steals
+        it is decapped all the way back through neutral – so partial decapping steals
         no income, you have to neutralise the platform to cut its payout."""
         return self._income_owner
 
@@ -106,7 +106,7 @@ class CapturePoint:
         """Force the platform COMPLETELY neutral this frame: meter snapped to 0, no
         live owner, no sticky income holder, no contest, no ships credited. Used
         while a punishment flagship boss is live on either side so the midfield is
-        taken fully off the board — nobody holds, captures or earns from it — until
+        taken fully off the board – nobody holds, captures or earns from it – until
         the boss cycle is resolved. Blooms the ownership flash if it was held."""
         if self.owner != "neutral":
             self._flash = 1.0
@@ -163,7 +163,7 @@ class CapturePoint:
 
         # Sticky income holder. A full capture (meter pinned to a side) claims the
         # payout; it is only surrendered once the meter is pried back to neutral (0).
-        # In between — the rig half-decapped — the last full owner keeps earning.
+        # In between – the rig half-decapped – the last full owner keeps earning.
         if self.progress >= 1.0:
             self._income_owner = "player"
         elif self.progress <= -1.0:

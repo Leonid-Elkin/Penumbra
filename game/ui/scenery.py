@@ -1,5 +1,5 @@
 """
-game.ui.scenery — a procedural navy backdrop drawn from the existing sprites.
+game.ui.scenery – a procedural navy backdrop drawn from the existing sprites.
 
 No external image files: the menus paint a sky/sea scene with a horizon line of
 dark fleet silhouettes reused from the unit pixmaps.
@@ -20,13 +20,13 @@ _CLOUDS = [(0.12, 0.16, 1.0), (0.34, 0.10, 0.7), (0.62, 0.20, 1.2),
 # continuous when they slide past each other: SKY_TOP sits at the main menu's top
 # edge (world 0) and SKY_LOW at its horizon (world _SKY_REF_FRAC·h). Screens higher
 # up (the panned-up save sky) pass a negative `sky_base_offset` and simply sample the
-# same line further up — see paint_navy_scene.
+# same line further up – see paint_navy_scene.
 _SKY_REF_FRAC = 0.62
 
 
 def _lerp_qcolor(c0: QColor, c1: QColor, u: float) -> QColor:
     """Blend c0→c1 at fraction u, extrapolating past the ends (u<0 or u>1) and
-    clamping each channel to 0–255 — lets the one sky gradient extend beyond its
+    clamping each channel to 0–255 – lets the one sky gradient extend beyond its
     two anchor colours without banding at a hard edge."""
     def ch(a, b):
         return max(0, min(255, round(a + (b - a) * u)))
@@ -41,7 +41,7 @@ _MOVERS = [
     ("battleship",  0.48,  16, +1),
 ]
 
-# Silhouettes are constant-size per (sprite, w, h, flip) — only their x drifts —
+# Silhouettes are constant-size per (sprite, w, h, flip) – only their x drifts –
 # so cache them instead of rebuilding every frame.
 _sil_cache: dict = {}
 
@@ -79,13 +79,13 @@ def _paint_moon(p: QPainter, w: int, h: int, sky_base_offset: float):
     my = 0.17 * h - sky_base_offset          # world-anchored, like the sky gradient
     mr = max(15.0, h * 0.045)
     p.setPen(Qt.PenStyle.NoPen)
-    # Soft halo — a faint bloom bleeding into the sky.
+    # Soft halo – a faint bloom bleeding into the sky.
     halo = QRadialGradient(QPointF(mx, my), mr * 3.4)
     halo.setColorAt(0.0, QColor(206, 219, 234, 55))
     halo.setColorAt(0.35, QColor(206, 219, 234, 22))
     halo.setColorAt(1.0, QColor(206, 219, 234, 0))
     p.setBrush(halo); p.drawEllipse(QPointF(mx, my), mr * 3.4, mr * 3.4)
-    # The disc — a pale steel-white, lit a touch brighter toward the upper-left.
+    # The disc – a pale steel-white, lit a touch brighter toward the upper-left.
     disc = QRadialGradient(QPointF(mx - mr * 0.3, my - mr * 0.3), mr * 1.7)
     disc.setColorAt(0.0, QColor(234, 241, 248))
     disc.setColorAt(1.0, QColor(190, 203, 218))
@@ -104,7 +104,7 @@ def paint_navy_scene(p: QPainter, w: int, h: int, sprites=None, t: float = 0.0,
     sits (raise it toward 1.0 to drop the sea to a strip at the very bottom, as if
     the camera has panned up into the sky); `movers` is the list of ships drifting
     on the water (pass () for empty seas). Pass `sea=False` to drop the water,
-    horizon and waves entirely — the sky gradient then fills the whole frame (the
+    horizon and waves entirely – the sky gradient then fills the whole frame (the
     camera has panned all the way up). `sky_base_offset` shifts this screen within
     the shared sky world-space (see _SKY_REF_FRAC): the panned-up save sky passes
     −h so its sky is the exact upward continuation of the menu's and the two meet
@@ -113,7 +113,7 @@ def paint_navy_scene(p: QPainter, w: int, h: int, sprites=None, t: float = 0.0,
     p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
     horizon = int(h * horizon_frac) if sea else h
 
-    # Sky — one world-space gradient (SKY_TOP → SKY_LOW), sampled over this screen's
+    # Sky – one world-space gradient (SKY_TOP → SKY_LOW), sampled over this screen's
     # slice of it so it lines up with the neighbouring screen during a slide.
     ref = _SKY_REF_FRAC * h
     top = QColor(theme.SKY_TOP); low = QColor(theme.SKY_LOW)
@@ -135,20 +135,20 @@ def paint_navy_scene(p: QPainter, w: int, h: int, sprites=None, t: float = 0.0,
         p.drawEllipse(QPointF(cxp, cy), cw, ch)
 
     if not sea:
-        return                                    # sky only — no water, horizon or waves
+        return                                    # sky only – no water, horizon or waves
 
     # Sea
     sea_grad = QLinearGradient(0, horizon, 0, h)
     sea_grad.setColorAt(0.0, QColor(theme.SEA_TOP)); sea_grad.setColorAt(1.0, QColor(theme.SEA_DEEP))
     p.fillRect(0, horizon, w, h - horizon, sea_grad)
 
-    # Hard amber horizon rule — the single accent
+    # Hard amber horizon rule – the single accent
     p.setPen(QPen(QColor(theme.ACCENT), 1)); p.setOpacity(0.5)
     p.drawLine(0, horizon, w, horizon); p.setOpacity(1.0)
 
     # Ships drifting across the water, each on its own lane. Only x depends on
     # time, so they slide steadily and wrap around off-screen. (No stationary
-    # horizon fleet — the menu's single hero flagship is the only anchored ship.)
+    # horizon fleet – the menu's single hero flagship is the only anchored ship.)
     if sprites is not None:
         for i, (key, lane, spd, dr) in enumerate(movers):
             px = sprites.get(f"player_{key}")
@@ -170,7 +170,7 @@ def paint_navy_scene(p: QPainter, w: int, h: int, sprites=None, t: float = 0.0,
             y = horizon - mv.height() * 0.85 + lane * 10
             p.drawPixmap(int(x), int(y + bob), mv)
 
-    # Wave lines — 12px sampling is plenty for the ≥150px wavelengths and keeps
+    # Wave lines – 12px sampling is plenty for the ≥150px wavelengths and keeps
     # this per-frame Python loop cheap at the 60fps menu tick.
     for i in range(4):
         amp = 3.0 - i * .5; wl = 150 + i * 50; alpha = 70 - i * 12
@@ -190,7 +190,7 @@ _SKY_SIL_TINT = QColor(60, 80, 99, 236)  # lighter steel so the bomber reads on 
 
 
 def paint_bomber_scene(p: QPainter, w: int, h: int, sprites=None, t: float = 0.0):
-    # Pure sky — the water is gone, so is the horizon; just clouds and the bomber.
+    # Pure sky – the water is gone, so is the horizon; just clouds and the bomber.
     # This screen sits one full frame above the menu, so it samples the shared sky
     # gradient a frame higher (offset −h): its bottom edge is SKY_TOP, exactly the
     # colour of the menu's top edge, so the two are seamless as they slide past.
@@ -198,7 +198,7 @@ def paint_bomber_scene(p: QPainter, w: int, h: int, sprites=None, t: float = 0.0
     p.setRenderHint(QPainter.RenderHint.Antialiasing)
     p.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
 
-    # A small, distant bomber — a fraction of its old size.
+    # A small, distant bomber – a fraction of its old size.
     bw = max(56, int(w * 0.055)); bh = bw
     px = sprites.get("player_bomber") if sprites else None
     mv = None
@@ -207,7 +207,7 @@ def paint_bomber_scene(p: QPainter, w: int, h: int, sprites=None, t: float = 0.0
         bw, bh = mv.width(), mv.height()
     span = w + bw + 160                  # wrap span, with off-screen margin
     # Cruise through the title band so it passes *behind* the "PENUMBRA"
-    # lockup — the title is a child widget, drawn over this backdrop, so the
+    # lockup – the title is a child widget, drawn over this backdrop, so the
     # bomber slips behind the letters. ~92px is the title's vertical centre.
     alt = 92 - bh / 2
 

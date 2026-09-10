@@ -1,5 +1,5 @@
 """
-game.net — LAN multiplayer transport.
+game.net – LAN multiplayer transport.
 
 A tiny host-authoritative link for a two-player PvP battle. One player HOSTS
 (runs the authoritative simulation) and the other JOINS. The transport is a
@@ -14,7 +14,7 @@ Message flow (see game.netsync for the payload shapes):
 The socket is serviced on a background reader thread that only ever appends to a
 thread-safe queue; the Qt battle loop drains that queue on its own tick, so no
 Qt object is ever touched off the GUI thread. Sends happen straight from the GUI
-thread under a lock — LAN messages are small and infrequent enough that a
+thread under a lock – LAN messages are small and infrequent enough that a
 blocking send never stalls a frame in practice.
 """
 
@@ -34,7 +34,7 @@ _MAX_MSG = 8 * 1024 * 1024             # sanity cap on a single frame (8 MB)
 # The endpoint is deliberately NOT a plaintext literal: players create/join rooms
 # by code and never see, type, or need the server address, so it's kept out of the
 # UI and lightly obscured here (a casual `strings`/grep won't surface an IP). This
-# is obfuscation, not secrecy — the address is observable on the wire — its only
+# is obfuscation, not secrecy – the address is observable on the wire – its only
 # job is to keep the relay off the players' radar. Override with PENUMBRA_RELAY
 # ("host" or "host:port") for local testing / self-hosting.
 _RELAY_BLOB = "QVFZW1xaQE8fQ1dCVkoXVERZVkQ="
@@ -77,7 +77,7 @@ def local_ips() -> list[str]:
     except OSError:
         pass
     # A UDP "connect" to a public address reveals the primary outbound NIC
-    # without sending anything — catches the common case the hostname lookup misses.
+    # without sending anything – catches the common case the hostname lookup misses.
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
@@ -302,7 +302,7 @@ class NetClient:
             sock.settimeout(None)
             self.link = NetLink(sock, "client")
         except OSError as e:
-            self.error = f"could not connect to {self.host}:{self.port} — {e}"
+            self.error = f"could not connect to {self.host}:{self.port}. {e}"
         finally:
             self._done = True
 
@@ -360,7 +360,7 @@ class NetRelayHost:
         try:
             sock = socket.create_connection((self.relay, self.port), timeout=8.0)
         except OSError as e:
-            self.error = f"could not reach relay {self.relay}:{self.port} — {e}"
+            self.error = f"could not reach relay {self.relay}:{self.port}. {e}"
             return
         self._sock = sock
         try:
@@ -442,7 +442,7 @@ class NetRelayClient:
         try:
             sock = socket.create_connection((self.relay, self.port), timeout=8.0)
         except OSError as e:
-            self.error = f"could not reach relay {self.relay}:{self.port} — {e}"
+            self.error = f"could not reach relay {self.relay}:{self.port}. {e}"
             self._done = True
             return
         try:
@@ -475,7 +475,7 @@ class NetRelayClient:
 
 
 # A locked room's status must reach the browser even through an OLD relay that
-# doesn't know the "locked" field — the relay is deliberately dumb (see relay.py /
+# doesn't know the "locked" field – the relay is deliberately dumb (see relay.py /
 # the host-authoritative check in battle.py), so we can't rely on it to advertise
 # it. Every relay echoes the room's `map` verbatim, and the browser never shows
 # `map`, so the host smuggles the lock flag in there as a leading sentinel; the
@@ -536,7 +536,7 @@ class NetRoomBrowser:
                 self.rooms = fetch_rooms(self.relay, self.port)
                 self.error = None
             except OSError as e:
-                self.error = f"cannot reach the server — {e}"
+                self.error = f"cannot reach the server. {e}"
             self.loaded = True
             slept = 0.0
             while slept < self.interval and not self._stop:

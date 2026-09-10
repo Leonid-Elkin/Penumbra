@@ -1,5 +1,5 @@
 """
-game.entities.faction — per-side economy, upgrades, base HP and boss state.
+game.entities.faction – per-side economy, upgrades, base HP and boss state.
 """
 
 from __future__ import annotations
@@ -9,7 +9,7 @@ from ..config import (INCOME_T, STORAGE_T, BASEHP_T, UPGRADE_COSTS)
 class Faction:
     def __init__(self, is_player: bool):
         self.is_player   = is_player
-        # An opening purse — enough for a couple of early hulls, not a fleet.
+        # An opening purse – enough for a couple of early hulls, not a fleet.
         self.resources   = 180.0 if is_player else 140.0
         self.upgrades    = {k: 0 for k in UPGRADE_COSTS}
         self.base_hp     = float(BASEHP_T[0])

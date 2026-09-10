@@ -1,5 +1,5 @@
 """
-game.ballistics — pure projectile-aiming math (no Qt, no game state).
+game.ballistics – pure projectile-aiming math (no Qt, no game state).
 """
 
 from __future__ import annotations

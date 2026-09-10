@@ -1,11 +1,11 @@
 """
-game.entities.fortress — procedural sea-fort: geometry + rendering.
+game.entities.fortress – procedural sea-fort: geometry + rendering.
 
 Single source of truth for the player/enemy base. The same mount points that the
 fortress is *drawn* from are the ones turrets are *placed* on, so a turret in slot
 `i` always sits on the visible platform for slot `i`. The fort is a stepped
 casemate: a low gun deck at the waterline rising, tier by tier, to a tall keep at
-the shore — and it grows taller as the armour (Health) upgrade adds slots. The
+the shore – and it grows taller as the armour (Health) upgrade adds slots. The
 hull runs all the way down to the seabed (screen bottom), and a small strip of
 open water is left BEHIND the shore face so aircraft can loop around it.
 
@@ -128,8 +128,8 @@ class FortressView:
         return (self._wx(RIG_X), water_y)
 
     def _silhouette(self, water_y: float, hlv: int):
-        """Local-frame extents of the above-water fort — (foot_lx, front_lx, top_y)
-        — shared by the on-screen silhouette (hover) and the collision box, so both
+        """Local-frame extents of the above-water fort – (foot_lx, front_lx, top_y)
+        – shared by the on-screen silhouette (hover) and the collision box, so both
         track the stepped body exactly as `draw` lays it down and grow together as
         armour adds tiers. `top_y` clears the crenellations, mast and beacon."""
         n = 2 + hlv
@@ -154,7 +154,7 @@ class FortressView:
         visible silhouette above water, its bottom carried a short way BELOW the
         waterline to cover the apron and upper caisson where shells splash and
         torpedoes strike. Mirrors `screen_bounds` so what reads as the base is what
-        rounds actually hit — no more detonations in the empty sky above it or the
+        rounds actually hit – no more detonations in the empty sky above it or the
         open water in front of it."""
         foot_lx, front_lx, top = self._silhouette(water_y, hlv)
         a = self._wx(foot_lx); b = self._wx(front_lx)
@@ -191,7 +191,7 @@ class FortressView:
 
     def _pad_cap(self, p, cam_x, lx, w, surf_y):
         """A turret platform cap: lit plate slab with the signal colour on its
-        leading edge — the visible 'this is a mount' marker."""
+        leading edge – the visible 'this is a mount' marker."""
         p.fillRect(self._rect(cam_x, lx - w / 2, w, surf_y - 7, 8), self.body.lighter(185))
         p.fillRect(self._rect(cam_x, lx - w / 2, w, surf_y - 3, 4), self.body.lighter(140))
         p.setPen(QPen(self.accent, 2)); p.setBrush(Qt.BrushStyle.NoBrush)
@@ -228,7 +228,7 @@ class FortressView:
         # couple of px past the screen bottom so it never leaves a gap).
         self._caisson(p, cam_x, foot_lx, foot_w, water_y + 14, bottom_y + 4, fog)
 
-        # Spread footing where the caisson meets the seabed — two plinth steps
+        # Spread footing where the caisson meets the seabed – two plinth steps
         # that root the fort on the sea floor.
         fy0, fy1 = bottom_y - 30, bottom_y - 14
         p.fillRect(self._rect(cam_x, foot_lx - 14, foot_w + 28, fy0, 32),
@@ -325,7 +325,7 @@ class FortressView:
             for dx in (-10, 2):
                 p.fillRect(self._rect(cam_x, mlx + dx, 6, my + 14, 8), win)
 
-        # Platform caps — the visible mounts. Drawn front-to-back so higher tiers
+        # Platform caps – the visible mounts. Drawn front-to-back so higher tiers
         # overlap lower ones cleanly.
         for i, (wx, surf_y) in enumerate(mounts):
             lx = (wx - self.origin_x) / self.sign
@@ -350,7 +350,7 @@ class FortressView:
         p.setBrush(acc)
         p.drawEllipse(pole.left() - 2, pole.top() - 2, 4, 4)
         # Stream the pennant LANDWARD (away from the guns' seaward firing arc) so
-        # the barrels never cross the cloth — otherwise the mirrored enemy fort's
+        # the barrels never cross the cloth – otherwise the mirrored enemy fort's
         # turrets sit right under a seaward-streaming flag.
         flag_dir = -1 if self.team == "player" else 1
         fx = pole.left(); fy = pole.top() + 4

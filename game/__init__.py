@@ -1,4 +1,4 @@
-"""Penumbra — game package.
+"""Penumbra – game package.
 
 Modules:
     config      tunable constants, tables, asset paths
@@ -7,6 +7,6 @@ Modules:
     assets      image helpers + SpriteCache
     ballistics  projectile aiming math
     entities    Projectile, Ship, Boss, Explosion, Faction
-    battle      BattleCanvas — one level's simulation + rendering
+    battle      BattleCanvas – one level's simulation + rendering
     ui          menu, hud, widgets, app shell
 """

@@ -1,5 +1,5 @@
 """
-game.config — tunable constants, upgrade tables and asset paths.
+game.config – tunable constants, upgrade tables and asset paths.
 
 Everything here is data the rest of the engine reads but never owns. Edit values
 here (or the per-vehicle JSON under vehicles/) rather than hunting through code.
@@ -27,7 +27,7 @@ FORT_D_W     = 430; FORT_D_H_MAX = 310
 PLANE_ALT    = 220.0
 
 # Rear-guard reach: a turret seated further back from its own base's waterline
-# front line shoots proportionally further — every pixel of setback behind that
+# front line shoots proportionally further – every pixel of setback behind that
 # line adds this many pixels of combat range. Placing a battery high up the
 # staircase (far behind) trades forward coverage for extra reach.
 TURRET_REAR_RANGE_PER_PX = 1.0
@@ -50,7 +50,7 @@ SCORE_PER_SEC       = 1.0      # score/sec earned by the platform-holder
 # Aggression bounty: in multiplayer/sandbox the side that HOLDS the central
 # platform is ALSO paid this much gold/sec directly (on top of the score→boss
 # loop). Seizing the midfield funds a capital ship, so fighting for the platform
-# pays off immediately — the incentive to push rather than turtle.
+# pays off immediately – the incentive to push rather than turtle.
 SCORE_HOLD_INCOME   = 20.0     # gold/sec paid to the platform-holder
 
 # ─── Scoring (stars) ────────────────────────────────────────────────────────
@@ -87,7 +87,7 @@ SALVAGE_T = [0.0, 0.10, 0.18, 0.26, 0.34, 0.45]
 # proportionally slower. Index = Factory level.
 FACTORY_CD_MULT = [2.6, 2.1, 1.7, 1.4, 1.2, 1.0]
 
-# Upgrades are not instant — once bought they take this many seconds to come
+# Upgrades are not instant – once bought they take this many seconds to come
 # online (index = the level being researched, 0→1 … 4→5). One per side at a time.
 UPGRADE_TIME = [6.0, 9.0, 12.0, 16.0, 21.0]
 
@@ -100,20 +100,20 @@ SPAWN_STAGGER = 0.16
 # There is no button: holding CTRL engages "surge". While Ctrl is down every
 # unit's price in the deploy bar visibly climbs to SURGE_COST_MULT×, and any hull
 # you deploy while surging then rebuilds in 1/SURGE_CD_MULT of its normal
-# production time (a 3× shorter cooldown) — a pay-more, rebuild-sooner rush.
+# production time (a 3× shorter cooldown) – a pay-more, rebuild-sooner rush.
 # Unlocks at SURGE_UNLOCK_LEVEL (1-based campaign level). All three values are
 # overlaid from surge.json when present (see load_surge_config), so designers can
-# retune the ability without touching code — same idea as capture_points.json.
-#   cost_mult    — price multiplier while Ctrl is held (1.5 = +50%)
-#   cd_mult      — cooldown DIVISOR on a surged hull (3 = one-third the normal wait)
-#   unlock_level — 1-based campaign level from which the ability becomes available
+# retune the ability without touching code – same idea as capture_points.json.
+#   cost_mult    – price multiplier while Ctrl is held (1.5 = +50%)
+#   cd_mult      – cooldown DIVISOR on a surged hull (3 = one-third the normal wait)
+#   unlock_level – 1-based campaign level from which the ability becomes available
 SURGE_DEFAULTS = {
     "cost_mult":    1.5,
     "cd_mult":      3.0,
     "unlock_level": 5,
 }
 # (SURGE_FILE path + the SURGE_COST_MULT / SURGE_CD_MULT / SURGE_UNLOCK_LEVEL
-#  constants are resolved after _HERE is defined — see load_surge_config below.)
+#  constants are resolved after _HERE is defined – see load_surge_config below.)
 
 # Hard cap on live mobile units per side (bases/rigs/turrets excluded). This is
 # the ceiling the Fleet upgrade climbs toward; FLEET_T is clamped to it per side,
@@ -132,7 +132,7 @@ UPGRADE_COSTS = {
 # ─── Asset paths ────────────────────────────────────────────────────────────
 # When packaged by PyInstaller the code + bundled data live in a read-only
 # extraction dir (sys._MEIPASS); __file__ resolves inside it, so _HERE finds the
-# bundled JSON / textures exactly as it does from source — no path change needed.
+# bundled JSON / textures exactly as it does from source – no path change needed.
 _HERE        = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _FROZEN      = getattr(sys, "frozen", False)
 TEXTURE_DIR  = os.path.join(_HERE, "Textures")
@@ -157,14 +157,14 @@ WAVES_FILE   = os.path.join(_HERE, "waves.json")
 CAPTURE_POINTS_FILE = os.path.join(_HERE, "capture_points.json")
 # Editable tuning for the six base-upgrade tracks (values + costs per level).
 BASE_UPGRADES_FILE = os.path.join(_HERE, "base_upgrades.json")
-# Editable tuning for the Ctrl-to-surge rush (game/battle.py) — see SURGE_DEFAULTS.
+# Editable tuning for the Ctrl-to-surge rush (game/battle.py) – see SURGE_DEFAULTS.
 SURGE_FILE = os.path.join(_HERE, "surge.json")
 FORTRESS_FILE = "364_FortressGraphicsAll.png"
 
 # ─── Capturable oil platforms (capture_points.json) ─────────────────────────
 # Defaults for the midfield capture mechanic; capture_points.json (if present
 # and well-formed) overlays them so designers can retune income, capture times
-# and positions without touching code — same idea as waves.json.
+# and positions without touching code – same idea as waves.json.
 CAPTURE_DEFAULTS = {
     "enabled_from_level":        4,        # 1-based campaign level the rigs appear on
     "count":                     3,
@@ -188,7 +188,7 @@ CAPTURE_DEFAULTS = {
     # trailing side's first recapture is the most valuable rig on the map. 1.0
     # restores flat/linear income.
     "holdings_falloff":          0.55,
-    # Comeback: you capture faster while holding FEWER rigs than the opponent —
+    # Comeback: you capture faster while holding FEWER rigs than the opponent –
     # + this per rig you're behind, capped by `max_comeback`. Lets a team that has
     # lost the midfield claw a rig back instead of being locked out.
     "comeback_per_rig":          0.6,
@@ -199,7 +199,7 @@ CAPTURE_DEFAULTS = {
 def load_capture_config() -> dict:
     """Merge capture_points.json over CAPTURE_DEFAULTS. Missing file, bad JSON,
     unknown keys and wrong-typed values are ignored so a typo can never crash a
-    battle — the offending field just keeps its default."""
+    battle – the offending field just keeps its default."""
     cfg = dict(CAPTURE_DEFAULTS)
     try:
         with open(CAPTURE_POINTS_FILE, encoding="utf-8") as fh:
@@ -227,7 +227,7 @@ def load_capture_config() -> dict:
 
 def load_surge_config() -> dict:
     """Merge surge.json over SURGE_DEFAULTS. Missing file, bad JSON, unknown keys
-    and wrong-typed values are ignored so a typo can never crash a battle — the
+    and wrong-typed values are ignored so a typo can never crash a battle – the
     offending field just keeps its default."""
     cfg = dict(SURGE_DEFAULTS)
     try:
@@ -257,7 +257,7 @@ SURGE_UNLOCK_LEVEL = _SURGE_CFG["unlock_level"]  # 1-based campaign unlock level
 # ─── Bulk deploy (Alt-to-bulk player ability) ───────────────────────────────
 # There is no button: holding ALT engages "bulk". While Alt is down every unit's
 # price in the deploy bar drops to BULK_COST_MULT× (a volume discount), and one
-# deploy press then buys a batch of BULK_SIZE hulls at that discounted price —
+# deploy press then buys a batch of BULK_SIZE hulls at that discounted price –
 # the first fills the ready slot, the rest stack into the queue. A buy-more,
 # pay-less counterpart to Surge Rush; always available (no campaign unlock).
 BULK_SIZE      = 5      # hulls bought per press while Alt is held
@@ -265,7 +265,7 @@ BULK_COST_MULT = 0.8    # per-hull price multiplier while Alt is held (0.8 = −
 
 # ─── Surge + Bulk together (Ctrl AND Alt held) ──────────────────────────────
 # Holding BOTH engages a surged batch: the surge +50% still stands, but the
-# volume discount shrinks from the solo 20% to just 10% off — the deal is worse
+# volume discount shrinks from the solo 20% to just 10% off – the deal is worse
 # when you also want the rush. The net per-hull multiplier is therefore
 # SURGE_COST_MULT × SURGE_BULK_DISCOUNT (1.5 × 0.9 = 1.35), and the batch keeps
 # both the surge's shortened cooldown and bulk's BULK_SIZE count.
@@ -277,7 +277,7 @@ def deploy_unit_cost(base_cost: int, surge: bool, bulk: bool) -> int:
 
     This is the SINGLE source of truth shared by the battle sim (what it charges)
     and the HUD (what it shows), so the displayed price is always exactly what the
-    player pays — no more mismatch between an elevated label and a base-price buy.
+    player pays – no more mismatch between an elevated label and a base-price buy.
 
         surge only  → SURGE_COST_MULT×               (Ctrl:  +50%)
         bulk  only  → BULK_COST_MULT×                (Alt:   −20%, ×BULK_SIZE)
@@ -308,7 +308,7 @@ def find_texture(name: str) -> str:
 # ─── Editable upgrade tuning (base_upgrades.json) ───────────────────────────
 # The upgrade tables above are DEFAULTS. base_upgrades.json (if present and
 # well-formed) overlays them so designers can retune values/costs without
-# touching code — same idea as unlocks.json / waves.json. Tables are mutated in
+# touching code – same idea as unlocks.json / waves.json. Tables are mutated in
 # PLACE so modules that did `from .config import INCOME_T` see the overrides.
 
 # Maps a base_upgrades.json track key → the value table it drives. The key is

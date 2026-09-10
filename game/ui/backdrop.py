@@ -1,15 +1,15 @@
 """
-game.ui.backdrop — the battlefield sky/sea, skinned in the menu's war-room register.
+game.ui.backdrop – the battlefield sky/sea, skinned in the menu's war-room register.
 
 The main menu (game.ui.scenery) paints a moody nocturnal navy scene: a steel sky
 gradient, faint drifting clouds, a celestial disc, a single amber horizon rule and
 subtle white wave lines. The battle map used to be a bright, cartoon-blue daylight
 scene that clashed with it. This module gives the battle the same instrument-panel
-mood — and ramps it across the campaign as a *time of day*: the opening operations
+mood – and ramps it across the campaign as a *time of day*: the opening operations
 fight under an overcast steel daylight, the mid-campaign at dusk, the late fights at
-a burning sunset, and the final operations at full night — the exact palette of the
+a burning sunset, and the final operations at full night – the exact palette of the
 main-menu backdrop. Later levels are darker. One level goes further still: the "No
-Contact" finale opts into the ABYSS skin — past night, an oil-black dead sea under a
+Contact" finale opts into the ABYSS skin – past night, an oil-black dead sea under a
 smouldering ember horizon and a cold wan moon.
 
 A `Backdrop` is a flat bundle of colours + one celestial body; `for_level` picks the
@@ -33,12 +33,12 @@ class Backdrop:
     name:          str
     night:         float    # 0.0 = full daylight ‥ 1.0 = full night. Drives the
                             #   night-only glow of tracer rounds and launched orbs
-                            #   (see game.entities.projectile) — muzzle fire and
+                            #   (see game.entities.projectile) – muzzle fire and
                             #   incandescent shells only "light up" after dark.
     sky_top:       str      # upper sky
     sky_horizon:   str      # sky colour meeting the waterline
     sea_top:       str      # water just below the horizon
-    sea_deep:      str      # deep water — also the tint forts/rigs/mines fog into
+    sea_deep:      str      # deep water – also the tint forts/rigs/mines fog into
     cloud:         str      # cloud fill colour
     cloud_alpha:   int      # how present the cloud banks read (night = barely there)
     wave_alpha:    int      # brightest wave line's alpha (steps down per line)
@@ -59,7 +59,7 @@ class Backdrop:
 
     @property
     def water_tint(self) -> str:
-        """The deep-water hex the rest of the scene fogs into — forts' submerged
+        """The deep-water hex the rest of the scene fogs into – forts' submerged
         caissons, oil-rig legs, sea mines. Kept in lockstep with the water gradient."""
         return self.sea_deep
 
@@ -109,11 +109,11 @@ _NIGHT = Backdrop(
 )
 
 # ── The finale skin ──────────────────────────────────────────────────────────────
-# ABYSS is *past* night: not a time of day but a mood. The "No Contact" finale — a
-# floating fortress nothing on record matches — fights under a dead, oil-black sea and
+# ABYSS is *past* night: not a time of day but a mood. The "No Contact" finale – a
+# floating fortress nothing on record matches – fights under a dead, oil-black sea and
 # a heavy overcast, its horizon smouldering a dull ember-red. Overhead hangs a moon in
 # total eclipse: a blood-red disc bitten by the Earth's umbral shadow, ringed by a
-# fiery refraction crescent — an omen over the last operation. Levels opt in by naming
+# fiery refraction crescent – an omen over the last operation. Levels opt in by naming
 # `"backdrop": "abyss"` in their JSON; it is NOT reached from `order`, so ordinary
 # night levels and sandbox battles never see it.
 _ABYSS = Backdrop(
@@ -135,7 +135,7 @@ _BANDS = [_DAY, _DUSK, _SUNSET, _NIGHT]
 _NAMED = {"abyss": _ABYSS}
 
 # Human-facing time-of-day names, keyed by the band's internal `name`. Used where a
-# map is chosen for its light rather than its campaign story — the multiplayer map
+# map is chosen for its light rather than its campaign story – the multiplayer map
 # picker, where the boss/operation title means nothing to two duelling fleets.
 _TOD_LABELS = {
     "DAY":    "Day",
@@ -158,7 +158,7 @@ def for_level(order: int, water_tint: str | None = None,
     """Pick the backdrop for a level. Normally this is the time-of-day band for the
     campaign `order` (1-based); a level may instead name a special `skin` (e.g.
     "abyss" for the ominous finale) to bypass the ramp entirely. Either way, a level
-    that pins an explicit `water_tint` keeps it — its deep water (and everything that
+    that pins an explicit `water_tint` keeps it – its deep water (and everything that
     fogs into it) uses that colour while still taking the skin's sky and light."""
     bd = _NAMED.get(skin) if skin else None
     if bd is None:
@@ -199,7 +199,7 @@ def _paint_celestial(p, bd: Backdrop, W: int, WY: int):
 
 def _paint_eclipse(p, bd: Backdrop, cx: float, cy: float, r: float):
     """A moon in total eclipse: a black body fully occluded, ringed by a glowing red
-    corona — a dark disc with a burning red outline. cel_halo drives the ring colour."""
+    corona – a dark disc with a burning red outline. cel_halo drives the ring colour."""
     ring = QColor(bd.cel_halo)
     rr, rg, rb = ring.red(), ring.green(), ring.blue()
 
@@ -212,7 +212,7 @@ def _paint_eclipse(p, bd: Backdrop, cx: float, cy: float, r: float):
     outer.setColorAt(1.0, QColor(rr, rg, rb, 0))
     p.setBrush(outer); p.drawEllipse(QPointF(cx, cy), r * 2.6, r * 2.6)
 
-    # The bright ring of fire hugging the limb — a thin band drawn as an annulus.
+    # The bright ring of fire hugging the limb – a thin band drawn as an annulus.
     ringw = max(2.0, r * 0.14)
     band = QRadialGradient(QPointF(cx, cy), r + ringw)
     inner_stop = (r - ringw) / (r + ringw)
@@ -223,7 +223,7 @@ def _paint_eclipse(p, bd: Backdrop, cx: float, cy: float, r: float):
     band.setColorAt(1.0, QColor(rr, rg, rb, 0))
     p.setBrush(band); p.drawEllipse(QPointF(cx, cy), r + ringw, r + ringw)
 
-    # The fully occluded body — near-black, faintly warm so it isn't a dead hole.
+    # The fully occluded body – near-black, faintly warm so it isn't a dead hole.
     body = QRadialGradient(QPointF(cx, cy), r)
     body.setColorAt(0.0, QColor(6, 3, 3))
     body.setColorAt(0.82, QColor(9, 4, 4))
@@ -260,7 +260,7 @@ def paint(p, bd: Backdrop, W: int, H: int, WY: int, cam_x: float, clouds, wave_t
     wg.setColorAt(0.0, QColor(bd.sea_top)); wg.setColorAt(1.0, QColor(bd.sea_deep))
     p.fillRect(0, WY, W, H - WY, wg)
 
-    # The single horizon rule — the menu's amber hairline (band-coloured), plus a
+    # The single horizon rule – the menu's amber hairline (band-coloured), plus a
     # faint glow just under it where sky light catches the water.
     glow = QColor(bd.horizon)
     hg = QLinearGradient(0, WY - 10, 0, WY + 6)
@@ -273,7 +273,7 @@ def paint(p, bd: Backdrop, W: int, H: int, WY: int, cam_x: float, clouds, wave_t
 
 
 def paint_waves(p, bd: Backdrop, W: int, WY: int, cam_x: float, wave_t: float):
-    """The animated white wave lines — same motion as before, alpha from the band
+    """The animated white wave lines – same motion as before, alpha from the band
     (night is subtlest, matching the menu)."""
     for i in range(4):
         amp = 3.5 - i * .55; wl = 105 + i * 32; speed = 1.25 - i * .22
