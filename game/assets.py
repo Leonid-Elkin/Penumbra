@@ -1,5 +1,5 @@
 """
-game.assets — image helpers and the sprite cache.
+game.assets – image helpers and the sprite cache.
 
 Loads PNGs (via Pillow), recolours them per team, and hands back QPixmaps. All
 Qt/PIL image fiddling lives here so the rest of the engine deals only in cached
@@ -20,7 +20,7 @@ try:
     PIL_OK = True
 except ImportError:
     PIL_OK = False
-    print("Pillow missing — pip install Pillow")
+    print("Pillow missing: pip install Pillow")
 
 
 def _log(msg: str):
@@ -102,7 +102,7 @@ def load_ship_sprites(sdef: ShipDef) -> tuple[QPixmap, QPixmap]:
 def load_barrel_sprites(sdef: ShipDef) -> tuple[QPixmap, QPixmap]:
     """Return (player, enemy) pixmaps for a unit's elevating barrel.
 
-    The barrel art is drawn pointing RIGHT and is NOT team-flipped here — the
+    The barrel art is drawn pointing RIGHT and is NOT team-flipped here – the
     engine mirrors and rotates it about its pivot at draw time. It is scaled by
     the same base_width→display_w factor as the base, so both share one scale.
     Sets sdef.barrel_disp to the scaled (w, h).
@@ -175,7 +175,7 @@ def load_portrait_sprites(sdef: ShipDef) -> tuple[QPixmap, QPixmap]:
         canvas = QPixmap(cw, ch); canvas.fill(Qt.GlobalColor.transparent)
         q = QPainter(canvas)
         q.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
-        # base hull — mirrored for the flipped team, matching the in-game sprite
+        # base hull – mirrored for the flipped team, matching the in-game sprite
         if flip:
             q.save(); q.translate(pad + bw, pad); q.scale(-1.0, 1.0)
             q.drawPixmap(0, 0, base_px); q.restore()
@@ -201,7 +201,7 @@ def load_portrait_sprites(sdef: ShipDef) -> tuple[QPixmap, QPixmap]:
 
 
 def bastion_portrait(sdef: ShipDef, team: str) -> QPixmap:
-    """The Bastion has no unit sprite — it is drawn procedurally on the base. Render
+    """The Bastion has no unit sprite – it is drawn procedurally on the base. Render
     that same fort-style artwork into a standalone portrait for the catalog."""
     from .entities.oilrig import render_bastion         # local import avoids a cycle
     w = sdef.display_w or 150
@@ -293,7 +293,7 @@ class SpriteCache:
             _log(f"[Fortress sprites] {e}")
 
     # Ordnance (torpedoes, bombs, shells, depth charges, …) is drawn entirely as
-    # cheap procedural vector shapes in Projectile.draw — no projectile pixmaps are
+    # cheap procedural vector shapes in Projectile.draw – no projectile pixmaps are
     # loaded, scaled or rotated, which keeps a screenful of rounds cheap to render.
 
     def get(self, name: str) -> QPixmap | None:

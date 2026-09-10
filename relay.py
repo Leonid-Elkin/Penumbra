@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-relay.py — Penumbra WAN rendezvous / relay server.
+relay.py – Penumbra WAN rendezvous / relay server.
 
 Run this on a machine with a public IP (the game embeds that address in an
-obscured form — see game/net.py `relay_endpoint()` — so players never see or type
+obscured form – see game/net.py `relay_endpoint()` – so players never see or type
 it; they only exchange a short room code). It lets two players behind home routers
 over the internet WITHOUT either of them port-forwarding: both the host and the
 joiner open an *outbound* TCP connection to this relay (outbound traverses NAT
@@ -19,14 +19,14 @@ Wire format (same length-prefixed JSON the game uses):
     [4-byte big-endian length][UTF-8 JSON]
 
 Handshake (client → relay, one frame):
-    host  :  {"t":"host","room":"ABCD"}   — claim a room, then wait for a joiner
-    join  :  {"t":"join","room":"ABCD"}   — pair with a waiting host
+    host  :  {"t":"host","room":"ABCD"}   – claim a room, then wait for a joiner
+    join  :  {"t":"join","room":"ABCD"}   – pair with a waiting host
 
 Relay → client (one frame), then the pipe goes transparent:
-    ok    :  {"t":"peer"}                 — paired; start playing
-    err   :  {"t":"err","msg":"..."}      — room taken / no such room / timed out
+    ok    :  {"t":"peer"}                 – paired; start playing
+    err   :  {"t":"err","msg":"..."}      – room taken / no such room / timed out
 
-Zero third-party dependencies — plain Python 3 stdlib. Deploy notes at the
+Zero third-party dependencies – plain Python 3 stdlib. Deploy notes at the
 bottom of this file (systemd unit + firewall).
 
 Usage:
@@ -109,7 +109,7 @@ class _Room:
         self.name = name
         self.map = map_
         # "" ⇒ open room; otherwise a joiner must present this exact password.
-        # Never sent in the browser listing — only a boolean "locked" flag is.
+        # Never sent in the browser listing – only a boolean "locked" flag is.
         self.password = password
         self.host_sock = host_sock
         self.peer_sock: "socket.socket | None" = None
@@ -344,7 +344,7 @@ def main(argv=None):
     try:
         srv.bind((args.host, args.port))
     except OSError as e:
-        _log(f"FATAL: cannot bind {args.host}:{args.port} — {e}")
+        _log(f"FATAL: cannot bind {args.host}:{args.port} – {e}")
         return 1
     srv.listen(64)
     _log(f"relay listening on {args.host}:{args.port} "
@@ -375,7 +375,7 @@ if __name__ == "__main__":
 #
 #   2. Open the port on the host firewall AND the DigitalOcean cloud firewall:
 #          ssh root@<SERVER_IP> 'ufw allow 50577/tcp'
-#      (DO firewall: add inbound TCP 50577 in the control panel — ufw alone is
+#      (DO firewall: add inbound TCP 50577 in the control panel – ufw alone is
 #       not enough on DO droplets.)
 #
 #   3. Run it as a service so it survives reboots and logout. Create

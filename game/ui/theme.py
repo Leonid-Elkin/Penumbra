@@ -1,5 +1,5 @@
 """
-game.ui.theme — the visual system: "The Plotting Table".
+game.ui.theme – the visual system: "The Plotting Table".
 
 Aesthetic: a naval war-room, not a website. We are stood over a steel plotting
 table in a fortress command centre, directing capital ships against named
@@ -8,15 +8,15 @@ leviathans. Everything is built from painted battleship plate: chamfered
 hull markings and hazard chevrons.
 
 Palette is a THREE-SIGNAL instrument system, never decoration:
-  • signal amber   — command / action / the player's hand
-  • phosphor green  — friendly / ready / live telemetry
-  • danger red      — hostile / warning
+  • signal amber   – command / action / the player's hand
+  • phosphor green  – friendly / ready / live telemetry
+  • danger red      – hostile / warning
 
 Typography is an instrument too:
-  • Bahnschrift (DIN)  — labels & headers
-  • Stencil            — hull markings, class names, the wordmark
-  • Consolas (mono)    — every numeric readout (the plotting-room data font)
-  • Segoe UI           — body copy
+  • Bahnschrift (DIN)  – labels & headers
+  • Stencil            – hull markings, class names, the wordmark
+  • Consolas (mono)    – every numeric readout (the plotting-room data font)
+  • Segoe UI           – body copy
 
 Deliberately NOT Inter / Roboto / Arial, no rounded cards, no glassmorphism,
 no purple, no floating white panels.
@@ -44,11 +44,11 @@ TEXT      = "#e9eef1"
 TEXT_DIM  = "#8794a0"
 TEXT_FAINT = "#4a5762"
 
-ACCENT    = "#f0a81e"            # signal amber — command / action
+ACCENT    = "#f0a81e"            # signal amber – command / action
 GOLD      = ACCENT
 AMBER_HI  = "#ffc648"
 STAR      = "#f5b52b"
-PHOSPHOR  = "#46d18a"            # sonar green — friendly / ready / live
+PHOSPHOR  = "#46d18a"            # sonar green – friendly / ready / live
 GOOD      = "#3fae6b"
 DANGER    = "#d24338"
 DANGER_HI = "#ff6a5c"
@@ -60,7 +60,7 @@ SKY_LOW   = "#25323c"
 
 HEAD_FAMILY    = "Bahnschrift"   # industrial DIN-style
 BODY_FAMILY    = "Segoe UI"
-STENCIL_FAMILY = "Stencil"       # military stencil — hull markings & wordmark
+STENCIL_FAMILY = "Stencil"       # military stencil – hull markings & wordmark
 MONO_FAMILY    = "Consolas"      # plotting-room data font (all numerics)
 
 
@@ -114,8 +114,8 @@ def _brushed_tile(base: QColor) -> QPixmap:
 
 # ─── Photographic steel textures (real plate scans, retuned to the palette) ───
 # Two scanned surfaces live in Textures/:  a worn painted-steel plate and a
-# diamond tread ("chequer") plate.  Raw they are bright bare aluminium — far too
-# light for our cold gunmetal war-room — so we never blit them straight.  Both are
+# diamond tread ("chequer") plate.  Raw they are bright bare aluminium – far too
+# light for our cold gunmetal war-room – so we never blit them straight.  Both are
 # desaturated to neutral grey and used only as *relief*: the steel scan is Overlay-
 # composited onto a plate's own colour (worn mottling, no colour of its own), and
 # the tread plate is laid down then Multiply-tinted to gunmetal (a dark structural
@@ -150,17 +150,17 @@ def _grey_tile(filename: str, tile: int) -> QPixmap:
     return pm
 
 def steel_texture(tile: int = 220) -> QPixmap:
-    """Grey worn-plate tile — Overlay-composited onto plate fills as subtle wear."""
+    """Grey worn-plate tile – Overlay-composited onto plate fills as subtle wear."""
     return _grey_tile(STEEL_TEX, tile)
 
 def diamond_texture(tile: int = 128) -> QPixmap:
-    """Grey diamond tread-plate tile — the structural kick-plate relief."""
+    """Grey diamond tread-plate tile – the structural kick-plate relief."""
     return _grey_tile(DIAMOND_TEX, tile)
 
 
 def steel_wear(p: QPainter, rect: QRectF, opacity: float = 0.13, tile: int = 220):
     """Overlay real worn-steel relief onto an already-painted surface. Caller must
-    have the target region clipped (e.g. a chamfer path) before calling — this only
+    have the target region clipped (e.g. a chamfer path) before calling – this only
     adds light/dark mottling, it does not fill or colour."""
     p.save()
     p.setOpacity(opacity)
@@ -171,7 +171,7 @@ def steel_wear(p: QPainter, rect: QRectF, opacity: float = 0.13, tile: int = 220
 
 def tread_band(p: QPainter, rect: QRectF, *, tint=STEEL, strength: float = 1.0,
                edges: bool = True, hazard=None):
-    """A diamond tread-plate strip — a real floor/kick-plate for structural bands
+    """A diamond tread-plate strip – a real floor/kick-plate for structural bands
     (footers, sills, header rails). The bright scan is laid down then Multiply-tinted
     to gunmetal so the chequer relief survives but the colour is ours. `tint` sets
     the plate colour; `hazard` (a QColor) stripes the top few px as a caution rail;
@@ -206,7 +206,7 @@ def tread_band(p: QPainter, rect: QRectF, *, tint=STEEL, strength: float = 1.0,
 # ─── Geometry: chamfered (corner-cut) plate silhouette ────────────────────────
 def chamfer_path(x, y, w, h, cut=9, corners=(True, False, False, True)) -> QPainterPath:
     """A rectangle with selected corners sliced off. Default cuts the top-left and
-    bottom-right — an asymmetric, mechanical silhouette that reads as hardware.
+    bottom-right – an asymmetric, mechanical silhouette that reads as hardware.
     corners = (top-left, top-right, bottom-right, bottom-left)."""
     tl, tr, br, bl = corners
     path = QPainterPath()
@@ -224,7 +224,7 @@ def chamfer_path(x, y, w, h, cut=9, corners=(True, False, False, True)) -> QPain
 
 
 def rivets(p: QPainter, x, y, w, h, inset=7, step=34, r=1.6, color=None):
-    """A row of countersunk rivets around a plate edge — the material tell that
+    """A row of countersunk rivets around a plate edge – the material tell that
     says 'welded steel'. Drawn as a dark pit with a faint top-left highlight."""
     col = color or QColor(EDGE_HI)
     def dot(cx, cy):
@@ -240,7 +240,7 @@ def rivets(p: QPainter, x, y, w, h, inset=7, step=34, r=1.6, color=None):
 
 
 def hazard_bar(p: QPainter, rect: QRectF, color=None, bg=None, stripe=11, alpha=210):
-    """Diagonal hazard chevrons — the 'live / armed / caution' marking on a control.
+    """Diagonal hazard chevrons – the 'live / armed / caution' marking on a control.
     Clipped to `rect`; only painted where it matters (never wallpaper)."""
     col = QColor(color or ACCENT); col.setAlpha(alpha)
     p.save(); p.setClipRect(rect)
@@ -265,7 +265,7 @@ def plate(p: QPainter, x, y, w, h, *, base=PANEL, cut=9,
     fill, a top-left→bottom-right bevel (embossed metal), an optional coloured
     signal edge and optional rivets. Everything else in the UI is built from this.
 
-    `textured=True` Overlay-composites a real worn-steel scan into the fill — reserve
+    `textured=True` Overlay-composites a real worn-steel scan into the fill – reserve
     it for large, calm backing plates where the extra grain reads (not small chips)."""
     p.save()
     p.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -313,7 +313,7 @@ def plate(p: QPainter, x, y, w, h, *, base=PANEL, cut=9,
 
 def engraved_label(p: QPainter, text: str, x, y, w, f: QFont,
                    color=TEXT, shadow=True, flags=None):
-    """Text with a 1px dark drop — an engraved / stamped plate reading. `y` is the
+    """Text with a 1px dark drop – an engraved / stamped plate reading. `y` is the
     top of the text; height is kept tight so callers can position deterministically."""
     p.setFont(f)
     flags = (Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop) if flags is None else flags
@@ -326,7 +326,7 @@ def engraved_label(p: QPainter, text: str, x, y, w, f: QFont,
 
 
 def led(p: QPainter, cx, cy, color, r=3.2, on=True):
-    """A small indicator lamp with a soft phosphor bloom — the only 'glow' we
+    """A small indicator lamp with a soft phosphor bloom – the only 'glow' we
     allow, because instrument lamps genuinely glow."""
     c = QColor(color)
     if on:
@@ -344,7 +344,7 @@ def led(p: QPainter, cx, cy, color, r=3.2, on=True):
 
 def scanlines(p: QPainter, rect: QRectF, gap=3, alpha=18):
     """Faint horizontal CRT lines for glass/screen surfaces (minimap, dossier
-    photo). Used sparingly — a screen, not the whole UI."""
+    photo). Used sparingly – a screen, not the whole UI."""
     p.save(); p.setClipRect(rect)
     p.setPen(QPen(QColor(0, 0, 0, alpha), 1))
     yy = int(rect.top())
@@ -486,7 +486,7 @@ def draw_icon(p, name: str, rect: QRectF, color: QColor | None = None):
         p.drawLine(QPointF(x+w*.38, y+h*.55), QPointF(x+w*.62, y+h*.55))
         p.drawLine(QPointF(x+w*.32, y+h*.82), QPointF(x+w*.68, y+h*.82))
     elif name == "fullscreen":
-        # four corner brackets opening outward — 'expand to full screen'
+        # four corner brackets opening outward – 'expand to full screen'
         c = 0.24
         for ox, oy, sx, sy in ((.2, .2, 1, 1), (.8, .2, -1, 1),
                                (.2, .8, 1, -1), (.8, .8, -1, -1)):
@@ -494,7 +494,7 @@ def draw_icon(p, name: str, rect: QRectF, color: QColor | None = None):
             p.drawLine(QPointF(px, py), QPointF(px + sx*w*c, py))
             p.drawLine(QPointF(px, py), QPointF(px, py + sy*h*c))
     elif name == "windowed":
-        # four corner brackets folded inward — 'restore window'
+        # four corner brackets folded inward – 'restore window'
         c = 0.24
         for ox, oy, sx, sy in ((.42, .42, -1, -1), (.58, .42, 1, -1),
                                (.42, .58, -1, 1), (.58, .58, 1, 1)):
@@ -511,7 +511,7 @@ def draw_icon(p, name: str, rect: QRectF, color: QColor | None = None):
         p.drawEllipse(QPointF(cx, cy), r * 0.8, r * 0.8)
         p.drawEllipse(QPointF(cx, cy), r * 0.3, r * 0.3)
     elif name == "salvage":
-        # Value dropping back into the coffer — a % refund on every wreck.
+        # Value dropping back into the coffer – a % refund on every wreck.
         p.drawLine(QPointF(cx, y + h*.16), QPointF(cx, y + h*.5))
         p.drawLine(QPointF(cx - w*.14, y + h*.36), QPointF(cx, y + h*.52))
         p.drawLine(QPointF(cx + w*.14, y + h*.36), QPointF(cx, y + h*.52))
@@ -519,14 +519,14 @@ def draw_icon(p, name: str, rect: QRectF, color: QColor | None = None):
         p.drawLine(QPointF(x + w*.24, y + h*.8), QPointF(x + w*.76, y + h*.8))
         p.drawLine(QPointF(x + w*.76, y + h*.8), QPointF(x + w*.76, y + h*.56))
     elif name == "surge":
-        # A lightning bolt — the all-in Surge Deploy alpha strike.
+        # A lightning bolt – the all-in Surge Deploy alpha strike.
         path = QPainterPath(); path.moveTo(x + w*.58, y + h*.12)
         path.lineTo(x + w*.30, y + h*.54); path.lineTo(x + w*.47, y + h*.54)
         path.lineTo(x + w*.40, y + h*.88); path.lineTo(x + w*.72, y + h*.42)
         path.lineTo(x + w*.53, y + h*.42); path.closeSubpath()
         p.setBrush(QColor(color)); p.setPen(Qt.PenStyle.NoPen); p.drawPath(path)
     elif name == "boss":
-        # A flagship battleship crowned with a rank chevron — the score-reward
+        # A flagship battleship crowned with a rank chevron – the score-reward
         # boss. A broad hull, a bridge tower with twin raised main guns, and a
         # commander's chevron above, so it reads as 'the enemy's flagship'.
         hull = QPainterPath()

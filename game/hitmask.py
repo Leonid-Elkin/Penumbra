@@ -1,11 +1,11 @@
 """
-game.hitmask — per-sprite collision silhouettes.
+game.hitmask – per-sprite collision silhouettes.
 
 A ship sprite's bounding box is mostly air: tall thin masts poke up out of the
 hull and there is empty sky in the corners. Colliding shells against that whole
 box means rounds "hit" a mast or blank space. A HitMask fixes that by carrying,
 for each vertical slice of the sprite, the band of rows that are actually solid
-HULL + SUPERSTRUCTURE — so a projectile only lands when it strikes real plating,
+HULL + SUPERSTRUCTURE – so a projectile only lands when it strikes real plating,
 and flies right through masts and empty space.
 
 The mask is built once per unit from its (cropped, recoloured) source image and
@@ -31,7 +31,7 @@ class HitMask:
     def centroid(self) -> tuple:
         """(u, v) centre of mass of the SOLID silhouette, sprite-relative 0..1.
 
-        The sprite bounding box is mostly empty — a surface ship rides high in its
+        The sprite bounding box is mostly empty – a surface ship rides high in its
         frame (only the lower hull is underwater) and a sub's art carries clear
         water above and below the boat. So the geometric middle of the sprite
         (`mid_y`) is usually NOT on solid plating. Homing rounds should aim HERE,

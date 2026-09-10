@@ -1,5 +1,5 @@
 """
-game.entities.ship — the live unit entity and all of its movement/combat AI.
+game.entities.ship – the live unit entity and all of its movement/combat AI.
 
 A Ship is data-driven: every stat, weapon and muzzle comes from its ShipDef. The
 master update() dispatches to a behaviour method per unit_type (ship/submarine,
@@ -17,7 +17,7 @@ from ..ballistics import ballistic_velocity, velocity_at_angle
 from .projectile import Projectile, attack_can_hit, attack_gravity
 from .explosion import MuzzleSmoke
 
-# Shell calibre (proj_h) at/above which firing throws a muzzle smoke cloud —
+# Shell calibre (proj_h) at/above which firing throws a muzzle smoke cloud –
 # the big naval rifles qualify, light quick-firing guns fire clean.
 LARGE_SHELL_CAL = 7
 
@@ -41,10 +41,10 @@ class Ship:
 
     # ── Per-frame spatial index (sorted by x) ────────────────────────────────
     # Target selection used to scan the whole ship list for every unit, every
-    # attack, every frame — O(N²) with a 180-unit field. Instead the battle loop
+    # attack, every frame – O(N²) with a 180-unit field. Instead the battle loop
     # rebuilds this x-sorted index once per frame and each unit only scans the
     # slice within weapon reach (see _candidates). Nothing is culled by camera:
-    # every unit on the field — on- or off-screen — is indexed and keeps fighting.
+    # every unit on the field – on- or off-screen – is indexed and keeps fighting.
     _frame_ships: list = []
     _frame_xs: list = []
     _frame_max_half_w: float = 0.0
@@ -63,7 +63,7 @@ class Ship:
         cls._frame_max_half_w = mh
 
     def _candidates(self, reach: float, fallback):
-        """Ships whose x lies within `reach` of ours — a superset of everything a
+        """Ships whose x lies within `reach` of ours – a superset of everything a
         weapon of that range could possibly hit. The window folds in both hulls'
         half-widths (edge-to-edge ranging) plus a little slack for intra-frame
         movement, so it never drops a target the full scan would have found; it
@@ -113,7 +113,7 @@ class Ship:
         # after opening fire) instead of halting on a dime.
         self.move_vel        = 0.0
         # Smoothed world velocity (px/s), measured from frame-to-frame movement so
-        # an AA gun can LEAD its aim — shoot where a crossing plane WILL be, not
+        # an AA gun can LEAD its aim – shoot where a crossing plane WILL be, not
         # where it is. Sampled at the top of update(); _prev_py None until first.
         self.vel_x           = 0.0
         self.vel_y           = 0.0
@@ -150,7 +150,7 @@ class Ship:
 
     @property
     def hit_com(self) -> tuple:
-        """World (x, y) of the collision hitbox's centre of mass — the spot a
+        """World (x, y) of the collision hitbox's centre of mass – the spot a
         homing round should steer AT so it strikes solid plating. Differs from
         (`x`, `mid_y`): a surface ship's mass sits low (near/under the waterline)
         and a sub's hull is offset within its padded frame. Falls back to the
@@ -175,7 +175,7 @@ class Ship:
 
     def _display_mirror(self) -> bool:
         """True when the sprite is drawn mirrored relative to the source image the
-        hitmask was built from — so the mask's columns must be flipped to match.
+        hitmask was built from – so the mask's columns must be flipped to match.
         Folds in the team flip, a fire-and-scoot turnabout, and a plane's banking
         heading (see draw())."""
         m = self._is_flipped()
@@ -251,14 +251,14 @@ class Ship:
                 return Projectile(fire_x, fire_y, self.team,
                                   math.cos(ang) * v * dirx, -math.sin(ang) * v, attack)
 
-        # flak: launch straight AT the target — it then homes + air-bursts
+        # flak: launch straight AT the target – it then homes + air-bursts
         if attack.attack_type == "flak" and target_y is not None:
             dx = target_x - fire_x; dy = target_y - fire_y
             dist = math.hypot(dx, dy) or 1.0
             return Projectile(fire_x, fire_y, self.team, dx / dist * spd, dy / dist * spd, attack)
 
         # bomb: a plane releases it with forward momentum and a slight downward
-        # lean — so it leaves nearly level with the plane's heading and arcs ahead
+        # lean – so it leaves nearly level with the plane's heading and arcs ahead
         # of it. (A ship/boss bomb is instead lobbed at a fixed gun_angle, handled
         # by the gun_angle branch above.) On hitting the water a bomb switches to a
         # straight-down sink (see Projectile.update), so it can also strike subs.
@@ -273,7 +273,7 @@ class Ship:
             g = attack_gravity(attack, 200.0 if attack.attack_type in ("bomb", "depth_charge") else 220.0)
             # A depth-charge carrier BURSTS the instant it hits the sea surface (see
             # Projectile._update_dc_carrier), so it must be lobbed to land ON the
-            # waterline directly above the submerged target — not at the sub's own
+            # waterline directly above the submerged target – not at the sub's own
             # underwater depth, which would drop the pattern short (the arc crosses
             # the surface while still descending toward that deeper point). If no
             # arc reaches that point, return None so the ship holds fire instead of
@@ -291,7 +291,7 @@ class Ship:
         # down, so a dead-level shot sails over or under them across the gun's
         # reach. Keep the horizontal component along the facing (never fire
         # backwards) and add just the vertical slope needed to converge on the
-        # target — bullets carry no gravity, so a straight line meets it. Fixed-
+        # target – bullets carry no gravity, so a straight line meets it. Fixed-
         # wing guns only; homing/tracking/omnidirectional weapons are elsewhere.
         if (attack.attack_type == 'bullet'
                 and getattr(self.sdef, 'unit_type', 'ship') == 'plane'
@@ -331,7 +331,7 @@ class Ship:
     def _muzzle_smoke(self, attack, mx, my, vx, vy, effects):
         """Blow a powder-smoke cloud out of the muzzle at (mx, my), along the
         shot's departure (vx, vy). Only heavy ordnance smokes: a large-calibre
-        shell throws a big blast scaled by calibre — and a boss's artillery
+        shell throws a big blast scaled by calibre – and a boss's artillery
         always counts as large, whatever its calibre; each MLRS rocket leaving
         its tube adds a smaller exhaust puff (a full salvo stacks them into one
         rolling cloud around the launcher). Everything else fires clean."""
@@ -351,7 +351,7 @@ class Ship:
         """Predictive aim for a direct-fire tracking gun: the point a straight
         round at this attack's muzzle speed should be sent to INTERCEPT the target,
         derived from the target's smoothed velocity. A plane crossing at speed
-        otherwise flies out from under a shot aimed where it currently is — which
+        otherwise flies out from under a shot aimed where it currently is – which
         is why light AA feels like it can never connect. Only `track_target` guns
         lead (homing/ballistic/flak solve interception their own way); everything
         else keeps aiming at the present position, so this is a no-op for them."""
@@ -366,7 +366,7 @@ class Ship:
         # on a noisy velocity estimate.
         tmax = getattr(attack, 'max_lifetime', 0.0) or 1.5
         ax, ay = tx, ty
-        for _ in range(2):                     # fixed-point intercept — converges fast
+        for _ in range(2):                     # fixed-point intercept – converges fast
             t = math.hypot(ax - self.x, ay - self.mid_y) / spd
             if t > tmax: t = tmax
             ax, ay = tx + vx * t, ty + vy * t
@@ -381,7 +381,7 @@ class Ship:
         first = None
         if attack.attack_type == "depth_charge" or not (n > 1 and sp > 0):
             pr = self._make_projectile(attack, fp, aim_x, aim_y)
-            if pr is None:            # no ballistic arc reaches the sub — hold fire
+            if pr is None:            # no ballistic arc reaches the sub – hold fire
                 return
             pr.owner_id = self.id
             projectiles.append(pr); first = pr
@@ -441,7 +441,7 @@ class Ship:
     # ── Minelayer ───────────────────────────────────────────────────────────────
     def _update_minelayer(self, dt, ships, projectiles, effects, fac):
         """Pop out, run forward laying a trail of mines, and the moment it nears
-        the enemy turn about and steam off the map edge — gone for good."""
+        the enemy turn about and steam off the map edge – gone for good."""
         is_pl = self.team == "player"
         fwd = 1 if is_pl else -1
         trigger_x = (WORLD_W - FORT_D_W - 360) if is_pl else (FORT_D_W + 360)
@@ -482,7 +482,7 @@ class Ship:
         projectiles.append(m)
 
     def _update_burst(self, dt, ships, projectiles, fac, effects):
-        """Fire a salvo as a series — one rocket every burst_interval — while the
+        """Fire a salvo as a series – one rocket every burst_interval – while the
         launcher holds station, then hand over to the rearm/scoot."""
         self.state = "fighting"
         self.burst_timer -= dt
@@ -517,7 +517,7 @@ class Ship:
         ty = target.mid_y
         bv = ballistic_velocity(tx - fire_x, ty - fire_y, attack.speed,
                                 attack_gravity(attack, 240.0), high=True)
-        if bv is None:                                  # out of arc range — lob toward it
+        if bv is None:                                  # out of arc range – lob toward it
             dirx = 1.0 if target.x >= self.x else -1.0
             bv = (math.cos(1.0) * attack.speed * dirx, -math.sin(1.0) * attack.speed)
         pr = Projectile(fire_x, fire_y, self.team, bv[0], bv[1], attack)
@@ -552,7 +552,7 @@ class Ship:
         self.state = "moving"
         if getattr(self.sdef, 'unit_type', 'ship') == 'plane':
             # Hand over to combat AI at the plane's roam edge. That edge is normally
-            # just past its own fort — but when an enemy is pressing the base it
+            # just past its own fort – but when an enemy is pressing the base it
             # opens up to overfly it (see _plane_bounds). Respect that here too, so
             # a plane flying in doesn't cruise (unable to fire) straight over an
             # enemy sitting on the base and only engage after it has cleared it.
@@ -580,7 +580,7 @@ class Ship:
             dist = self._edge_dist(s)
             if dist > attack.combat_range: continue
             # Ballistic anti-sub ordnance (depth charges) can only engage a target
-            # its arc can actually reach onto the sea above it — otherwise the ship
+            # its arc can actually reach onto the sea above it – otherwise the ship
             # would halt in "combat" and never manage to throw a charge that lands.
             if getattr(attack, 'ballistic', False) and not self._ballistic_reaches(attack, s):
                 continue
@@ -591,7 +591,7 @@ class Ship:
 
     def _edge_dist(self, s) -> float:
         """Horizontal gap measured from OUR furthermost point (the edge of this
-        hull facing the target) to the nearest edge of the target's sprite — so a
+        hull facing the target) to the nearest edge of the target's sprite – so a
         long ship ranges from its bow, not its centre, and reaches as soon as its
         leading edge is in range."""
         gap = abs(s.x - self.x)
@@ -649,13 +649,13 @@ class Ship:
                         return
 
         # Momentum: roll toward full speed when advancing, ease to 0 when holding
-        # to fire — so a unit keeps creeping for a moment after it opens up and
+        # to fire – so a unit keeps creeping for a moment after it opens up and
         # decelerates smoothly rather than stopping instantly.
         advancing = (not surface_combat) or getattr(self.sdef, 'advance_while_firing', False)
         target_v  = ((1 if is_pl else -1) * self.sdef.speed) if advancing else 0.0
         self.move_vel += (target_v - self.move_vel) * min(1.0, dt * 1.8)
         self.x += self.move_vel * dt
-        # Hold at the assault line — never drive onto or past the base.
+        # Hold at the assault line – never drive onto or past the base.
         self.x = min(self.x, float(assault_x)) if is_pl else max(self.x, float(assault_x))
         at_base = (self.x == float(assault_x))
         self.state = ("assaulting" if (at_base and in_combat)
@@ -706,7 +706,7 @@ class Ship:
         """World (x, y) of the muzzle end of a drawn elevating barrel. Replays
         _draw_barrel's translate→mirror→rotate transform on the far end of the
         barrel sprite (the art points RIGHT, so the muzzle is its right edge at
-        the vertical centre) — the point where smoke should erupt. None when the
+        the vertical centre) – the point where smoke should erupt. None when the
         unit has no barrel art loaded."""
         sd = self.sdef
         if not getattr(sd, 'barrel_file', None) or not getattr(sd, 'barrel_disp', None):
@@ -750,7 +750,7 @@ class Ship:
         waterline front line. Each pixel of setback behind that line adds
         TURRET_REAR_RANGE_PER_PX of range; forward-mounted turrets (and every
         mobile unit) get nothing. The turret is static, so this is constant once
-        placed — a battery high up the staircase reaches further than one at the
+        placed – a battery high up the staircase reaches further than one at the
         front pad, trading forward coverage for reach."""
         if getattr(self.sdef, 'unit_type', 'ship') != 'turret':
             return 0.0
@@ -881,7 +881,7 @@ class Ship:
             self._hover_kite(dt, target, home_x, far_x, orbit_r, ships)
         else:
             # Smooth banking turn (long, no velocity snap): the visual heading eases
-            # toward plane_dir, and MOVEMENT follows `facing` — so the plane glides
+            # toward plane_dir, and MOVEMENT follows `facing` – so the plane glides
             # to a stop, banks through edge-on, then accelerates the other way.
             self.facing += (self.plane_dir - self.facing) * min(1.0, dt * 1.7)
             self.x += self.facing * spd * dt
@@ -952,7 +952,7 @@ class Ship:
 
     def _clamp_plane_x(self, x):
         """Last-resort safety clamp for a plane's x. Uses FIXED off-screen walls,
-        NOT the turn-around bounds from _plane_bounds — those flip inward when an
+        NOT the turn-around bounds from _plane_bounds – those flip inward when an
         enemy retreats from a base, and clamping against them would teleport a
         plane that had legitimately flown off-screen back onto the field edge in
         one frame. The turn logic (plane_dir) already flies such a plane home
@@ -1020,7 +1020,7 @@ class Ship:
         spr = sprites.get(f"{self.team}_{self.sdef.key}")
 
         # At the dead of night a near-black player hull reads as a hole in the dark
-        # sea. Lay a moonlit rim around the sprite so every hull keeps a lit edge —
+        # sea. Lay a moonlit rim around the sprite so every hull keeps a lit edge –
         # drawn under the sprite so only the protruding fringe shows. Restricted to
         # the full-night bands (NIGHT/ABYSS, night==1.0); dusk and sunset levels
         # keep their hulls unlit. Player-toggleable (SETTINGS.night_silhouette).
@@ -1041,7 +1041,7 @@ class Ship:
         self._blit(p, spr, sx, sy, ut)
 
         # The barrel rides on top of the base only in normal (unmirrored,
-        # non-plane) orientation — matching where _blit drew the hull upright.
+        # non-plane) orientation – matching where _blit drew the hull upright.
         normal_orient = (ut != 'plane' or self.rising) and not self.retreat_flip
         if normal_orient and getattr(self.sdef, 'barrel_file', None):
             self._draw_barrel(p, sx, sy, sprites)
@@ -1060,7 +1060,7 @@ class Ship:
         cx = sx + self.disp_w // 2; cy = sy + self.disp_h // 2
         if ut == 'plane' and not self.rising:
             # The cached sprite faces the team's forward direction. Mirror it by
-            # `facing`, which eases between +1/-1 during a turn — passing through
+            # `facing`, which eases between +1/-1 during a turn – passing through
             # ~0 (edge-on) for a smooth bank instead of a snap or spin.
             forward = 1.0 if self.team == 'player' else -1.0
             scale_x = self.facing * forward

@@ -1,5 +1,5 @@
 """
-game.ui.widgets — small reusable in-battle widgets: the unit deploy button and
+game.ui.widgets – small reusable in-battle widgets: the unit deploy button and
 the minimap.
 """
 
@@ -16,7 +16,7 @@ from ..settings import (SETTINGS, KEYBINDS, parse_keys, default_deploy_key)
 from . import theme
 
 
-# ─── Command button — an armed steel control, not a web CTA ────────────────────
+# ─── Command button – an armed steel control, not a web CTA ────────────────────
 class CommandButton(QWidget):
     """A chamfered steel-plate command switch: engraved label + sub-caption, an
     indicator lamp that lights on hover, and (for the primary variant) a hazard
@@ -93,7 +93,7 @@ class CommandButton(QWidget):
                              color=theme.ACCENT, alpha=200 if lit else 120)
 
 
-# ─── Icon button — a small square steel toggle for screen chrome ───────────────
+# ─── Icon button – a small square steel toggle for screen chrome ───────────────
 class IconButton(QWidget):
     """A small chamfered steel-plate control that paints a single vector icon and
     lights amber on hover. Used for chrome toggles (e.g. fullscreen) where a full
@@ -138,12 +138,12 @@ _KEY_FIELD_QSS = (
 ).format(acc=theme.ACCENT, ln=theme.LINE_HI)
 
 
-# ─── Settings tab — the same panel on every screen ─────────────────────────────
+# ─── Settings tab – the same panel on every screen ─────────────────────────────
 class SettingsOverlay(QWidget):
     """The shared SETTINGS tab: a dark veil holding the game's option switches and
     the full keybind list. One instance is parented to each screen (the menus and
     the battle), tracks its parent's size itself, and writes straight to the global
-    SETTINGS — so anything changed anywhere applies everywhere at once.
+    SETTINGS – so anything changed anywhere applies everywhere at once.
 
     Every control (and every deployable ship) can hold more than one key: type key
     names separated by commas and press Enter. Escape stays a fixed cancel/back key
@@ -174,7 +174,7 @@ class SettingsOverlay(QWidget):
         title = QLabel("SETTINGS"); title.setFont(theme.head(18, 5))
         title.setStyleSheet(f"color:{theme.TEXT};background:transparent;")
         v.addWidget(title, alignment=Qt.AlignmentFlag.AlignCenter)
-        sub = QLabel("APPLIES EVERYWHERE — SAVED AT ONCE"); sub.setFont(theme.head(9, 3))
+        sub = QLabel("APPLIES EVERYWHERE – SAVED AT ONCE"); sub.setFont(theme.head(9, 3))
         sub.setStyleSheet(f"color:{theme.ACCENT};background:transparent;")
         v.addWidget(sub, alignment=Qt.AlignmentFlag.AlignCenter)
         v.addSpacing(6)
@@ -258,7 +258,7 @@ class SettingsOverlay(QWidget):
         return gw
 
     def _build_ships(self):
-        """Fill the SHIPS grid from the live roster — done once, on first open, when
+        """Fill the SHIPS grid from the live roster – done once, on first open, when
         self.window() has resolved to the AppWindow that carries GameData."""
         if self._ships_built:
             return
@@ -364,7 +364,7 @@ def _targets(attack) -> str:
     if getattr(attack, 'can_hit_surface', False): t.append("ships")
     if getattr(attack, 'can_hit_plane', False):   t.append("air")
     if getattr(attack, 'can_hit_sub', False):     t.append("subs")
-    return "/".join(t) if t else "—"
+    return "/".join(t) if t else "–"
 
 def weapon_lines(sdef) -> list[str]:
     out = []
@@ -393,7 +393,7 @@ class UnitButton(QWidget):
         self.rush_queued = 0           # hulls bought while surging → drawn as a RED tally
         self.locked = False; self.stage = 0
         self.cd_rem = 0.0; self.cd_total = 0.0
-        self.held = False              # deployed & unique (e.g. Bastion) — held unavailable
+        self.held = False              # deployed & unique (e.g. Bastion) – held unavailable
         self.cost = getattr(sdef, 'cost', 0)   # price shown (raised while surging)
         self.surge = False             # Ctrl-held surge → price elevated, drawn hot
         self.bulk = False              # Alt-held bulk → batch of BULK_SIZE, total shown w/ ×N tag
@@ -407,7 +407,7 @@ class UnitButton(QWidget):
     def set_state(self, can_afford, queued=0, sprite=None, locked=False, stage=0,
                   cd_rem=0.0, cd_total=0.0, held=False, cost=None, surge=False,
                   bulk=False, rush_queued=0):
-        # Only repaint when something visible actually changed — this is called for
+        # Only repaint when something visible actually changed – this is called for
         # every button on every HUD refresh, so skipping no-op updates keeps idle
         # buttons from repainting. (A cooling-down button's cd_rem changes each tick,
         # so its wipe still animates.)
@@ -451,7 +451,7 @@ class UnitButton(QWidget):
         spr_bottom = H - cap_h - 2
         if self.sprite and not self.sprite.isNull():
             # The button size is fixed, so the smooth-scaled sprite is identical
-            # every paint — scale it once and cache it (this rescale used to run on
+            # every paint – scale it once and cache it (this rescale used to run on
             # every one of ~25 buttons, 60×/s).
             avail_w = W - 10; avail_h = max(1, spr_bottom - 4)
             if self._scaled is None:
@@ -486,7 +486,7 @@ class UnitButton(QWidget):
         if not self.hide_cost:
             # The price reflects the live Ctrl/Alt modifiers (self.cost is already the
             # per-hull price the sim will charge). A bulk press buys BULK_SIZE hulls,
-            # so for bulk — and for surge+bulk — we show the BATCH TOTAL with an "(×N)"
+            # so for bulk – and for surge+bulk – we show the BATCH TOTAL with an "(×N)"
             # tag; surge-only stays a single elevated price. Colour reads the mode:
             #   surge+bulk → hot amber (elevated batch)   surge → red (elevated)
             #   bulk       → cool phosphor (discount)      plain → amber
@@ -525,7 +525,7 @@ class UnitButton(QWidget):
         # amber fill line marking progress, and the remaining seconds in mono.
         if reloading:
             # `held` (a unique unit already deployed, e.g. the Bastion) reads as a
-            # full wipe with no ticking clock — it's not counting down, it's occupied.
+            # full wipe with no ticking clock – it's not counting down, it's occupied.
             frac = 1.0 if self.held else max(0.0, min(1.0, self.cd_rem / self.cd_total))
             p.setBrush(QColor(6, 9, 12, 200)); p.setPen(Qt.PenStyle.NoPen)
             p.drawRect(2, 2, W - 4, int((H - 4) * frac))
@@ -587,7 +587,7 @@ class Minimap(QWidget):
         self.canvas.cam_x = max(0.0, min(WORLD_W - W, mx / max(1, self.width()) * WORLD_W - W * .5))
 
 
-# ─── Resource gauge — the pulse of the match, the HUD's focal readout ─────────
+# ─── Resource gauge – the pulse of the match, the HUD's focal readout ─────────
 class ResourceGauge(QWidget):
     """A command-console resource gauge: the current bank in big amber mono, a
     segmented tank showing fill against capacity, and income in live phosphor."""
@@ -617,14 +617,14 @@ class ResourceGauge(QWidget):
         p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.mono(10))
         p.drawText(16 + fm_w, 17, 90, 22, int(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft),
                    f"/ {self.cap}")
-        # income, right-aligned, phosphor (live gain) — hidden in the sandbox,
+        # income, right-aligned, phosphor (live gain) – hidden in the sandbox,
         # where income is maxed/irrelevant and the readout would just be noise.
         if not self.hide_income:
             p.setPen(QColor(theme.PHOSPHOR)); p.setFont(theme.mono(12, True))
             p.drawText(W - 92, 8, 82, 18, int(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter),
                        f"+{self.income}/s")
             theme.led(p, W - 14, 15, theme.PHOSPHOR, r=2.4, on=True)
-        # segmented tank bar — the leading segment lights up gradually as it
+        # segmented tank bar – the leading segment lights up gradually as it
         # fills rather than popping in, so the bar reads as a continuous fill.
         bx, by, bw, bh = 12, H - 12, W - 24, 6
         p.setBrush(QColor(theme.BG)); p.setPen(QPen(QColor(theme.LINE), 1)); p.drawRect(bx, by, bw, bh)
@@ -644,7 +644,7 @@ class ResourceGauge(QWidget):
 
 # ─── Info box (to the right of the ship selection) ────────────────────────────
 class InfoBox(QWidget):
-    """A fixed panel that shows details of the unit currently hovered — in the
+    """A fixed panel that shows details of the unit currently hovered – in the
     buy menu or on the battlefield."""
 
     def __init__(self, sprites=None):
@@ -735,14 +735,14 @@ class InfoBox(QWidget):
             p.setPen(QColor(theme.TEXT_DIM)); p.setFont(theme.font(9))
             p.drawText(QRectF(x, y, W - 18, H - y - 6),
                        int(Qt.TextFlag.TextWordWrap) | int(Qt.AlignmentFlag.AlignTop),
-                       f"Locked — unlocks at Level {lvl}. Clear operations to declassify.")
+                       f"Locked. Unlocks at Level {lvl}. Clear operations to declassify.")
             return
 
         p.setPen(QColor(theme.ACCENT)); p.setFont(theme.head(9, 1))
         p.drawText(x, y, W - 16, 13, int(Qt.AlignmentFlag.AlignLeft), "ARMAMENT")
         p.setPen(QPen(QColor(theme.LINE), 1)); p.drawLine(x + 74, y + 7, W - 10, y + 7); y += 15
         p.setPen(QColor(theme.TEXT)); p.setFont(theme.mono(8))
-        lines = weapon_lines(sd) or ["—"]
+        lines = weapon_lines(sd) or ["–"]
         for ln in lines[:3]:
             p.drawText(x, y, W - 16, 12, int(Qt.AlignmentFlag.AlignLeft), ln); y += 12
         y += 4
@@ -797,7 +797,7 @@ class UpgradeCard(QWidget):
         p.setPen(QColor(theme.TEXT if (ready or self.maxed) else theme.TEXT_DIM))
         p.setFont(theme.head(10, 1))
         p.drawText(34, 7, W - 38, 16, int(Qt.AlignmentFlag.AlignVCenter), self.name.upper())
-        # pip ladder showing the upgrade level (0..5) — instrument feel
+        # pip ladder showing the upgrade level (0..5) – instrument feel
         p.setPen(Qt.PenStyle.NoPen)
         for i in range(5):
             on = i < self.level

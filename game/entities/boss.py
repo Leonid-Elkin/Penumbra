@@ -1,15 +1,15 @@
 """
-game.entities.boss — the end-of-battle boss entity.
+game.entities.boss – the end-of-battle boss entity.
 
 A Boss is a Ship that DEFENDS its base instead of assaulting. It holds station
 near the base, fires all of its weapons at any valid target, and drives the
 base-immunity flag on its faction (immune while the boss lives). Behaviour and
 hit-medium come from boss_type / unit_type:
 
-    air      (Hindenburg) — flies high; only anti-air weapons can hit it
-    carrier  (Nimitz)     — floats and launches aircraft (via spawn_units)
-    sub      (Nautilus)   — submerged; only anti-sub weapons can hit it
-    surface  (the rest)   — floats; long-range arcing artillery
+    air      (Hindenburg) – flies high; only anti-air weapons can hit it
+    carrier  (Nimitz)     – floats and launches aircraft (via spawn_units)
+    sub      (Nautilus)   – submerged; only anti-sub weapons can hit it
+    surface  (the rest)   – floats; long-range arcing artillery
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ from .explosion import Explosion
 from ..config import FORT_D_W, WORLD_W
 
 BOSS_AIR_ALT = 270.0          # px above water for an airborne boss centre
-BOSS_SPEED   = 28.0           # px/s — bosses creep toward the player's base
+BOSS_SPEED   = 28.0           # px/s – bosses creep toward the player's base
 
 
 class Boss(Ship):
@@ -55,14 +55,14 @@ class Boss(Ship):
 
     def _move(self, dt, in_combat, surface_combat):
         """Advance toward the base this boss assaults (leftward for an enemy boss,
-        rightward for a player boss — see attack_dir). A surface/carrier/sub boss
-        only STOPS to bombard when it has a SURFACE or UNDERSEA target in range —
+        rightward for a player boss – see attack_dir). A surface/carrier/sub boss
+        only STOPS to bombard when it has a SURFACE or UNDERSEA target in range –
         it keeps creeping while merely strafing aircraft. An AIR boss (Hindenburg)
         never stops: it patrols back and forth raining ordnance."""
         spd = max(self.sdef.speed, BOSS_SPEED)
         d = self.attack_dir
         if self.boss_type == 'air':
-            # Patrol band hugging the target base — near the left fort for an enemy
+            # Patrol band hugging the target base – near the left fort for an enemy
             # boss, near the right fort for a player boss.
             if d < 0:
                 lo = float(FORT_D_W + self.disp_w * 0.5 + 40)
@@ -94,7 +94,7 @@ class Boss(Ship):
         else:
             hold = surface_combat
         # A boss spawns BEYOND its far edge and opens fire as it sails in, but it
-        # must NEVER stop to bombard while still off the field — otherwise it freezes
+        # must NEVER stop to bombard while still off the field – otherwise it freezes
         # off-screen the instant a target enters range, technically "attacking" yet
         # unable to advance. It only holds station once its hull is on the battlefield.
         if off_field:
@@ -123,17 +123,17 @@ class Boss(Ship):
             # Seat the hull in the water: `submerged_frac` (from the boss JSON) is
             # how much of the sprite HEIGHT sits below the waterline. The default
             # 0.05 keeps only the very bottom dipping under (tall-masted ships stay
-            # fully visible); a larger value sinks the boss lower — e.g. the Unknown
+            # fully visible); a larger value sinks the boss lower – e.g. the Unknown
             # rides with its hull "base" all the way in the ocean, deck at the water.
             frac = getattr(self.sdef, 'submerged_frac', 0.05)
             self.top_y = wy - self.disp_h * (1.0 - frac)
 
     def _fire(self, dt, ships, projectiles, effects=None):
         """Fire every weapon at its best target. Returns (in_combat, surface_combat)
-        where surface_combat is True only when a non-aircraft target is in range —
+        where surface_combat is True only when a non-aircraft target is in range –
         a boss keeps advancing while it merely strafes planes."""
         in_combat = False; surface_combat = False
-        # Nearest surface/undersea foe — drives the standoff hold in _move.
+        # Nearest surface/undersea foe – drives the standoff hold in _move.
         self.nearest_ground = float('inf')
         for s in ships:
             if s.team == self.team or not s.alive: continue
@@ -177,6 +177,6 @@ class Boss(Ship):
             p.setPen(QColor("#cc4444")); p.setFont(QFont("Arial", 12, QFont.Weight.Bold))
             p.drawText(sx, sy, self.disp_w, self.disp_h,
                        Qt.AlignmentFlag.AlignCenter, self.sdef.name)
-        # Bosses use the same plain health bar as any other enemy — no special
-        # boss banner — so they read as ordinary (if large) hostiles.
+        # Bosses use the same plain health bar as any other enemy – no special
+        # boss banner – so they read as ordinary (if large) hostiles.
         self._draw_hpbar(p, sx, sy)

@@ -1,5 +1,5 @@
 """
-game.bot — CaptainBob: a solo opponent for the head-to-head (PvP) mode.
+game.bot – CaptainBob: a solo opponent for the head-to-head (PvP) mode.
 
 The head-to-head battle is host-authoritative: the host runs the sim as the
 "player" faction and a second human, joined over the network, commands the
@@ -7,34 +7,34 @@ The head-to-head battle is host-authoritative: the host runs the sim as the
 battle._handle_net → _apply_deploy / _apply_place / request_upgrade). CaptainBob
 stands in for that second human. It runs on the SAME host sim, reads the world
 straight off the canvas, and issues the very same enemy-faction orders by calling
-those apply methods directly — so it plays by identical rules: the same starting
+those apply methods directly – so it plays by identical rules: the same starting
 purse, the same plain (no time-ramp) income, the same upgrade costs and research
 delays, the same fort slots, the same production cooldowns. Nothing is handed to
 it; every hull, turret and upgrade is paid for out of the enemy bank.
 
 Its doctrine, in priority order each decision tick:
-  1. DEFEND    — read the incoming player fleet, weight threats by how close they
+  1. DEFEND    – read the incoming player fleet, weight threats by how close they
                  are to the enemy fort, and answer an uncovered air / sub / surface
                  threat by seating the right turret in a free fort (or Bastion)
                  slot; if it can't yet afford the turret, it musters a cheap hull
                  that counters the same threat instead.
-  2. FORTIFY   — a seaward Bastion (a tanky shield that also mounts two turrets)
+  2. FORTIFY   – a seaward Bastion (a tanky shield that also mounts two turrets)
                  once the bank can spare it, then turrets on its deck nodes.
-  3. INVEST    — buy base upgrades on an economy-first plan (income → production →
+  3. INVEST    – buy base upgrades on an economy-first plan (income → production →
                  fleet → …), always keeping a reserve so a sudden push still finds
                  the bank ready to fortify.
-  4. SEIZE     — fight for the midfield oil platform: whenever it isn't paying the
+  4. SEIZE     – fight for the midfield oil platform: whenever it isn't paying the
                  enemy bank, push a SURFACE hull (only surface hulls drag the meter,
-                 and a heavy capture_weight hull pulls it faster) to take it back —
+                 and a heavy capture_weight hull pulls it faster) to take it back –
                  harder and faster the moment the player starts prying it away. In
                  this mode holding the cap scores the punishment flagship, so the
                  bot contests it directly instead of hoping its fleet drifts through.
-  5. ATTACK    — spend the surplus pressuring the player with a diversified fleet,
+  5. ATTACK    – spend the surplus pressuring the player with a diversified fleet,
                  leaning on hulls that also counter the player's air / sub units.
 
 Every decision is gated by the real cost / cooldown / fleet-cap checks the human
 opponent faces, so the bot is income-limited and must grow its economy to escalate
-— exactly as a person playing this mode would.
+– exactly as a person playing this mode would.
 """
 
 from __future__ import annotations
@@ -47,7 +47,7 @@ class CaptainBob:
     NAME = "CAPTAIN BOB"
 
     # Economy-first upgrade ambition. The bot buys the first track in this order it
-    # is behind on and can afford (with a reserve) — income and faster production
+    # is behind on and can afford (with a reserve) – income and faster production
     # first, then a bigger fleet / bank, then armour (which also adds a turret slot).
     UPGRADE_PRIO = ["resource", "warehouse", "fleet", "storage", "health", "salvage"]
 
@@ -117,14 +117,14 @@ class CaptainBob:
         try:
             self._think()
         except Exception:
-            # A bot slip must never take down the live battle — swallow and retry
+            # A bot slip must never take down the live battle – swallow and retry
             # next tick.
             pass
 
     # ── One decision pass ──────────────────────────────────────────────────────
-    # The bot banks toward ONE clear goal at a time — the next income tier, then a
+    # The bot banks toward ONE clear goal at a time – the next income tier, then a
     # turret to wall off a threat, then a Bastion, then the rest of the upgrade plan
-    # — and spends only genuine SURPLUS (money beyond that goal) on chip defence and
+    # – and spends only genuine SURPLUS (money beyond that goal) on chip defence and
     # offence. This savings discipline is what lets an income-limited commander ever
     # afford a 1600-credit battery: without it, dribbling every credit onto cheap
     # hulls keeps the bank flat forever. At most one major order per tick, so its
@@ -142,7 +142,7 @@ class CaptainBob:
         goal = self._savings_goal(worst, worst_cat)
 
         # A goal the bank can't even HOLD (its cost exceeds the storage cap) is a
-        # deadlock — income just overflows at the cap and the purchase never lands.
+        # deadlock – income just overflows at the cap and the purchase never lands.
         # A human lifts the warehouse first; so does the bot, redirecting to a
         # storage upgrade until the cap clears the goal.
         if goal is not None and goal[2] > en.max_res - 40.0:
@@ -172,7 +172,7 @@ class CaptainBob:
             return
 
         # 2.5) SEIZE the midfield: whenever the scoring platform isn't paying our bank,
-        #      push a surface hull to contest it — the mode's win condition (the score
+        #      push a surface hull to contest it – the mode's win condition (the score
         #      leader is handed a punishment flagship), so the bot fights for the cap
         #      directly rather than hoping its attack fleet drifts through the lane.
         #      Reserve a slice of the savings goal so seizing it doesn't starve the
@@ -184,7 +184,7 @@ class CaptainBob:
             self._last_cap = self._t
             return
 
-        # 3) Keep a STANDING FLEET on the water — forward defence that meets the
+        # 3) Keep a STANDING FLEET on the water – forward defence that meets the
         #    player's hulls in midfield instead of letting them reach the fort, and
         #    the bot's own offence. Throttled and reserved so it grows the fleet
         #    steadily WITHOUT starving the savings goal (turrets stay affordable).
@@ -205,7 +205,7 @@ class CaptainBob:
         target = min(c._fleet_cap("enemy"), 3 + int(c.game_time // 30.0))
         if c._committed("enemy") >= target:
             return False
-        # Protect the savings goal, but never hoard the whole bank for it — cap the
+        # Protect the savings goal, but never hoard the whole bank for it – cap the
         # protected slice so a costly goal (a Bastion) can't freeze fleet upkeep.
         reserve = min(goal_cost, 500.0) + 100.0
         if self._attack(threat, reserve):
@@ -224,14 +224,14 @@ class CaptainBob:
         c = self.c
         en = c.enemy
         hp_frac = (en.base_hp / en.max_base_hp) if en.max_base_hp else 1.0
-        # 1) Rush income while it's still low — nothing else is affordable until it
+        # 1) Rush income while it's still low – nothing else is affordable until it
         #    climbs, so a human takes the first few tiers straight away.
         if en.upgrades.get("resource", 0) < 3 and "resource" not in c.pending_upg["enemy"]:
             cost = self._track_cost("resource")
             if cost is not None:
                 return ("upgrade", "resource", cost)
         # 2) DEFEND: while any threat is bearing down OR the base has taken damage,
-        #    fill the fort with turrets — cover the most-threatened class first, then
+        #    fill the fort with turrets – cover the most-threatened class first, then
         #    seat versatile batteries in any remaining slot. Turrets are the most
         #    cost-effective defence per credit, so this comes before further economy.
         if worst > 0.4 or hp_frac < 0.92:
@@ -245,7 +245,7 @@ class CaptainBob:
                 cost = self._track_cost(key)
                 if cost is not None:
                     return ("upgrade", key, cost)
-        # 4) Luxury: a Bastion for two more turret decks — only when the base is
+        # 4) Luxury: a Bastion for two more turret decks – only when the base is
         #    healthy and every fort slot is already filled, so it genuinely EXTENDS
         #    the wall rather than delaying it.
         fort_full = (not self._free_slots(c.enemy_over_slots)
@@ -267,7 +267,7 @@ class CaptainBob:
         tg = self._turret_goal(worst_cat)              # cover the pressing class first
         if tg is not None:
             return tg
-        # No slot for the threatened class (or it's already covered) — put a general
+        # No slot for the threatened class (or it's already covered) – put a general
         # missile battery on any free surface/deck slot, or torpedoes below.
         if (self._free_slots(c.enemy_over_slots) or self._free_rig_node() is not None):
             info = self.turrets.get("missile_battery")
@@ -355,7 +355,7 @@ class CaptainBob:
 
     # ── Defence: turret placement / counter-hull ───────────────────────────────
     def _place_turret_key(self, key: str, reserve: float) -> bool:
-        """Seat a specific turret in a fitting free slot — its underwater step for a
+        """Seat a specific turret in a fitting free slot – its underwater step for a
         torpedo battery, else a free surface pad or a Bastion deck. Reports whether
         it actually went down (affordability / cooldown / slot are all re-checked)."""
         c = self.c
@@ -377,7 +377,7 @@ class CaptainBob:
         return False
 
     def _deploy_counter(self, cat: str, reserve: float) -> bool:
-        """Muster the cheapest ready hull whose guns answer `cat` — the poor-bot
+        """Muster the cheapest ready hull whose guns answer `cat` – the poor-bot
         response to a threat it can't yet wall off with a turret."""
         capi = {"air": 0, "sub": 1, "surf": 2}[cat]
         best = None
@@ -437,7 +437,7 @@ class CaptainBob:
         return c.capture_points[0]
 
     def _cap_interval(self, cap) -> float:
-        """Seconds to wait between capture pushes — short while the player is
+        """Seconds to wait between capture pushes – short while the player is
         actively prying the platform away (their ships on it, or they hold it), long
         while it merely sits neutral. So the bot floods hulls exactly when the cap is
         in play instead of trickling them out on a flat cadence."""
@@ -516,7 +516,7 @@ class CaptainBob:
         """(rig_nid, node_idx) of a free deck node on a finished enemy Bastion, or
         None. Stamps the rig with a network id first if it lacks one, since in a
         solo match the snapshot serializer (which normally assigns ids) never runs
-        — _apply_place looks the rig up by that id."""
+        – _apply_place looks the rig up by that id."""
         c = self.c
         for rig in c._team_rigs("enemy"):
             if getattr(rig, "under_construction", False):

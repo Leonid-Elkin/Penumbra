@@ -1,5 +1,5 @@
 """
-game.registry — discovers and loads the JSON configs into typed registries.
+game.registry – discovers and loads the JSON configs into typed registries.
 
 `GameData()` scans:
     vehicles/*.json          -> deployable units
@@ -91,7 +91,7 @@ class GameData:
         on a fresh playthrough the Nth level (index N) is entered having cleared
         N earlier levels, so `progression.unlocked_keys(stage)` is exactly the
         roster the player has available before and during this level. The enemy
-        economy is pinned to this — independent of the player's global progress.
+        economy is pinned to this – independent of the player's global progress.
         """
         order = [l.key for l in self.levels_sorted()]
         return order.index(level_key) if level_key in order else 0

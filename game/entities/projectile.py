@@ -1,5 +1,5 @@
 """
-game.entities.projectile — flying ordnance and its per-type behaviour/rendering.
+game.entities.projectile – flying ordnance and its per-type behaviour/rendering.
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ FADE_TIME = 0.35
 
 def _mix(a: QColor, b: QColor, t: float) -> QColor:
     """Linear blend a→b by t (0..1), used to fade a round's day look into its
-    night look — a dark metal shell into a white-hot incandescent orb."""
+    night look – a dark metal shell into a white-hot incandescent orb."""
     t = 0.0 if t < 0.0 else 1.0 if t > 1.0 else t
     return QColor(int(a.red()   + (b.red()   - a.red())   * t),
                   int(a.green() + (b.green() - a.green()) * t),
@@ -55,7 +55,7 @@ def ship_hit(s, x, y) -> bool:
 
 def apply_damage(ship, dmg) -> None:
     """Deal `dmg` to `ship`, unless it is invulnerable. An immune base (boss
-    alive) still stops and absorbs the round — it simply takes no damage. The
+    alive) still stops and absorbs the round – it simply takes no damage. The
     caller consumes the projectile either way, so an immune base "eats" hits."""
     if getattr(ship, 'invulnerable', False):
         return                             # e.g. an immune base while the boss lives
@@ -121,7 +121,7 @@ class Projectile:
     def _begin_fade(self) -> None:
         """Start the timed-out fade-out instead of vanishing this frame. The
         round stops hitting / homing and just coasts on its last heading while
-        draw() ramps its opacity to zero. Idempotent — never restarts a fade."""
+        draw() ramps its opacity to zero. Idempotent – never restarts a fade."""
         if self.fade_t is None:
             self.fade_t = FADE_TIME
 
@@ -145,7 +145,7 @@ class Projectile:
             if abs(s.x - self.x) >= s.disp_w * 0.52 + R or abs(s.mid_y - self.y) >= s.disp_h * 0.70 + R:
                 continue
             # Contact pass: detonate when any point of the mine's rim (or its
-            # centre) touches the hull silhouette — bow/stern included, not
+            # centre) touches the hull silhouette – bow/stern included, not
             # just the centre of mass.
             for px, py in ((self.x, self.y),
                            (self.x - R, self.y), (self.x + R, self.y),
@@ -162,7 +162,7 @@ class Projectile:
         self.x += self.vx * dt; self.y += self.vy * dt
         # The carrier is a barrel lobbed at the submarine; it bursts into the
         # sinking charge pattern the instant it strikes the sea. Splitting AT the
-        # water surface — centred on the carrier's own position — makes the charges
+        # water surface – centred on the carrier's own position – makes the charges
         # drop exactly where the projectile hits. (It was previously released a
         # little above the water and re-centred on a stored target x, which left
         # the pattern visibly detached from the round that dropped it.)
@@ -184,7 +184,7 @@ class Projectile:
             frac = (i / (n - 1)) - 0.5                 # -0.5 .. 0.5, evenly spaced
             b = Projectile(cx + frac * spread, water_y - 6.0, self.team,
                            0.0, random.uniform(34.0, 46.0), self.attack)
-            b.armed = True                             # a bomblet — won't split again
+            b.armed = True                             # a bomblet – won't split again
             b.owner_id = self.owner_id
             spawn.append(b)
 
@@ -237,7 +237,7 @@ class Projectile:
 
         Damage is proximity-scaled: a near-direct hit is devastating (enough to
         one-shot light aircraft), falling off toward a light sting at the blast
-        edge. `frag_damage` sets the scale — peak is ~18x it, edge ~2x."""
+        edge. `frag_damage` sets the scale – peak is ~18x it, edge ~2x."""
         BLAST = 74.0            # outer radius: past here a plane takes nothing
         CORE  = 30.0            # within here it eats the full peak blast
         base  = max(1, getattr(self.attack, 'frag_damage', 8))
@@ -319,7 +319,7 @@ class Projectile:
         # it over ~90° toward the target and boosts it to full speed.
         vls = getattr(self.attack, 'vls', False)
         if vls and self.age < getattr(self.attack, 'vls_pop_time', 0.35):
-            # Cold-eject phase: the motor has NOT lit yet, so no exhaust — it just
+            # Cold-eject phase: the motor has NOT lit yet, so no exhaust – it just
             # coasts silently up out of the tube. The smoke plume starts below,
             # once the motor fires and it begins to accelerate.
             self.vy += 260.0 * dt
@@ -337,7 +337,7 @@ class Projectile:
             in_water = (self.y >= SURFACE)
             if not in_water:
                 if self.fired_downward and not self.armed:
-                    # still falling toward the sea — keep travelling
+                    # still falling toward the sea – keep travelling
                     self.x += self.vx * dt; self.y += self.vy * dt
                     if not (-PROJ_EDGE_MARGIN <= self.x <= WORLD_W + PROJ_EDGE_MARGIN) or self.y > 4000:
                         self.alive = False
@@ -374,7 +374,7 @@ class Projectile:
             # Steer at the target's HITBOX centre of mass, not its sprite centre.
             # A ship rides high in its frame and a sub's hull is offset within its
             # padded art, so (x, mid_y) frequently points at empty sprite / above
-            # the waterline — a round aimed there sails through blank space and
+            # the waterline – a round aimed there sails through blank space and
             # never trips the hitmask. `hit_com` is where the solid plating is.
             best = None; best_d = float('inf'); best_aim = None
             for s in ships:
@@ -416,7 +416,7 @@ class Projectile:
 
         # ── VLS motor plume ───────────────────────────────────────────────────
         # `boosting` is set above whenever the motor is lit and the round is still
-        # gaining speed toward full — trail an exhaust puff from the tail every
+        # gaining speed toward full – trail an exhaust puff from the tail every
         # such frame, so a plume streams behind it the WHOLE time it accelerates
         # and stops the instant it reaches cruise speed. (No smoke during the
         # silent cold-eject, and none once at full speed / with no target.)
@@ -429,8 +429,8 @@ class Projectile:
 
         # ── Cruise-missile exhaust plume ──────────────────────────────────────
         # A missile flagged `exhaust_smoke` trails the SAME grey motor plume the
-        # VLS "aegis" round leaves — a LaunchSmoke puff shed from the tail every
-        # frame — but for its whole powered flight rather than only while boosting
+        # VLS "aegis" round leaves – a LaunchSmoke puff shed from the tail every
+        # frame – but for its whole powered flight rather than only while boosting
         # (a plain rocket-motor missile burns the entire way to the target). The
         # VLS eject/boost phases return earlier, so a round never double-plumes.
         if (getattr(self.attack, 'exhaust_smoke', False)
@@ -448,7 +448,7 @@ class Projectile:
             # A shell reaching the sea normally splashes and is spent. But a
             # surface ship rides ~15% sunk (battle seats its top at
             # water_y - 0.85*disp_h), so the lower hull of its collision
-            # silhouette sits BELOW the waterline — and flat-fire guns/rockets
+            # silhouette sits BELOW the waterline – and flat-fire guns/rockets
             # already strike that submerged plating. Cull the shell here only
             # over open water; when it is still coming down onto a hittable hull,
             # let it keep descending so a dead-on shot hits the thick hull at/
@@ -468,14 +468,14 @@ class Projectile:
                 if abs(s.x - self.x) <= half_w and self.y <= mid + getattr(s, 'disp_h', 0) * 0.5:
                     onto_hull = True; break
             if not onto_hull:
-                # Splashes into the open sea and is spent — throw up the same
+                # Splashes into the open sea and is spent – throw up the same
                 # foam-and-spray plume the menu flagship's salvo raises on impact.
                 if self._effects is not None:
                     self._effects.append(Splash(self.x, water_y))
                 self.alive = False; return
 
         if atp == "missile" and self.y >= water_y:
-            # A ground-to-ground missile that reaches the sea is spent — it
+            # A ground-to-ground missile that reaches the sea is spent – it
             # splashes and is culled rather than skimming on across the water.
             # Mirror the shell rule so a dead-on shot still connects: a surface
             # ship rides ~15% sunk, so the lower hull of its collision
@@ -505,14 +505,14 @@ class Projectile:
         # of forgiveness against aircraft: a small, fast-crossing plane can sit
         # just off the silhouette when a fast MG round sweeps past. Counting a
         # near-miss within `aa_tol` px of the plane's box as a hit makes AA feel
-        # like it connects — paired with the predictive lead on the firing side.
+        # like it connects – paired with the predictive lead on the firing side.
         aa_tol = 6.0 if (self.attack.attack_type == 'bullet'
                          and getattr(self.attack, 'can_hit_plane', False)
                          and not getattr(self.attack, 'can_hit_surface', True)) else 0.0
         for s in ships:
             if not s.alive: continue
             if s.team == self.team:
-                continue                              # pass through friendlies — never blocked
+                continue                              # pass through friendlies – never blocked
             hit = ship_hit(s, self.x, self.y)
             if not hit and aa_tol > 0.0 and getattr(s.sdef, 'unit_type', 'ship') == 'plane':
                 hw = getattr(s, 'disp_w', 0) * 0.5 + aa_tol
@@ -524,7 +524,7 @@ class Projectile:
                     continue                          # an enemy we can't damage → fly over
                 if piercing:
                     if getattr(s, 'id', -1) == self.last_hit_id:
-                        continue                      # already hit this one — keep going
+                        continue                      # already hit this one – keep going
                     self.last_hit_id = getattr(s, 'id', -1)
                     apply_damage(s, self.attack.damage)
                     continue                          # pierce through, don't despawn
@@ -545,7 +545,7 @@ class Projectile:
     def _glow(self):
         """A luminous team-tinted colour for a round's night glow. The team `base`
         (black player / red enemy) is too dark to read as light, so the player
-        glows a cool steel-white and the enemy a hot red-orange — muzzle fire that
+        glows a cool steel-white and the enemy a hot red-orange – muzzle fire that
         still tells the two sides apart in the dark."""
         if self.team == "player":
             return QColor(150, 194, 236)                  # cool steel muzzle glow
@@ -572,7 +572,7 @@ class Projectile:
         battleship shells and MLRS rockets 'ignite' only under the night sky."""
         base, hot = self._palette()
         p.setPen(Qt.PenStyle.NoPen)
-        # Warm outer bloom — night only, its opacity ramping with `night`.
+        # Warm outer bloom – night only, its opacity ramping with `night`.
         if night > 0.01:
             warm = QColor(255, 214, 150)
             def a(v): return int(v * night)
@@ -593,9 +593,9 @@ class Projectile:
         p.drawEllipse(QPointF(sx, self.y), r, r)
 
     def _shell(self, p, sx, L, night):
-        """Draw the round as an actual artillery-shell silhouette — a pointed
+        """Draw the round as an actual artillery-shell silhouette – a pointed
         ogive nose, a cylindrical body, a copper driving band and a boat-tailed
-        base — flown nose-first along its heading, so it arcs like a real shell
+        base – flown nose-first along its heading, so it arcs like a real shell
         rather than a featureless ball. It keeps the same day/night skin as
         `_orb`: a dark team-tinted steel round by day that ignites into a warm
         incandescent one at night (soft bloom + white-hot nose). `L` is the
@@ -614,7 +614,7 @@ class Projectile:
         p.translate(sx, self.y)
         p.rotate(math.degrees(ang))
 
-        # Warm outer bloom — night only, ramping in with `night`, so the shell
+        # Warm outer bloom – night only, ramping in with `night`, so the shell
         # glows like a tracer after dark (mirrors `_orb`).
         if night > 0.01:
             warm = QColor(255, 214, 150)
@@ -646,13 +646,13 @@ class Projectile:
         p.setPen(Qt.PenStyle.NoPen); p.setBrush(body)
         p.drawPath(path)
 
-        # Driving band — a darker copper ring near the base.
+        # Driving band – a darker copper ring near the base.
         bandc = _mix(base.darker(180), QColor(200, 120, 60), night)
         pen = QPen(bandc, max(1.2, hh * 0.55)); pen.setCapStyle(Qt.PenCapStyle.FlatCap)
         p.setPen(pen)
         p.drawLine(QPointF(band, -hh * 0.92), QPointF(band, hh * 0.92))
 
-        # White-hot nose spark after dark — the shell's incandescent tip.
+        # White-hot nose spark after dark – the shell's incandescent tip.
         if night > 0.01:
             nose = QColor(255, 252, 235); nose.setAlpha(int(230 * night))
             p.setPen(Qt.PenStyle.NoPen); p.setBrush(nose)
@@ -664,7 +664,7 @@ class Projectile:
     def draw(self, p: QPainter, cam_x: float, night: float = 0.0):
         if not self.alive: return
         night = 0.0 if night < 0.0 else 1.0 if night > 1.0 else night
-        # Ordnance ignites *only* under a full-night sky — the NIGHT band and the
+        # Ordnance ignites *only* under a full-night sky – the NIGHT band and the
         # "Dead of Night" ABYSS finale (both night==1.0). The lit DUSK/SUNSET bands
         # (night 0.4/0.7) keep their plain daytime metal look, so shells and orbs
         # don't glow at sunset. Snap any partial band down to no glow.
@@ -683,9 +683,9 @@ class Projectile:
         base, hot = self._palette()
 
         # Rounds leave a faint tracer in their team colour, drawn first so the
-        # solid body sits on top of the streak — except heavy shells and depth
+        # solid body sits on top of the streak – except heavy shells and depth
         # charges, which fly clean. All ordnance is drawn as cheap procedural
-        # vector shapes below — no sprite blit / per-frame scale+rotate.
+        # vector shapes below – no sprite blit / per-frame scale+rotate.
         if atp not in ("shell", "depth_charge"):
             self._tracer(p, sx, base, night=night)
 
@@ -705,7 +705,7 @@ class Projectile:
                     p.drawLine(int(sx - nx * L), int(self.y - ny * L),
                                int(sx), int(self.y))
             else:
-                # Night: a glowing tracer round — a luminous streak along its
+                # Night: a glowing tracer round – a luminous streak along its
                 # flight with a soft bloom and a white-hot head, brightening with
                 # `night`. (The faint team tracer above sits underneath it.)
                 spd = math.hypot(self.vx, self.vy)
@@ -759,7 +759,7 @@ class Projectile:
 
         elif atp == "rocket":
             # Each MLRS rocket reads as a small metal bead by day that ignites into
-            # a warm glowing orb at night — the same incandescent round the
+            # a warm glowing orb at night – the same incandescent round the
             # battleship's shell throws (the "shell" branch below), just a touch
             # smaller. The glow only lights up after dark; a faint team tracer
             # (drawn above) still tells you whose salvo it is either way.
@@ -795,7 +795,7 @@ class Projectile:
             p.drawEllipse(int(sx - 3), int(self.y - 3), 7, 7)
 
         elif atp == "shell":
-            # A lobbed battleship shell reads as an actual shell silhouette — a
+            # A lobbed battleship shell reads as an actual shell silhouette – a
             # pointed ogive nose, a cylindrical body and a boat-tailed base, flown
             # nose-first along its arc. It is a dark team-tinted steel round by day
             # that ignites into a warm incandescent one at night (soft bloom +
@@ -809,7 +809,7 @@ class Projectile:
 
         elif atp in ("missile", "aa_missile"):
             # Both surface-to-surface and anti-air missiles share the same compact
-            # "small missile" look — a short team-coloured body flown nose-first
+            # "small missile" look – a short team-coloured body flown nose-first
             # along its heading, with a hot nose spark and a soft exhaust glow at
             # the tail (rather than the old stubby AA blob).
             spd = max(math.hypot(self.vx, self.vy), 1)

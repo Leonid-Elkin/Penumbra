@@ -1,5 +1,5 @@
 """
-game.battle — BattleCanvas: simulation, rendering, camera and input for one level.
+game.battle – BattleCanvas: simulation, rendering, camera and input for one level.
 
 Owns the ship/projectile/effect lists and the two factions, runs the fixed-step
 update loop, draws the world, and handles the boss trigger (enemy base at 25% HP
@@ -36,21 +36,21 @@ from .settings import SETTINGS
 SELL_FRACTION = 0.40
 
 # When a base is battered to 0 HP the fort doesn't just vanish and cut to the
-# verdict: the field freezes and the doomed fort plays a short collapse — a
-# rolling series of explosions with a camera push-in and a fading blast flash —
+# verdict: the field freezes and the doomed fort plays a short collapse – a
+# rolling series of explosions with a camera push-in and a fading blast flash –
 # for this many seconds before the VICTORY / DEFEAT card is shown (see
 # _begin_collapse / _update_collapse).
 BASE_DEATH_ANIM = 2.4
 
 # Downing a boss doesn't freeze the fight, but it does flash the same bright blast
-# over the whole field as a base collapse — this is how long that bloom takes to
+# over the whole field as a base collapse – this is how long that bloom takes to
 # fade (see boss_flash_t / _draw_boss_flash).
 BOSS_FLASH_DUR = 0.5
 
 
 class BattleCanvas(QOpenGLWidget):
     """The live battlefield. A QOpenGLWidget so the per-frame QPainter draw runs
-    on the GPU (hardware-accelerated OpenGL paint engine) — the whole scene is
+    on the GPU (hardware-accelerated OpenGL paint engine) – the whole scene is
     repainted every tick, so the 60 fps sim stays smooth even when the field is
     crowded with ships, projectiles and effects."""
     sig_ui    = pyqtSignal()
@@ -71,12 +71,12 @@ class BattleCanvas(QOpenGLWidget):
         # ── LAN / WAN multiplayer ────────────────────────────────────────────
         # net_role: None (single-player) | "host" (P1, runs the authoritative
         # sim, commands the player faction) | "client" (P2, commands the enemy
-        # faction, renders host snapshots — no local simulation). PvP mode is
+        # faction, renders host snapshots – no local simulation). PvP mode is
         # implied by any net role: the enemy AI is off and a human drives it.
         #
         # net_pending (host only): a NetRelayHost that has opened a room but not
         # yet been paired. The battle is entered immediately in an "awaiting
-        # player" hold — the sim is frozen and input blocked — and the moment the
+        # player" hold – the sim is frozen and input blocked – and the moment the
         # relay pairs a joiner we adopt the live link and the fight begins.
         self.net_role = net_role
         self.net      = net_link
@@ -84,8 +84,8 @@ class BattleCanvas(QOpenGLWidget):
         self.awaiting_peer = net_pending is not None
         self._await_error: Optional[str] = None
         # "Play with a bot" (Captain Bob): a solo match that runs the head-to-head
-        # PvP ruleset — symmetric economy, the one-turret opening, no campaign
-        # director/HP-scaling, the central score platform — but with the enemy
+        # PvP ruleset – symmetric economy, the one-turret opening, no campaign
+        # director/HP-scaling, the central score platform – but with the enemy
         # faction driven by a LOCAL bot instead of a networked human. net_role stays
         # None (no link, no snapshots); the bot ticks inside _update and issues the
         # same enemy-faction orders a P2 client would (see game.bot.CaptainBob).
@@ -95,7 +95,7 @@ class BattleCanvas(QOpenGLWidget):
         # the host runs the sim with itself as player; the client renders every
         # host snapshot through a horizontal mirror + team swap (see netsync.apply)
         # so its own base always sits on the LEFT in player black/amber and the
-        # opponent on the RIGHT in danger red — regardless of who is host.
+        # opponent on the RIGHT in danger red – regardless of who is host.
         self.my_team  = "player"
         self.mirror_view = (net_role == "client")   # client renders the world mirrored
         # Commander names shown on the two base HP gauges (PvP only). My own name
@@ -118,7 +118,7 @@ class BattleCanvas(QOpenGLWidget):
         else:
             self._net_session = net_session
         self._hello_sent = False
-        # Password-protected rooms are enforced HERE, host-side — the relay is
+        # Password-protected rooms are enforced HERE, host-side – the relay is
         # deliberately dumb and byte-transparent (see relay.py), so we never rely on
         # it to gate a locked room. After the relay pairs a joiner, the host holds
         # the match until that joiner proves the room password over the link; only
@@ -145,14 +145,14 @@ class BattleCanvas(QOpenGLWidget):
         self._rematch_local = False     # this side pressed RE-ENGAGE
         self._rematch_peer  = False     # opponent has asked for a rematch
         self.level      = level
-        # Campaign levels the profile has cleared so far — gates the Surge Rush
+        # Campaign levels the profile has cleared so far – gates the Surge Rush
         # ability (see surge_unlocked). Defaults high so one-off / test battles get
         # it; the campaign passes the real count and the sandbox is always unlocked.
         self.cleared    = cleared
         self.data       = data
         self.sprites    = sprites
         self.difficulty = difficulty
-        # "easy" | "normal" | "hard" — selects a boss's exact per-difficulty HP.
+        # "easy" | "normal" | "hard" – selects a boss's exact per-difficulty HP.
         self.difficulty_name = difficulty_name if difficulty_name in (
             "easy", "normal", "hard") else "normal"
         # Sandbox: spawn any ally OR enemy instantly with no cooldowns and free.
@@ -160,7 +160,7 @@ class BattleCanvas(QOpenGLWidget):
         self.spawn_team = 'player'      # which side the deploy bar spawns (sandbox toggle)
         # Vehicle keys the player may deploy (campaign unlocks); default = all.
         self.unlocked   = set(unlocked) if unlocked is not None else set(data.vehicles.keys())
-        # Vehicle keys the enemy may field — pinned to this level's campaign
+        # Vehicle keys the enemy may field – pinned to this level's campaign
         # stage so it never fields units the player hadn't unlocked by here,
         # even on a replay with everything unlocked. Defaults to the player's
         # roster when unspecified (e.g. a one-off battle outside the campaign).
@@ -201,7 +201,7 @@ class BattleCanvas(QOpenGLWidget):
         self.player = Faction(True); self.enemy = Faction(False)
         # PvP is a fair duel between two humans, so both commanders open with the
         # same purse. (Single-player keeps the player's 180-vs-140 head start: the
-        # AI enemy offsets it with a time-ramped income no human enemy ever gets —
+        # AI enemy offsets it with a time-ramped income no human enemy ever gets –
         # see the pvp branch in _update.)
         if self.pvp:
             self.enemy.resources = self.player.resources
@@ -212,8 +212,8 @@ class BattleCanvas(QOpenGLWidget):
             self.player.max_base_hp = self.player.base_hp = 10000.0
             self.enemy.max_base_hp  = self.enemy.base_hp  = 10000.0
         # Sandbox: the player starts with every upgrade maxed out (base HP, income,
-        # storage, fleet, warehouse), so downstream setup — armour slots,
-        # base HP — reads the max-tier values below.
+        # storage, fleet, warehouse), so downstream setup – armour slots,
+        # base HP – reads the max-tier values below.
         if self.sandbox:
             for k in self.player.upgrades:
                 self.player.upgrades[k] = MAX_LVL
@@ -260,7 +260,7 @@ class BattleCanvas(QOpenGLWidget):
         self.dying_t = 0.0
         self._dying_spawn_t = 0.0
         # Downing a boss fires the same bright blast flash as a base collapse, but
-        # without freezing the fight — this just counts down while the bloom fades.
+        # without freezing the fight – this just counts down while the bloom fades.
         self.boss_flash_t = 0.0
         self.paused = False             # Escape holds the battle (see _draw_pause)
         self.tutorial_freeze = False    # first-run guide is up: turrets held in a
@@ -272,7 +272,7 @@ class BattleCanvas(QOpenGLWidget):
         self.director = EnemyDirector(self, self.data, self.difficulty)
         # Captain Bob commands the enemy faction in two cases:
         #   • a "play with a bot" match (vs_bot), always; and
-        #   • the campaign, once oil rigs have entered the enemy roster — from that
+        #   • the campaign, once oil rigs have entered the enemy roster – from that
         #     stage on he TAKES OVER from the scripted director, so the late game is
         #     fought against a live, economy-driven opponent that fortifies, upgrades
         #     and pushes exactly as the bot-match Bob does.
@@ -303,7 +303,7 @@ class BattleCanvas(QOpenGLWidget):
         # fixed underwater section (2). Each entry holds its occupant or None.
         self.over_slots: list = [None] * (2 + self.player.hlv)
         self.under_slots: list = [None, None]
-        # Mirror slots on the enemy fort — used in sandbox so the player can seat
+        # Mirror slots on the enemy fort – used in sandbox so the player can seat
         # enemy fortifications on the enemy base exactly like their own turrets.
         self.enemy_over_slots:  list = [None] * (2 + self.enemy.hlv)
         self.enemy_under_slots: list = [None, None]
@@ -318,14 +318,14 @@ class BattleCanvas(QOpenGLWidget):
         self._pause_rects: list = []
         # Per-unit production cooldowns (key -> seconds remaining), per team.
         self.build_cd = {"player": {}, "enemy": {}}
-        # The FULL cooldown each of those was started with — captured at deploy time
+        # The FULL cooldown each of those was started with – captured at deploy time
         # (Factory level + any surge ×), so the HUD shows the TRUE cooldown and a
         # later Factory upgrade only shortens the NEXT order, never a unit already
         # cooling. Ticked down alongside build_cd; cleared when a unit comes ready.
         self.build_cd_total = {"player": {}, "enemy": {}}
         # Upgrades in progress per team, keyed by track: {key: {"timer", "total"}}.
-        # Each track researches independently — you can advance fleet and income at
-        # the same time — but the SAME track can't be queued twice at once. Upgrades
+        # Each track researches independently – you can advance fleet and income at
+        # the same time – but the SAME track can't be queued twice at once. Upgrades
         # are bought now and only take effect once their timer elapses.
         self.pending_upg = {"player": {}, "enemy": {}}
         # Buffered spawns released one at a time (SPAWN_STAGGER apart) so waves and
@@ -336,7 +336,7 @@ class BattleCanvas(QOpenGLWidget):
         # deploys it when the cooldown ends (max 10 stacks per unit type).
         self.unit_queue: dict = {}
         # Parallel FIFO ledger of what was actually PAID for each queued stack (in
-        # buy order), so a right-click dequeue can hand back exactly that — the price
+        # buy order), so a right-click dequeue can hand back exactly that – the price
         # may differ per hull (bulk discount). Oldest deploys first (pop(0)); a
         # dequeue cancels the most-recent purchase (pop()).
         self.unit_queue_cost: dict = {}
@@ -346,7 +346,7 @@ class BattleCanvas(QOpenGLWidget):
         # normal cooldown. Same {key:count} + FIFO cost-ledger shape as the pair above.
         self.unit_rush_queue: dict = {}
         self.unit_rush_queue_cost: dict = {}
-        # "Surge Rush" ability: there is no toggle — holding CTRL engages it live
+        # "Surge Rush" ability: there is no toggle – holding CTRL engages it live
         # (see surge_active). While surging, unit prices rise SURGE_COST_MULT× and a
         # ready hull rebuilds in 1/SURGE_CD_MULT of its normal cooldown. Unlocks at
         # SURGE_UNLOCK_LEVEL (see surge_unlocked). Read straight from the global
@@ -367,7 +367,7 @@ class BattleCanvas(QOpenGLWidget):
         # snapshot to the client, and the score/countdown are netsynced for the HUD.
         # The CAMPAIGN instead fields the midfield income rigs (capture_points.json),
         # which are purely economic and carry no punishment bosses. The SANDBOX gets
-        # neither — it's a clean-slate arena where you spawn everything by hand.
+        # neither – it's a clean-slate arena where you spawn everything by hand.
         self.score_mode = self.pvp
         self.score = {"player": 0.0, "enemy": 0.0}
         # PvP gives both commanders a longer runway before the first flagship (3
@@ -385,9 +385,9 @@ class BattleCanvas(QOpenGLWidget):
 
     def reset(self):
         # In a LAN battle a MID-MATCH local restart would desync the two clients,
-        # so it's a no-op here — either side leaves to the menu to end the match.
+        # so it's a no-op here – either side leaves to the menu to end the match.
         # (A post-match RE-ENGAGE instead runs the coordinated _rematch_reset, only
-        # after both sides agree — see _request_rematch.) A vs-bot match has no peer
+        # after both sides agree – see _request_rematch.) A vs-bot match has no peer
         # to desync, so a local restart is fine and reruns _init_state (fresh bot).
         if self.pvp and not self.vs_bot:
             return
@@ -424,9 +424,9 @@ class BattleCanvas(QOpenGLWidget):
         sdef = self.data.vehicles[type_key]
         placed = getattr(sdef, 'unit_type', '') in ('turret', 'structure')
         if self.sandbox:
-            # Sandbox: spawn this unit for the selected side instantly — no cost,
+            # Sandbox: spawn this unit for the selected side instantly – no cost,
             # no cooldown, no queue. Click-placed units (turrets / oil rig) are
-            # seated by hand on the selected side's fort — including enemy
+            # seated by hand on the selected side's fort – including enemy
             # fortifications on the enemy base.
             if placed:
                 self.start_placing(type_key, self.spawn_team)
@@ -437,17 +437,17 @@ class BattleCanvas(QOpenGLWidget):
         if placed:
             self.start_placing(type_key); return    # click-placed on the fort / pier
         if self._committed('player') >= self._fleet_cap('player'):
-            return                                  # at the unit limit — don't charge, the
+            return                                  # at the unit limit – don't charge, the
                                                     # press is simply ignored until a slot frees
 
-        # Surge (Ctrl) and Bulk (Alt) compose — read both once, up front, so every
+        # Surge (Ctrl) and Bulk (Alt) compose – read both once, up front, so every
         # hull in this press is priced identically to what the HUD showed:
         #   • Bulk  (Alt held)  → ONE press buys a batch of BULK_SIZE hulls; the first
         #     fills the ready slot, the rest stack into the queue.
         #   • Surge (Ctrl held) → every purchase costs more (see deploy_unit_cost) and
         #     the ready-slot fill rebuilds in 1/SURGE_CD_MULT of the usual time.
         #   • Both  → a surged batch: 1.35× price each, BULK_SIZE count, surged cooldown.
-        # The per-hull price is deploy_unit_cost() — the same function the HUD calls —
+        # The per-hull price is deploy_unit_cost() – the same function the HUD calls –
         # and it no longer depends on ready-ness, so the label never lies. Buy as many
         # of the batch as money / fleet cap / stack cap allow.
         surge = self.surge_active()
@@ -457,7 +457,7 @@ class BattleCanvas(QOpenGLWidget):
         # A bulk press is all-or-nothing: unless money is infinite, the player must
         # be able to afford the WHOLE batch (count × cost) before any hull is bought.
         # Without this the loop below would buy as many hulls as funds allowed and
-        # stop mid-batch — a partial bulk order. Fleet/stack caps may still trim the
+        # stop mid-batch – a partial bulk order. Fleet/stack caps may still trim the
         # batch, but running out of credits no longer does.
         if bulk and not self.infinite_money and self.player.resources < cost * count:
             return
@@ -502,7 +502,7 @@ class BattleCanvas(QOpenGLWidget):
         """True ONLY while the player is physically holding CTRL and the ability is
         unlocked. We query the live OS key state (queryKeyboardModifiers) rather than
         keyboardModifiers(), which only reflects the last processed Qt event and gets
-        stuck "on" when the CTRL release is lost — a deploy-bar button stealing focus,
+        stuck "on" when the CTRL release is lost – a deploy-bar button stealing focus,
         an Alt-Tab, or the Windows Alt-menu quirk. queryKeyboardModifiers reports the
         keys actually down at call time, so the mode drops the instant CTRL is released.
         Drives both the raised prices shown in the HUD and the shortened deploy cooldown."""
@@ -516,9 +516,9 @@ class BattleCanvas(QOpenGLWidget):
         buys a batch of BULK_SIZE hulls at BULK_COST_MULT× price each (a volume
         discount). Like surge_active, we query the live OS key state
         (queryKeyboardModifiers) instead of keyboardModifiers() so the mode never
-        sticks on after ALT is released — even when a deploy-bar button owns focus or
+        sticks on after ALT is released – even when a deploy-bar button owns focus or
         the window lost/regained it. Drives the discounted HUD prices and the batch
-        deploy. Always available — no campaign unlock."""
+        deploy. Always available – no campaign unlock."""
         mods = QApplication.queryKeyboardModifiers()
         return bool(mods & Qt.KeyboardModifier.AltModifier)
 
@@ -530,7 +530,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def dequeue_refund(self, key: str) -> int:
         """Credits handed back if the player right-clicks to cancel one queued hull
-        of `key` right now — the price of the most-recent purchase in the stack.
+        of `key` right now – the price of the most-recent purchase in the stack.
         Rush hulls are cancelled first (they're the pricier, most-recent buys)."""
         costs = self.unit_rush_queue_cost.get(key) or self.unit_queue_cost.get(key)
         return costs[-1] if costs else 0
@@ -539,7 +539,7 @@ class BattleCanvas(QOpenGLWidget):
         """Right-click a deploy button to cancel the most-recently queued hull of
         that type, refunding every credit it cost (bulk discount / surge premium
         included). The RED rush stack is cancelled first, then the standard queue.
-        Only queued hulls are cancellable — one already deploying/deployed is not.
+        Only queued hulls are cancellable – one already deploying/deployed is not.
         No-op when nothing of that type is queued."""
         if self.game_over or self.paused or self.dying is not None: return
         if type_key is None:
@@ -567,7 +567,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def cmd_dequeue(self, key: str = None):
         """A dequeue order from THIS player's console (right-click on a deploy
-        button). The cooldown queue is a host/single-player-only construct — the
+        button). The cooldown queue is a host/single-player-only construct – the
         client never accrues one (its deploys resolve straight on the host), so this
         simply applies locally to the player faction."""
         if self.awaiting_peer or self._reconnecting: return
@@ -578,7 +578,7 @@ class BattleCanvas(QOpenGLWidget):
     # The HUD/input speak these three verbs; each routes by role. Host and
     # single-player apply to the local faction at once (my_team == 'player'); the
     # client packages the order and sends it to the host, which applies it to the
-    # enemy faction authoritatively — the result comes back in the next snapshot.
+    # enemy faction authoritatively – the result comes back in the next snapshot.
     def faction(self, team: str):
         return self.player if team == 'player' else self.enemy
 
@@ -594,8 +594,8 @@ class BattleCanvas(QOpenGLWidget):
         if sdef is None:
             return
         if getattr(sdef, 'unit_type', '') in ('turret', 'structure'):
-            # Placement is resolved on OUR own (mirrored) fort — locally the 'player'
-            # side — then the slot index is sent; the host seats it on its enemy fort
+            # Placement is resolved on OUR own (mirrored) fort – locally the 'player'
+            # side – then the slot index is sent; the host seats it on its enemy fort
             # at the symmetric slot. See start_placing / _try_place.
             self.start_placing(key, 'player')
             return
@@ -633,7 +633,7 @@ class BattleCanvas(QOpenGLWidget):
     # ── Host-side: apply an order received from the client (enemy faction) ───────
     def _apply_deploy(self, team: str, key: str):
         """Muster one mobile unit for `team`, honouring roster / fleet cap / cost /
-        cooldown — the symmetric counterpart of a single (non-surge) enqueue."""
+        cooldown – the symmetric counterpart of a single (non-surge) enqueue."""
         sdef = self.data.vehicles.get(key)
         if sdef is None or getattr(sdef, 'unit_type', '') in ('turret', 'structure'):
             return
@@ -653,7 +653,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _apply_place(self, team: str, key: str, kind: str,
                      idx: int = 0, rig_nid=None, node=None):
-        """Seat a turret / structure for `team` at a resolved fort slot — the
+        """Seat a turret / structure for `team` at a resolved fort slot – the
         network counterpart of the interactive _try_place tail."""
         sdef = self.data.vehicles.get(key)
         roster = self.enemy_unlocked if team == 'enemy' else self.unlocked
@@ -711,11 +711,11 @@ class BattleCanvas(QOpenGLWidget):
         if not self.pvp or not self.game_over:
             return
         if self._rematch_local:
-            return                                     # already asked — ignore repeats
+            return                                     # already asked – ignore repeats
         self._rematch_local = True
         if self.net is not None and self.net.alive:
             self.net.send({"t": "rematch"})
-        self.sig_alert.emit("REMATCH REQUESTED — AWAITING OPPONENT")
+        self.sig_alert.emit("REMATCH REQUESTED: AWAITING OPPONENT")
         self._maybe_start_rematch()
 
     def _maybe_start_rematch(self):
@@ -726,13 +726,13 @@ class BattleCanvas(QOpenGLWidget):
             self._begin_rematch()
 
     def _begin_rematch(self):
-        """Host: both commanders agreed — tell the client to reset, then restart
+        """Host: both commanders agreed – tell the client to reset, then restart
         our own authoritative sim. The 'start' goes out before the reset so it
         arrives ahead of the first fresh snapshot."""
         if self.net is not None and self.net.alive:
             self.net.send({"t": "rematch", "a": "start"})
         self._rematch_reset()
-        self.sig_alert.emit("REMATCH — ENGAGING")
+        self.sig_alert.emit("REMATCH: ENGAGING")
         self.sig_ui.emit()
 
     def _on_net_rematch(self, msg):
@@ -742,16 +742,16 @@ class BattleCanvas(QOpenGLWidget):
         if not self.pvp:
             return
         if msg.get("a") == "start":
-            if self.net_role == 'client':              # host restarted — follow it
+            if self.net_role == 'client':              # host restarted – follow it
                 self._rematch_reset()
-                self.sig_alert.emit("REMATCH — ENGAGING")
+                self.sig_alert.emit("REMATCH: ENGAGING")
                 self.sig_ui.emit()
             return
         self._rematch_peer = True
         if self.net_role == 'host':
             self._maybe_start_rematch()
         else:
-            self.sig_alert.emit("OPPONENT WANTS A REMATCH — [R] TO ACCEPT")
+            self.sig_alert.emit("OPPONENT WANTS A REMATCH: [R] TO ACCEPT")
         self.sig_ui.emit()
 
     # ── Host: wait in-game for the relay to pair a joiner into our room ──────
@@ -774,7 +774,7 @@ class BattleCanvas(QOpenGLWidget):
                 # Open room: the host tick sends the 'hello' (level + session token)
                 # on the next frame now that the link is live; the fight begins here.
                 self.sig_peer_joined.emit()
-            # Locked room: stay held until the joiner proves the room password —
+            # Locked room: stay held until the joiner proves the room password –
             # see _await_auth(), driven from tick() while _peer_authed is False.
 
     # ── Host: gate a locked room on the joiner proving the room password ─────────
@@ -782,7 +782,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _await_auth(self):
         """A joiner has been paired into our LOCKED room. Admit them only once they
-        present the correct room password over the link — host-authoritative, so a
+        present the correct room password over the link – host-authoritative, so a
         dumb/old relay that skips its own password check can't let anyone through,
         and no 'hello' (nor the reconnect token) is revealed until they pass. A wrong
         password, or silence past AUTH_SECS, drops them and re-opens the room so a
@@ -794,7 +794,7 @@ class BattleCanvas(QOpenGLWidget):
             if msg.get("t") != "auth":
                 continue                                # ignore anything before auth
             if msg.get("pw", "") == self._net_password:
-                self._peer_authed = True                # correct — the match begins now
+                self._peer_authed = True                # correct – the match begins now
                 self.sig_peer_joined.emit()
             else:
                 self._reject_peer("wrong password")
@@ -827,7 +827,7 @@ class BattleCanvas(QOpenGLWidget):
         self._hello_sent   = False
         self._await_error  = None
         if reason:
-            self.sig_alert.emit(f"JOIN REJECTED — {reason.upper()}")
+            self.sig_alert.emit(f"JOIN REJECTED: {reason.upper()}")
             self.sig_ui.emit()
 
     # ── Transport: pump the link, apply orders / snapshots, broadcast state ──────
@@ -888,7 +888,7 @@ class BattleCanvas(QOpenGLWidget):
                 who = msg.get("who", "player")
                 self._end("enemy" if who == "player" else "player" if who == "enemy" else who)
 
-    # Host broadcasts a world snapshot ~30×/s (a fresh sim frame every ~2 ticks) —
+    # Host broadcasts a world snapshot ~30×/s (a fresh sim frame every ~2 ticks) –
     # ample for smooth LAN play without flooding the link with 60 Hz state.
     _SNAP_DT = 1.0 / 30.0
 
@@ -903,11 +903,11 @@ class BattleCanvas(QOpenGLWidget):
         self.net.send(netsync.serialize(self))
 
     def _client_update(self, dt: float):
-        """The client runs no simulation — it only advances local-only visuals
+        """The client runs no simulation – it only advances local-only visuals
         (explosion animation) and its own camera; the world comes from snapshots."""
-        if self.dying is not None:               # host signalled a base collapse —
+        if self.dying is not None:               # host signalled a base collapse –
             self._update_collapse(dt); return    # play it locally, then the verdict
-        # Wakes are cosmetic and never networked — the client peels its own off the
+        # Wakes are cosmetic and never networked – the client peels its own off the
         # snapshot ships' motion, so both screens show a wake behind every ship.
         if not SETTINGS.no_effects:
             self._spawn_wakes(self._water_y())
@@ -930,7 +930,7 @@ class BattleCanvas(QOpenGLWidget):
     def _spawn_wakes(self, wy: float):
         """Peel a foam ripple off the stern of every surface ship that is making
         way. Runs on the host AND the client off each side's own ship motion, so it
-        needs no networking — a purely local, cosmetic trail. Only water craft that
+        needs no networking – a purely local, cosmetic trail. Only water craft that
         ride the surface leave one: planes, turrets, forts, rigs, submarines and
         air/sub bosses are all skipped. The ripple is laid at the waterline behind
         the hull and left in the water as the ship sails on (see entities.Wake)."""
@@ -955,7 +955,7 @@ class BattleCanvas(QOpenGLWidget):
                 continue
             dx = s.x - prev
             s._wake_prev_x = s.x
-            if abs(dx) < 0.05:                         # holding station — no wake
+            if abs(dx) < 0.05:                         # holding station – no wake
                 s._wake_accum = 0.0
                 continue
             acc = getattr(s, '_wake_accum', 0.0) + abs(dx)
@@ -975,7 +975,7 @@ class BattleCanvas(QOpenGLWidget):
         """Host → client handshake: the level (so the client builds the same map),
         the session token (so a later disconnect can rendezvous to reconnect) and
         the host's commander name (shown on the client's HOSTILE gauge).
-        Idempotent — fires exactly once per match, never on a reconnect."""
+        Idempotent – fires exactly once per match, never on a reconnect."""
         if self._hello_sent or self.net is None or not self.net.alive:
             return
         if not self._peer_authed:
@@ -987,7 +987,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _send_ident(self):
         """Client → host handshake: the client's commander name, so the host can
-        label its HOSTILE gauge. Idempotent — sent once, when the link is live."""
+        label its HOSTILE gauge. Idempotent – sent once, when the link is live."""
         if self._ident_sent or self.net is None or not self.net.alive:
             return
         self.net.send({"t": "ident", "name": self.player_name or ""})
@@ -1006,7 +1006,7 @@ class BattleCanvas(QOpenGLWidget):
             if not getattr(self, '_net_lost', False):
                 self._net_lost = True
                 self.paused = True
-                self.sig_alert.emit("CONNECTION LOST — OPPONENT DISCONNECTED")
+                self.sig_alert.emit("CONNECTION LOST: OPPONENT DISCONNECTED")
                 self.sig_ui.emit()
             return
         self.net = None
@@ -1021,7 +1021,7 @@ class BattleCanvas(QOpenGLWidget):
         else:
             self._reconnector = _net.NetReconnectClient(host, self._net_session, port)
         self._reconnector.start()
-        self.sig_alert.emit("CONNECTION LOST — RECONNECTING…")
+        self.sig_alert.emit("CONNECTION LOST: RECONNECTING…")
         self.sig_ui.emit()
 
     def _reconnect_pump(self):
@@ -1042,7 +1042,7 @@ class BattleCanvas(QOpenGLWidget):
         if elapsed >= self.RECONNECT_SECS * 1000:
             self._stop_reconnector()
             self._reconnecting = False
-            # Opponent never came back — the match ends in our favour (forfeit).
+            # Opponent never came back – the match ends in our favour (forfeit).
             self._end(self.my_team)
 
     def _stop_reconnector(self):
@@ -1061,7 +1061,7 @@ class BattleCanvas(QOpenGLWidget):
 
     @property
     def opponent_gone(self) -> bool:
-        """True while an active PvP match is holding for a dropped opponent — either
+        """True while an active PvP match is holding for a dropped opponent – either
         the relay reconnect grace window (_reconnecting) or the non-session fallback
         hold (_net_lost). In this state, walking out isn't a clean exit: it forfeits."""
         return (self.pvp and not self.vs_bot and not self.game_over
@@ -1069,7 +1069,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _forfeit_disconnect(self):
         """The player chose to abandon a match whose opponent has dropped. You don't
-        get to duck the result by leaving — end it here as a loss (the opponent wins),
+        get to duck the result by leaving – end it here as a loss (the opponent wins),
         which surfaces the DEFEAT card rather than a silent bail to the menu."""
         self._stop_reconnector()
         self._reconnecting = False
@@ -1129,7 +1129,7 @@ class BattleCanvas(QOpenGLWidget):
             self.build_cd_total[team][key] = cd       # remember the full cooldown set
 
     def build_cooldown(self, key: str, team: str = 'player'):
-        """(remaining, total) production cooldown for a unit type — for the HUD.
+        """(remaining, total) production cooldown for a unit type – for the HUD.
         `total` is the cooldown this unit was ACTUALLY started with (locked in at
         deploy time), so the wipe reads true even after a Factory upgrade or a
         surge-shortened order; only a brand-new order recomputes it against the new Factory."""
@@ -1140,10 +1140,10 @@ class BattleCanvas(QOpenGLWidget):
     # ── Upgrades (bought now, applied after a research delay) ────────────────────
     def request_upgrade(self, team: str, key: str) -> bool:
         """Pay for and START an upgrade. It only takes effect after UPGRADE_TIME
-        seconds. Tracks research independently — one in progress PER TRACK, so
+        seconds. Tracks research independently – one in progress PER TRACK, so
         different tracks (e.g. fleet + income) can run at the same time."""
         fac = self.player if team == 'player' else self.enemy
-        if team == 'player' and (self.paused or self.dying is not None): return False  # held — no orders
+        if team == 'player' and (self.paused or self.dying is not None): return False  # held – no orders
         if key not in fac.upgrades: return False
         if key in self.pending_upg[team]: return False               # this track already researching
         lv = fac.upgrades[key]
@@ -1163,7 +1163,7 @@ class BattleCanvas(QOpenGLWidget):
         fac.upgrades[key] += 1
         if key == "health" and not self.pvp:
             # Campaign: armour raises both turret-slot count (2 + hlv) and hull HP.
-            # In PvP we skip the HP bump — the higher hlv still adds a turret slot
+            # In PvP we skip the HP bump – the higher hlv still adds a turret slot
             # (see _sync_slots), but every base stays pinned to its level-1 hull.
             mult = self.enemy_base_mult if team == 'enemy' else 1.0
             # Match _init_state's clamp: campaign scaling must never lift a hull
@@ -1184,7 +1184,7 @@ class BattleCanvas(QOpenGLWidget):
                     del tracks[key]
 
     def upgrade_progress(self, key: str, team: str = 'player'):
-        """(remaining, total) if this upgrade is researching, else None — for HUD."""
+        """(remaining, total) if this upgrade is researching, else None – for HUD."""
         pu = self.pending_upg[team].get(key)
         if pu:
             return pu["timer"], pu["total"]
@@ -1192,7 +1192,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _place_enemy_defenses(self, wy: float):
         """Seat the enemy base's fixed turret defences at the start of the battle
-        (mirrored onto the enemy fort). These are standing fortifications — present
+        (mirrored onto the enemy fort). These are standing fortifications – present
         from the first second, growing with the campaign level, never added later.
 
         Each gun is seated on a real fort mount (exactly like the player's coastal
@@ -1256,7 +1256,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _place_pvp_start(self, wy: float):
         """PvP start: each side musters exactly one missile turret and nothing
-        else — a perfectly symmetric opening. Both are seated on their fort's
+        else – a perfectly symmetric opening. Both are seated on their fort's
         front surface mount and registered in that side's over-slot."""
         sdef = self.data.vehicles.get('missile_battery')
         if not sdef:
@@ -1355,7 +1355,7 @@ class BattleCanvas(QOpenGLWidget):
             for i, occ in enumerate(self._over_slots(team)):
                 if occ is None:
                     x, y = self._slot_pos('over', i, team); out.append((x, y, 'over', i))
-            # A surface turret may also go on a free Bastion deck node — but not
+            # A surface turret may also go on a free Bastion deck node – but not
             # while the platform is still being raised.
             for ri, rig in enumerate(self._team_rigs(team)):
                 if getattr(rig, 'under_construction', False):
@@ -1368,7 +1368,7 @@ class BattleCanvas(QOpenGLWidget):
         return out
 
     def start_placing(self, key: str, team: str = 'player'):
-        if self.dying is not None: return                # base collapsing — no orders
+        if self.dying is not None: return                # base collapsing – no orders
         sdef = self.data.vehicles.get(key)
         roster = self.enemy_unlocked if team == 'enemy' else self.unlocked
         if not sdef or key not in roster: return
@@ -1397,7 +1397,7 @@ class BattleCanvas(QOpenGLWidget):
         x, y, kind, idx = best
         key, sdef, team = self.placing
         # Client (P2): placement is resolved against the local snapshot view, then
-        # sent to the host to apply authoritatively — the result returns in a snap.
+        # sent to the host to apply authoritatively – the result returns in a snap.
         if self.net_role == 'client':
             msg = {"t": "cmd", "a": "place", "key": key, "kind": kind}
             if kind == 'rig_node':
@@ -1501,7 +1501,7 @@ class BattleCanvas(QOpenGLWidget):
     # ── Off-screen spawning ─────────────────────────────────────────────────────
     def _spawn_mobile(self, team: str, sdef) -> Ship:
         """Create a mobile unit just beyond the map edge so it enters from
-        off-screen — the player never sees it pop into existence."""
+        off-screen – the player never sees it pop into existence."""
         wy = self._water_y()
         is_enemy = (team == 'enemy')
         d = -1 if is_enemy else 1
@@ -1566,7 +1566,7 @@ class BattleCanvas(QOpenGLWidget):
 
         A downed oil rig resets its owner's rebuild cooldown to full so it can be
         re-mustered. The Salvage upgrade refunds a fraction of a destroyed mobile
-        unit's cost to its owner (SALVAGE_T by level; level 0 pays nothing) —
+        unit's cost to its owner (SALVAGE_T by level; level 0 pays nothing) –
         downing the boss still maxes your bank, handled at the boss trigger. Units
         that merely sail off-screen (hp still > 0) aren't counted as kills."""
         # A bastion's deck turrets fall with it.
@@ -1584,13 +1584,13 @@ class BattleCanvas(QOpenGLWidget):
                 continue                                    # left the field, not destroyed
             s._reward_done = True
             if getattr(s, 'is_rig', False):
-                # Bastion down — reset its rebuild cooldown so it can be re-mustered.
+                # Bastion down – reset its rebuild cooldown so it can be re-mustered.
                 cd = self._cooldown_total('oilrig', s.team)
                 self.build_cd[s.team]['oilrig']       = cd
                 self.build_cd_total[s.team]['oilrig'] = cd
             else:
                 # Salvage: refund the owner a % of a lost mobile hull's cost.
-                # Structures (turrets/rigs) are excluded — turrets have their own
+                # Structures (turrets/rigs) are excluded – turrets have their own
                 # manual sell refund, and a rig isn't a vehicle.
                 ut = getattr(s.sdef, 'unit_type', 'ship')
                 if ut not in ('turret', 'structure'):
@@ -1616,7 +1616,7 @@ class BattleCanvas(QOpenGLWidget):
         """Units this side has already committed to fielding: live mobiles, plus any
         bought and waiting in the spawn buffer, plus (player) the cooldown queue.
         Used to gate builds against the Fleet cap so pressing at the limit neither
-        charges nor over-buffers — the units already in flight fill the cap."""
+        charges nor over-buffers – the units already in flight fill the cap."""
         n = self._mobile_count(team) + len(self.spawn_buffer[team])
         if team == 'player':
             n += sum(self.unit_queue.values()) + sum(self.unit_rush_queue.values())
@@ -1625,7 +1625,7 @@ class BattleCanvas(QOpenGLWidget):
     def _fleet_cap(self, team: str) -> int:
         """Max live mobile units this side may field right now: its Fleet-upgrade
         level (FLEET_T), clamped to the side's hard MAX_UNITS ceiling. Fleet is the
-        upgrade that used to be Salvage — buying it raises this cap toward MAX_UNITS."""
+        upgrade that used to be Salvage – buying it raises this cap toward MAX_UNITS."""
         fac = self.player if team == 'player' else self.enemy
         # Enemy AI always fields its maximum fleet: ignore its purchased Fleet level
         # and use the top tier. In PvP a human commands the enemy, so it earns its
@@ -1651,7 +1651,7 @@ class BattleCanvas(QOpenGLWidget):
     # ── Oil rig (deployable income structure) ────────────────────────────────────
     def build_oilrig(self, team: str):
         """AI / sandbox: auto-build an oil rig on a team's pier (the player places
-        it by hand on the rig node — see _try_place). The enemy may only build it
+        it by hand on the rig node – see _try_place). The enemy may only build it
         once it is unlocked for this level's campaign stage."""
         if team == 'enemy' and 'oilrig' not in self.enemy_unlocked:
             return                                  # not unlocked yet at this stage
@@ -1672,7 +1672,7 @@ class BattleCanvas(QOpenGLWidget):
 
     # ── Capturable midfield oil platforms ────────────────────────────────────────
     def _build_capture_points(self):
-        """Seat the neutral oil platforms across the open water between the forts —
+        """Seat the neutral oil platforms across the open water between the forts –
         but only from the campaign level set in capture_points.json. Positions come
         from the config's `positions` fractions when their count matches, else the
         rigs are spread evenly across the midfield."""
@@ -1750,7 +1750,7 @@ class BattleCanvas(QOpenGLWidget):
     def _update_score(self, dt: float):
         """Credit score to whoever HOLDS the platform, retire any downed flagship
         bosses, and every SCORE_BOSS_INTERVAL award the next flagship to whichever
-        side leads — then wipe both scores. Runs in multiplayer only
+        side leads – then wipe both scores. Runs in multiplayer only
         (host-authoritative); skipped in the campaign and the sandbox (score_mode
         is False there)."""
         if not self.score_mode:
@@ -1770,7 +1770,7 @@ class BattleCanvas(QOpenGLWidget):
                                      else "ALLIED FLAGSHIP LOST"))
         self.score_bosses = [b for b in self.score_bosses if b.alive]
         # The 1.5-minute cycle: award a flagship to the leader, then reset the tally.
-        # The countdown only advances while NO flagship boss is on the field — a live
+        # The countdown only advances while NO flagship boss is on the field – a live
         # boss must be resolved before the next one is called, so the leading side
         # never gets a second flagship stacked on top of the first (anti-snowball).
         if self.score_bosses:
@@ -1824,20 +1824,20 @@ class BattleCanvas(QOpenGLWidget):
         """True while any punishment flagship boss is live on EITHER side. Downed
         bosses are only culled from score_bosses in _update_score (which runs after
         _update_capture), so key off each boss's own `alive` flag rather than the
-        list being non-empty — a boss that died this frame must NOT still count."""
+        list being non-empty – a boss that died this frame must NOT still count."""
         return any(getattr(b, 'alive', False) for b in self.score_bosses)
 
     def _update_capture(self, dt: float, wy: float):
         """Tick the capture meter of every oil platform from the surface ships in its
         lane, and announce any ownership change. Only ground (surface) ships hold a
-        rig — submarines run too deep and aircraft too high to plant a boarding crew,
+        rig – submarines run too deep and aircraft too high to plant a boarding crew,
         so they contribute nothing to the capture meter."""
         if not self.capture_points:
             return
         # While a punishment flagship boss is live on either side, the central oil
         # platform is frozen COMPLETELY NEUTRAL: no side holds, captures or earns
         # from it, so the boss cycle must be resolved before the midfield reopens.
-        # Host-authoritative — the neutral meter/income rides the snapshot to the
+        # Host-authoritative – the neutral meter/income rides the snapshot to the
         # client (netsync caps/income_owner), so both ends read it the same.
         if self.score_mode and self._score_boss_active():
             neutralized = False
@@ -1847,7 +1847,7 @@ class BattleCanvas(QOpenGLWidget):
                     neutralized = True
                 cp.neutralize()
             if neutralized:
-                self.sig_alert.emit("OIL PLATFORM OFFLINE — FLAGSHIP INBOUND")
+                self.sig_alert.emit("OIL PLATFORM OFFLINE: FLAGSHIP INBOUND")
             return
         counts = [[0, 0] for _ in self.capture_points]      # [player, enemy] ship count per rig
         weights = [[0.0, 0.0] for _ in self.capture_points]  # summed capture_weight per side
@@ -1882,7 +1882,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def rig_income(self, owner: str) -> float:
         """Diminishing income for the rigs a side holds: the first rig pays full,
-        each further rig `holdings_falloff`× the previous — so hoarding all three
+        each further rig `holdings_falloff`× the previous – so hoarding all three
         is worth little at the margin (anti-snowball). Payout keys off the STICKY
         `income_owner`, not the live `owner`: once you fully capture a rig you keep
         earning from it until it is decapped all the way back to neutral, so an enemy
@@ -1901,8 +1901,8 @@ class BattleCanvas(QOpenGLWidget):
 
     def set_tutorial_freeze(self, on: bool):
         """Hold (or release) the battle for the first-run guide. The main tick is
-        already stopped while the guide is up, but a turret can freeze mid-shot —
-        barrel swung onto a target, muzzle flash lit — which reads as 'firing' in
+        already stopped while the guide is up, but a turret can freeze mid-shot –
+        barrel swung onto a target, muzzle flash lit – which reads as 'firing' in
         the still frame behind the overlay. So when the guide opens we settle every
         fort gun back to a calm resting pose and clear shells / flashes in flight,
         then repaint once so the guide sits over a quiet battlefield."""
@@ -1934,13 +1934,13 @@ class BattleCanvas(QOpenGLWidget):
         raw = (now - self._prev_ms) / 1000.0
         dt = min(raw, 0.05); self._prev_ms = now
         # FPS meter: average over ~half-second windows so the readout is steady.
-        # Uses the raw delta — the sim clamp above would flatter slow frames.
+        # Uses the raw delta – the sim clamp above would flatter slow frames.
         self._fps_frames += 1; self._fps_accum += raw
         if self._fps_accum >= 0.5:
             self._fps = self._fps_frames / self._fps_accum
             self._fps_frames = 0; self._fps_accum = 0.0
         # Host awaiting an opponent: the field is drawn but frozen behind the
-        # "awaiting player" overlay. No sim, no input — just watch for the pairing.
+        # "awaiting player" overlay. No sim, no input – just watch for the pairing.
         if self.awaiting_peer:
             self._await_pump()
             self.update()
@@ -1956,7 +1956,7 @@ class BattleCanvas(QOpenGLWidget):
             self._await_auth()
             self.update()
             return
-        # Client (P2): no local sim — drain host snapshots, animate local effects.
+        # Client (P2): no local sim – drain host snapshots, animate local effects.
         if self.net_role == 'client':
             self._send_ident()          # tell the host our name, once
             self._net_pump()
@@ -1987,9 +1987,9 @@ class BattleCanvas(QOpenGLWidget):
 
     def _update(self, dt):
         if self.game_over: return
-        if self.dying is not None:               # a base is collapsing — freeze the
+        if self.dying is not None:               # a base is collapsing – freeze the
             self._update_collapse(dt); return    # fight and play the death animation
-        if self.tutorial_freeze: return          # first-run guide up — hold everything
+        if self.tutorial_freeze: return          # first-run guide up – hold everything
         self.game_time += dt; self.wave_t += dt
         if self.boss_flash_t > 0.0:                  # fade the boss-down blast flash
             self.boss_flash_t = max(0.0, self.boss_flash_t - dt)
@@ -2010,7 +2010,7 @@ class BattleCanvas(QOpenGLWidget):
         # The enemy plays the same economy game as the player (difficulty no longer
         # touches its income): base income plus a slow time ramp, so it must still
         # upgrade its base to keep escalating. In PvP a human commands the enemy, so
-        # it earns plain income with no AI time-ramp handout — symmetric with P1.
+        # it earns plain income with no AI time-ramp handout – symmetric with P1.
         if self.pvp:
             en.resources = min(en.resources + en.income * dt, en.max_res)
         else:
@@ -2036,13 +2036,13 @@ class BattleCanvas(QOpenGLWidget):
         # Central score platform → escalating punishment bosses (multiplayer only).
         self._update_score(dt)
         pl.bonus_income = en.bonus_income = 0
-        # Campaign midfield rigs are ECONOMIC — holding one pays diminishing income.
+        # Campaign midfield rigs are ECONOMIC – holding one pays diminishing income.
         if self.capture_points and not self.score_mode:   # diminishing per-side rig income
             pl.bonus_income += self.rig_income('player')
             en.bonus_income += self.rig_income('enemy')
         # In multiplayer the single central platform drives the score→boss
         # loop (see _update_score) AND pays its holder a flat aggression bounty in
-        # gold/sec — seizing the midfield directly funds a capital ship, so pushing
+        # gold/sec – seizing the midfield directly funds a capital ship, so pushing
         # for the platform pays off at once instead of only after a boss cycle.
         elif self.capture_points and self.score_mode:
             for cp in self.capture_points:
@@ -2054,7 +2054,7 @@ class BattleCanvas(QOpenGLWidget):
                 continue
             if getattr(s, 'is_rig', False):
                 s.set_water(wy)                 # keep the bastion pinned to the waterline
-                inc = getattr(s, 'income', 0)   # 0 — the bastion produces no income
+                inc = getattr(s, 'income', 0)   # 0 – the bastion produces no income
             else:
                 inc = getattr(getattr(s, 'sdef', None), 'income', 0)  # Oil Rig turret
             if inc:
@@ -2066,14 +2066,14 @@ class BattleCanvas(QOpenGLWidget):
 
         # Enemy reinforcements are decided by the director (escalation, difficulty,
         # counterattacks, threat adaptation). It spawns units off-screen. In the
-        # sandbox the AI is off — you spawn both sides yourself.
+        # sandbox the AI is off – you spawn both sides yourself.
         if not self.sandbox and not self.pvp:
             if self.bob_campaign and self.bot is not None:
                 # Oil-rig-era campaign: the enemy is commanded by Captain Bob rather
                 # than the scripted director. He runs his own economy and upgrade
                 # plan, so the director's spawn cadence and _enemy_upgrade tick are
                 # both retired here (the director object survives only so the boss
-                # wave's boss_escort() call stays valid — a harmless no-op now).
+                # wave's boss_escort() call stays valid – a harmless no-op now).
                 self.bot.update(dt)
             else:
                 self.director.update(dt)
@@ -2089,7 +2089,7 @@ class BattleCanvas(QOpenGLWidget):
             self.bot.update(dt)
 
         # Carrier / boss-carrier aircraft launch. The aircraft enter from OFF-SCREEN
-        # (off the carrier's home map edge) and fly in — never popped into mid-air.
+        # (off the carrier's home map edge) and fly in – never popped into mid-air.
         for s in self.ships:
             if not s.alive: continue
             interval = getattr(s.sdef, 'spawn_interval', 0.0)
@@ -2133,7 +2133,7 @@ class BattleCanvas(QOpenGLWidget):
                 else:
                     s.top_y = base_y + getattr(s, 'y_off', 0.0)
             else:
-                # Surface boats all ride the same waterline — no random vertical
+                # Surface boats all ride the same waterline – no random vertical
                 # deviation, otherwise a static per-unit offset seats half of them
                 # above the water and they appear to float in the air. (y_jitter is
                 # kept for submarines, where it de-clumps depth.)
@@ -2141,7 +2141,7 @@ class BattleCanvas(QOpenGLWidget):
 
         # Rebuild the per-frame x-sorted target index so each unit scans only the
         # ships within weapon reach instead of the whole field (O(N·window), not
-        # O(N²)). Nothing is culled by the camera — every unit, on- or off-screen,
+        # O(N²)). Nothing is culled by the camera – every unit, on- or off-screen,
         # is indexed and keeps fighting.
         Ship.set_frame_index(self.ships)
 
@@ -2168,7 +2168,7 @@ class BattleCanvas(QOpenGLWidget):
         if not SETTINGS.no_effects:
             self._spawn_wakes(wy)
 
-        # NO EFFECTS (settings): drop every particle effect the frame it appears —
+        # NO EFFECTS (settings): drop every particle effect the frame it appears –
         # ships/projectiles keep appending into the list, so clearing here covers
         # every source (explosions, muzzle smoke, missile exhaust) in one place.
         if SETTINGS.no_effects:
@@ -2208,8 +2208,8 @@ class BattleCanvas(QOpenGLWidget):
 
     def _begin_collapse(self, loser: str, winner: str):
         """A base has been battered to 0 HP. Rather than cut straight to the
-        verdict, freeze the fight and play a short collapse — rolling explosions
-        across the doomed fort with a camera push-in — then declare the winner
+        verdict, freeze the fight and play a short collapse – rolling explosions
+        across the doomed fort with a camera push-in – then declare the winner
         (see _update_collapse). The clock is frozen here, at the killing blow, so
         the debrief time isn't padded by the animation."""
         self.dying = loser
@@ -2264,7 +2264,7 @@ class BattleCanvas(QOpenGLWidget):
     def _end(self, who: str):
         self.game_over = who
         self.clear_time = self.game_time
-        # Host is authoritative over the result — tell the client at once (the
+        # Host is authoritative over the result – tell the client at once (the
         # throttled snapshot also carries `over`, but this makes it immediate).
         if self.net_role == 'host' and self.net is not None and self.net.alive:
             self.net.send({"t": "over", "who": who})
@@ -2287,7 +2287,7 @@ class BattleCanvas(QOpenGLWidget):
         fac.boss_spawned = True; fac.boss_alive = True; fac.immune = True
         # A large escort wave arrives alongside the boss
         self.director.boss_escort()
-        # Leave the camera where the player put it — the boss announces itself via
+        # Leave the camera where the player put it – the boss announces itself via
         # the "incoming" banner rather than yanking the view over to the enemy base.
         # Carry the boss's name so the campaign banner can flash "BATTLESHIP <x> IS
         # COMING" (the sandbox spawn stays the plain generic "incoming").
@@ -2297,7 +2297,7 @@ class BattleCanvas(QOpenGLWidget):
     ENEMY_UPGRADE_PRIO = ["warehouse", "resource", "health", "storage", "fleet"]
 
     def _enemy_target_levels(self) -> dict:
-        """How high the enemy wants each upgrade — it LEVELS WITH the player,
+        """How high the enemy wants each upgrade – it LEVELS WITH the player,
         mirroring your per-track investment exactly (difficulty no longer shifts
         this; it only affects the final wave and enemy hull HP)."""
         return {u: max(0, min(self.max_upg_lvl, self.player.upgrades[u]))
@@ -2337,7 +2337,7 @@ class BattleCanvas(QOpenGLWidget):
         self._draw_waves(p, W, WY)
         # Off-screen units still fight (their sim ran in _update); they just don't
         # need to be PAINTED. Skipping the ones outside the viewport keeps a wide,
-        # crowded field cheap to render — the camera only shows a slice of WORLD_W.
+        # crowded field cheap to render – the camera only shows a slice of WORLD_W.
         cam = self.cam_x
         # Ships carry a moonlit rim after dark (see Ship._draw_night_rim) so
         # near-black player hulls stay visible against the dark night sea; the
@@ -2377,7 +2377,7 @@ class BattleCanvas(QOpenGLWidget):
     def _draw_collapse_flash(self, p, W, H):
         """Blast flash over the field while a fort collapses: a bright ignition
         bloom on the first frames that eases away, over a low red pall that rises
-        and fades across the whole animation — so the freeze reads as a
+        and fades across the whole animation – so the freeze reads as a
         catastrophe, not a dropped frame, before the verdict card appears."""
         t = self.dying_t
         bloom = max(0.0, 1.0 - t / 0.35)          # bright ignition, first ~0.35 s
@@ -2388,7 +2388,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _draw_boss_flash(self, p, W, H):
         """The boss-down blast: the same bright ignition bloom the collapse flash
-        opens on, played over the un-frozen field when the boss is destroyed — so
+        opens on, played over the un-frozen field when the boss is destroyed – so
         downing it lands with the same screen-flash punch as a fort's death."""
         bloom = self.boss_flash_t / BOSS_FLASH_DUR    # full at the kill, fading out
         p.fillRect(0, 0, W, H, QColor(255, 236, 200, int(150 * bloom)))
@@ -2435,7 +2435,7 @@ class BattleCanvas(QOpenGLWidget):
             locked = bool(getattr(self._net_pending, "password", ""))
             if name:
                 lock = "  🔒 password-protected" if locked else ""
-                sub = f"“{name}” is open — waiting for an opponent to join{lock}"
+                sub = f"“{name}” is open. Waiting for an opponent to join{lock}"
             else:
                 sub = "Opening your room…"
             col = QColor(theme.ACCENT)
@@ -2468,7 +2468,7 @@ class BattleCanvas(QOpenGLWidget):
             p.drawLine(int(sx - 26), int(y), int(sx + 26), int(y))
         label = f"PLACE {sdef.name.upper()}"
         if not targets:
-            label += "  —  NO FREE SLOTS"
+            label += ":  NO FREE SLOTS"
         # Sits below the boss-banner band (y≈54..100) so the two never overlap.
         p.setPen(acc); p.setFont(theme.head(13, 1))
         p.drawText(0, 108, self.width(), 20, Qt.AlignmentFlag.AlignHCenter,
@@ -2515,7 +2515,7 @@ class BattleCanvas(QOpenGLWidget):
         self._sell_rect = QRectF(bx, by, w, h)
 
     def _draw_sky(self, p, W, H, WY):
-        # Sky, celestial disc, parallax clouds, sea and the amber horizon rule —
+        # Sky, celestial disc, parallax clouds, sea and the amber horizon rule –
         # all skinned from this level's time-of-day band (game.ui.backdrop).
         from .ui import backdrop
         backdrop.paint(p, self._backdrop, W, H, WY, self.cam_x, self.clouds, self.wave_t)
@@ -2531,7 +2531,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _on_screen(self, x: float, W: int, pad: float) -> bool:
         """Is world-x `x` (± pad) within the current viewport? Used only to skip
-        PAINTING units the camera can't see — never to skip their simulation."""
+        PAINTING units the camera can't see – never to skip their simulation."""
         sx = x - self.cam_x
         return -pad <= sx <= W + pad
 
@@ -2592,7 +2592,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _boss_silhouette(self, src, w, h, color):
         """Render a ship sprite as a flat single-colour silhouette fitted within
-        w×h (aspect kept) — a clean radar contact for the inbound-flagship scope,
+        w×h (aspect kept) – a clean radar contact for the inbound-flagship scope,
         rather than the busy full-colour portrait. Every opaque pixel is repainted
         `color` via a source-in composite, so only the hull outline survives."""
         from PyQt6.QtGui import QPixmap
@@ -2620,7 +2620,7 @@ class BattleCanvas(QOpenGLWidget):
         clock = f"{secs // 60}:{secs % 60:02d}"
         lead = ("YOU" if ps > es else "ENEMY" if es > ps else "STALEMATE")
         nb = self._next_boss_sdef()            # the flagship due to deploy next
-        soon = secs <= 15                       # imminent — light the alarm red
+        soon = secs <= 15                       # imminent – light the alarm red
 
         w, h = 366, 88
         x = (W - w) / 2.0
@@ -2669,7 +2669,7 @@ class BattleCanvas(QOpenGLWidget):
         p.setPen(QColor(lead_col)); p.drawText(sbox, lal, f"LEADER  {lead}")
 
     def _score_row(self, p, x, y, w, label, value, colour, leading):
-        """One score line — an engraved DIN label and a large mono figure, each with
+        """One score line – an engraved DIN label and a large mono figure, each with
         a 1px black drop so it lifts off the brushed plate; the leading side's figure
         carries a lit lamp so the board reads at a glance."""
         from .ui import theme
@@ -2732,7 +2732,7 @@ class BattleCanvas(QOpenGLWidget):
         p.fillRect(npr, QColor(theme.DANGER).darker(260))
         p.setPen(QPen(QColor(theme.LINE_HI), 1)); p.setOpacity(0.6)
         p.drawLine(int(x), int(y + h - nph), int(x + w), int(y + h - nph)); p.setOpacity(1.0)
-        name = nb.name.upper() if nb is not None else "—"
+        name = nb.name.upper() if nb is not None else "–"
         ca = int(Qt.AlignmentFlag.AlignCenter)
         p.setFont(theme.mono(8, True))
         p.setPen(QColor(0, 0, 0, 180)); p.drawText(npr.translated(1, 1), ca, name)
@@ -2743,8 +2743,8 @@ class BattleCanvas(QOpenGLWidget):
         p.drawRect(rect)
 
     def _unit_tally(self, p, x, y, w, label, left):
-        """A compact 'units on field / fleet cap' counter beneath a base gauge —
-        phosphor for the player's fleet, danger-red for the enemy's — so the
+        """A compact 'units on field / fleet cap' counter beneath a base gauge –
+        phosphor for the player's fleet, danger-red for the enemy's – so the
         current strength of each side is always visible at a glance."""
         from .ui import theme
         team = 'player' if left else 'enemy'
@@ -2759,7 +2759,7 @@ class BattleCanvas(QOpenGLWidget):
     def _hp_bar(self, p, x, y, w, h, hp, max_hp, label, left, immune, name=None):
         """A stepped command gauge for a fortress: phosphor when the FRIENDLY base
         is healthy, escalating amber → danger as it's hit; the HOSTILE base reads
-        red. Steel bezel, mono figure — matches the console HUD below. In PvP the
+        red. Steel bezel, mono figure – matches the console HUD below. In PvP the
         commander's `name` replaces the FRIENDLY/HOSTILE tag on the gauge."""
         from .ui import theme
         from PyQt6.QtGui import QLinearGradient, QBrush
@@ -2790,7 +2790,7 @@ class BattleCanvas(QOpenGLWidget):
         p.drawRect(x, y, w - 1, h - 1)
         p.setPen(QPen(QColor(theme.EDGE_HI), 1)); p.setOpacity(0.4)
         p.drawLine(x + 1, y + 1, x + w - 2, y + 1); p.setOpacity(1.0)
-        # label (engraved DIN) on the anchored side, figure (mono) opposite —
+        # label (engraved DIN) on the anchored side, figure (mono) opposite –
         # a commander name (PvP) takes the tag's place when one is known.
         lab = (name.upper() if name else label) + ("  [IMMUNE]" if immune else "")
         p.setFont(theme.head(9, 2)); p.setPen(QColor(0, 0, 0, 160))
@@ -2820,7 +2820,7 @@ class BattleCanvas(QOpenGLWidget):
                              flags=Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop)
         hint_y = cy + 46
         if win and not self.sandbox and not self.pvp:
-            # The debrief: stars earned, clear time and score — the same numbers
+            # The debrief: stars earned, clear time and score – the same numbers
             # recorded on the profile, so the campaign screen holds no surprises.
             r = self.result()
             theme.draw_stars(p, W / 2 - 28, cy + 46, 16, r["stars"], total=3)
@@ -2832,7 +2832,7 @@ class BattleCanvas(QOpenGLWidget):
         if self.pvp and self.vs_bot:
             hint = "[ R ]  RE-ENGAGE      [ ESC ]  COMMAND"
         elif self.pvp and self._rematch_local:
-            hint = "REMATCH REQUESTED — AWAITING OPPONENT      [ ESC ]  COMMAND"
+            hint = "REMATCH REQUESTED: AWAITING OPPONENT      [ ESC ]  COMMAND"
         elif self.pvp and self._rematch_peer:
             hint = "[ R ]  ACCEPT REMATCH      [ ESC ]  COMMAND"
         elif self.pvp:
@@ -2844,7 +2844,7 @@ class BattleCanvas(QOpenGLWidget):
 
     def _draw_pause(self, p, W, H):
         """The battle held: a dark veil in the war-room idiom, mirroring the
-        game-over card — amber verdict, mono key legend."""
+        game-over card – amber verdict, mono key legend."""
         from .ui import theme
         p.save(); p.fillRect(0, 0, W, H, QColor(4, 7, 10, 170))
         theme.scanlines(p, QRectF(0, 0, W, H), gap=4, alpha=20)
@@ -2890,20 +2890,20 @@ class BattleCanvas(QOpenGLWidget):
         the pause overlay offers resume / restart / withdraw.
 
         Disabled in PvP: the match is host-authoritative and runs continuously on
-        the other side, so a local pause can't actually stop the fight — it would
+        the other side, so a local pause can't actually stop the fight – it would
         only freeze one player's own view (client) or unilaterally freeze both
         (host). ESC is inert during a live network match; the connection-lost hold
         in _on_net_lost still sets self.paused directly and is unaffected."""
         if self.pvp and not self.vs_bot: return    # a solo bot match CAN pause locally
         if self.game_over or self.awaiting_peer or self._reconnecting: return
-        if self.dying is not None: return             # base collapsing — can't pause
+        if self.dying is not None: return             # base collapsing – can't pause
         self.paused = not self.paused
         self.sig_ui.emit()
 
     @staticmethod
     def _phys_key(ev, letter):
         """True if `ev` is that physical letter key regardless of the active
-        keyboard layout — a Cyrillic layout reports Й in ev.key() where the
+        keyboard layout – a Cyrillic layout reports Й in ev.key() where the
         keycap says Q, but the native virtual key stays the Latin letter."""
         return (ev.key() == getattr(Qt.Key, 'Key_' + letter)
                 or ev.nativeVirtualKey() == ord(letter))
@@ -2929,7 +2929,7 @@ class BattleCanvas(QOpenGLWidget):
                     self._net_pending.cancel()
                 self.sig_main_menu.emit()
             return
-        if self._reconnecting:                        # grace window: Esc leaves — but
+        if self._reconnecting:                        # grace window: Esc leaves – but
             if ev.key() == Qt.Key.Key_Escape:         # bailing on a dropped opponent
                 self._forfeit_disconnect()            # forfeits, it doesn't escape free
             return
@@ -2958,7 +2958,7 @@ class BattleCanvas(QOpenGLWidget):
     def keyReleaseEvent(self, ev): self._keys.discard(ev.key())
 
     def _pause_action(self, name):
-        """Run a pause-menu command — shared by the ESC/R/Q keys and the on-canvas
+        """Run a pause-menu command – shared by the ESC/R/Q keys and the on-canvas
         buttons so both paths stay in lock-step."""
         if   name == "resume":    self.toggle_pause()
         elif name == "restart":   self.reset(); self.sig_ui.emit()
@@ -2967,10 +2967,10 @@ class BattleCanvas(QOpenGLWidget):
     def mousePressEvent(self, ev):
         if self.awaiting_peer or self._reconnecting:  # nothing is interactive yet
             return
-        if self.dying is not None:                    # base collapsing — field frozen
+        if self.dying is not None:                    # base collapsing – field frozen
             return
         # While held, the pause overlay owns the canvas: a left-click hits one of
-        # its buttons (or nothing) — never pans the field or sells a turret.
+        # its buttons (or nothing) – never pans the field or sells a turret.
         if self.paused:
             if ev.button() == Qt.MouseButton.LeftButton:
                 pos = ev.position()
@@ -2991,7 +2991,7 @@ class BattleCanvas(QOpenGLWidget):
             # A turret is selected and its SELL button was clicked → sell it.
             if (self.sel_turret is not None and self._sell_rect is not None
                     and self._sell_rect.contains(int(mx), int(my))):
-                if self.net_role == 'client':       # host is authoritative — order it
+                if self.net_role == 'client':       # host is authoritative – order it
                     nid = getattr(self.sel_turret, '_nid', None)
                     if nid is not None and self.net is not None:
                         self.net.send({"t": "cmd", "a": "sell", "nid": nid})

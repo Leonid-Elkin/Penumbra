@@ -1,5 +1,5 @@
 """
-game.entities.explosion — short-lived particle bursts: a fiery death burst, a
+game.entities.explosion – short-lived particle bursts: a fiery death burst, a
 heavy-gun muzzle blast and a VLS launch smoke cloud.
 """
 
@@ -35,7 +35,7 @@ class Explosion:
 class MuzzleSmoke:
     """The blast cloud of a heavy gun: a burst of grey powder smoke thrown out
     of the muzzle along the bore. Each puff erupts fast, drags to a hang, then
-    billows and fades — so the cloud lingers at the gun after the shell is long
+    billows and fades – so the cloud lingers at the gun after the shell is long
     gone. `power` scales puff count, throw and size (1.0 ≈ a battleship main
     battery; the MLRS uses a smaller per-rocket blast that stacks up over the
     salvo into one rolling cloud around the launcher)."""
@@ -80,7 +80,7 @@ class Splash:
     """The plume a heavy shell throws up when it falls short and strikes the
     sea: a pale foam ring spreading flat on the surface plus a few spray
     droplets kicked up and arcing back down under gravity. This is the same
-    splash the menu's flagship raises when its salvo lands (see ui.menu) —
+    splash the menu's flagship raises when its salvo lands (see ui.menu) –
     lifted here so an in-battle shell that splashes into open water gets the
     same flourish instead of vanishing on a single frame."""
 
@@ -121,8 +121,8 @@ class Splash:
 
 class Wake:
     """A foam ripple shed off a moving hull at the waterline. Each one is peeled
-    off the stern as the ship makes way, then spreads flat along the surface —
-    widening and fading — so a train of them traces the ship's wake. Purely
+    off the stern as the ship makes way, then spreads flat along the surface –
+    widening and fading – so a train of them traces the ship's wake. Purely
     cosmetic and cheap: each side spawns its own from local ship motion (never
     networked), so a wake appears behind every moving ship on both screens."""
 

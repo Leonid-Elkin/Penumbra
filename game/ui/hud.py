@@ -1,9 +1,9 @@
 """
-game.ui.hud — the bottom control panel during a battle.
+game.ui.hud – the bottom control panel during a battle.
 
 Units sit in tabs (Water / Air / Underwater / Upgrades) with hotkeys and a build
 queue (max 10). An info box to the right of the selection shows details for the
-unit currently hovered — in the menu or on the battlefield.
+unit currently hovered – in the menu or on the battlefield.
 """
 
 from __future__ import annotations
@@ -38,7 +38,7 @@ def _category(sdef) -> str:
 class _UnitScroll(QScrollArea):
     """The units-bar viewport. Its content only overflows sideways, so the mouse
     wheel (which Qt would otherwise send to the disabled vertical bar) is remapped
-    to horizontal panning, and left-drag anywhere pans the row via QScroller —
+    to horizontal panning, and left-drag anywhere pans the row via QScroller –
     which buffers the initial press so a tap still deploys but a drag doesn't."""
 
     def __init__(self):
@@ -97,7 +97,7 @@ class BattleHud(QWidget):
         self.info = InfoBox(self.canvas.sprites)
 
         # ── Units & upgrades shown side by side (no tabs) ─────────────────────
-        # (Surge Rush / Bulk deploy have no buttons — surge engages while CTRL is
+        # (Surge Rush / Bulk deploy have no buttons – surge engages while CTRL is
         # held and bulk while ALT is held; they compose. See _refresh, deploy_unit_cost,
         # and BattleCanvas.surge_active / bulk_active.)
         bl.addWidget(self._titled("UNITS", self._unit_tab()), 1)
@@ -138,7 +138,7 @@ class BattleHud(QWidget):
         return parse_keys(ch) if ch else []
 
     def _deploy_glyph(self, i, key):
-        """Short label drawn on the unit button — the first bound key, or ''."""
+        """Short label drawn on the unit button – the first bound key, or ''."""
         codes = self._deploy_codes(i, key)
         return key_display(codes[0]) if codes else ""
 
@@ -259,7 +259,7 @@ class BattleHud(QWidget):
     def _spawn_row(self) -> QHBoxLayout:
         """Sandbox side-selector on its own full-width row: choosing which side the
         deploy bar spawns for is a frequent action, so it gets a large, easy target
-        that never steals room from — or gets misclicked instead of — the controls."""
+        that never steals room from – or gets misclicked instead of – the controls."""
         row = QHBoxLayout(); row.setSpacing(6); row.setContentsMargins(0, 0, 0, 0)
         self.spawn_toggle = QPushButton()
         # Must never take keyboard focus: the canvas keeps Esc/Space/hotkeys.
@@ -278,7 +278,7 @@ class BattleHud(QWidget):
                                       f"font-size:10px;background:transparent;")
         self.status_lbl.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
         row.addWidget(self.status_lbl, 1)
-        # (Sandbox spawn-side toggle lives on its own row — see _spawn_row.)
+        # (Sandbox spawn-side toggle lives on its own row – see _spawn_row.)
         self.pause_btn = QPushButton("PAUSE"); self.pause_btn.setStyleSheet(self._BTN_TIGHT)
         self.pause_btn.setFixedWidth(78)          # PAUSE ↔ RESUME swap without reflow
         # Must never take keyboard focus: the canvas keeps Esc/Space/hotkeys.
@@ -289,11 +289,11 @@ class BattleHud(QWidget):
         menu_btn.clicked.connect(self.request_menu.emit)
         restart = QPushButton("RESTART"); restart.setStyleSheet(self._BTN_TIGHT)
         restart.clicked.connect(self._restart)
-        # Settings tab as a compact gear — the row is width-bound, and IconButton
+        # Settings tab as a compact gear – the row is width-bound, and IconButton
         # never takes keyboard focus, so the canvas keeps its hotkeys.
         gear = IconButton("settings", "Settings", size=26)
         gear.clicked.connect(self.request_settings.emit)
-        # Full-screen toggle (mirrors F11), same compact size — pinned to the far
+        # Full-screen toggle (mirrors F11), same compact size – pinned to the far
         # right end of the control row.
         self.fs_btn = IconButton("fullscreen", "Toggle fullscreen  (F11)", size=26)
         self.fs_btn.clicked.connect(self.request_fullscreen.emit)
@@ -356,8 +356,8 @@ class BattleHud(QWidget):
 
         # Surge Rush (Ctrl held) climbs every deploy-bar price; Bulk (Alt held) drops
         # it and buys a batch of BULK_SIZE; holding BOTH gives a surged batch (+50%
-        # then only −10%). The two now COMPOSE — surge is active whenever Ctrl is held,
-        # even alongside Alt — and prices come from deploy_unit_cost(), the exact same
+        # then only −10%). The two now COMPOSE – surge is active whenever Ctrl is held,
+        # even alongside Alt – and prices come from deploy_unit_cost(), the exact same
         # function the sim charges with, so the label can never disagree with the buy.
         surging = self.my == 'player' and self.canvas.surge_active()
         bulk    = self.my == 'player' and self.canvas.bulk_active()
@@ -371,9 +371,9 @@ class BattleHud(QWidget):
             queued = self.canvas.unit_queued(key) if self.my == 'player' else 0
             rush_queued = self.canvas.unit_rush_queued(key) if self.my == 'player' else 0
             # A unique deployed structure (the Bastion) is held unavailable while it
-            # stands — the button reads as occupied rather than ready-to-deploy.
+            # stands – the button reads as occupied rather than ready-to-deploy.
             held = getattr(sdef, 'unit_type', '') == 'structure' and self.canvas._has_oilrig(self.my)
-            # Bulk (Alt) only buys hulls — turrets and the oil rig are hand-placed one
+            # Bulk (Alt) only buys hulls – turrets and the oil rig are hand-placed one
             # at a time (deploy_unit routes them straight to start_placing, before the
             # batch loop), so they can never come in groups of BULK_SIZE. Suppress bulk
             # on their buttons so the label never advertises a ×N batch the sim won't buy.
@@ -381,7 +381,7 @@ class BattleHud(QWidget):
             bulk_btn = bulk and not placed
             # Per-hull price under the live modifiers (base price when neither is
             # held). A bulk press is all-or-nothing, so affordability is judged on the
-            # WHOLE batch (BULK_SIZE hulls) while Alt is held — the button dims unless
+            # WHOLE batch (BULK_SIZE hulls) while Alt is held – the button dims unless
             # you can pay for every hull, matching what the sim will actually buy.
             cost = deploy_unit_cost(sdef.cost, surging, bulk_btn)
             need = cost * BULK_SIZE if bulk_btn else cost
@@ -418,7 +418,7 @@ class BattleHud(QWidget):
 
     def _upgrade(self, key):
         # Buying just starts the research; it applies after a delay (see
-        # BattleCanvas.request_upgrade). One per track — tracks run in parallel.
+        # BattleCanvas.request_upgrade). One per track – tracks run in parallel.
         # Routes through the team-aware command layer (host applies locally; the
         # LAN client sends the order to the host).
         if self.canvas.cmd_upgrade(key):

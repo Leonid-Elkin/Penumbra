@@ -1,5 +1,5 @@
 """
-game.models — data definitions for vehicles, weapons and levels.
+game.models – data definitions for vehicles, weapons and levels.
 
 These dataclasses are the in-memory shape of the JSON files under vehicles/ and
 levels/. Each type has a `from_dict()` that builds it from parsed JSON, applying
@@ -83,7 +83,7 @@ class Attack:
     # Impact effect: spawn an explosion flash + spark burst where the round lands.
     hit_effect:      bool  = False
     # Exhaust plume: trail the grey motor-smoke puff (the VLS "aegis" plume) from
-    # the tail every frame of powered flight — for a plain rocket-motor missile
+    # the tail every frame of powered flight – for a plain rocket-motor missile
     # that has no boost phase, unlike the VLS round which only smokes while boosting.
     exhaust_smoke:   bool  = False
 
@@ -145,9 +145,9 @@ class ShipDef:
     # Optional elevating barrel drawn as a separate sprite pivoting on the base
     # (AA gun, coastal artillery). Authored at the SAME pixel scale as the base
     # sprite so the engine seats it with a single display_w/base_width factor.
-    #   barrel_pivot  — pivot point on the BASE sprite (0..1 fractions)
-    #   barrel_anchor — the point on the BARREL sprite that sits on that pivot
-    #   barrel_rest   — resting elevation (rad) when the gun has no target
+    #   barrel_pivot  – pivot point on the BASE sprite (0..1 fractions)
+    #   barrel_anchor – the point on the BARREL sprite that sits on that pivot
+    #   barrel_rest   – resting elevation (rad) when the gun has no target
     barrel_file:   Optional[str]   = None
     barrel_pivot:  tuple           = (0.5, 0.5)
     barrel_anchor: tuple           = (0.2, 0.5)
@@ -169,12 +169,12 @@ class ShipDef:
     # (0 for everything but the Oil Rig income turret).
     income:          int       = 0
 
-    # Construction time (seconds) for structures raised on deploy — the Bastion's
+    # Construction time (seconds) for structures raised on deploy – the Bastion's
     # platform rises over this long, fragile while it goes up.
     build_time:      float     = 6.0
 
     # Production cooldown: minimum seconds between successive orders of this unit
-    # type (per team). Discourages spamming one unit — heavier hulls cool longer.
+    # type (per team). Discourages spamming one unit – heavier hulls cool longer.
     cooldown:   float = 0.0
 
     # Special behaviours
@@ -201,7 +201,7 @@ class ShipDef:
     submerged_frac: float = 0.05
     # Per-difficulty HP overrides (bosses). When a bucket is > 0 it is used
     # verbatim for that difficulty instead of scaling `hp` by the difficulty
-    # multiplier — so a boss reads its exact wiki health on Easy/Normal/Hard.
+    # multiplier – so a boss reads its exact wiki health on Easy/Normal/Hard.
     hp_easy:   int = 0
     hp_normal: int = 0
     hp_hard:   int = 0
@@ -210,7 +210,7 @@ class ShipDef:
     # sprite fractions (0..1) forcing a plain rectangle; when omitted the engine
     # derives a hull/superstructure silhouette from the sprite at load time.
     # `hitmask` is that built silhouette (a game.hitmask.HitMask), attached by the
-    # sprite loader — never read from JSON.
+    # sprite loader – never read from JSON.
     hitbox:  Optional[list] = None
     hitmask: object = field(default=None, compare=False, repr=False)
 
@@ -287,7 +287,7 @@ class LevelDef:
     water_tint:  Optional[str] = None
     # Named backdrop skin override. Normally the backdrop is picked from the
     # campaign `order` as a time-of-day band (see game.ui.backdrop); a level may
-    # instead name a special skin here — e.g. "abyss" for the ominous finale.
+    # instead name a special skin here – e.g. "abyss" for the ominous finale.
     backdrop:    Optional[str] = None
     order:       int  = 100                # sort order in the level-select grid
     # Per-level encounter config (overridable in the level JSON):
@@ -303,9 +303,9 @@ class LevelDef:
     waves: dict = field(default_factory=dict)
     # Per-level base enemy spawn cadence (units/sec the director sustains). Shape:
     #   {"base": 0.14, "ramp": 0.26, "ramp_seconds": 180}
-    #   base        — opening spawn rate
-    #   ramp        — extra rate added as the battle drags on
-    #   ramp_seconds— seconds over which `ramp` is fully reached
+    #   base        – opening spawn rate
+    #   ramp        – extra rate added as the battle drags on
+    #   ramp_seconds– seconds over which `ramp` is fully reached
     # Any field omitted falls back to the engine defaults (see ai.EnemyDirector).
     spawn_rate: dict = field(default_factory=dict)
 

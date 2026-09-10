@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Penumbra — entry point.
+Penumbra – entry point.
 
 All gameplay lives in the `game` package:
   - vehicles/ and vehicles/bosses/ hold one JSON config per unit (edit those to
@@ -34,7 +34,7 @@ except AttributeError:
 # the whole app one GPU surface format up front: vsync'd double buffering (no
 # tearing) with a little multisampling for clean sprite/vector edges.
 _fmt = QSurfaceFormat()
-_fmt.setSwapInterval(1)            # vsync — cap present rate to the display
+_fmt.setSwapInterval(1)            # vsync – cap present rate to the display
 _fmt.setSwapBehavior(QSurfaceFormat.SwapBehavior.DoubleBuffer)
 _fmt.setSamples(4)                 # 4× MSAA for smooth diagonals
 QSurfaceFormat.setDefaultFormat(_fmt)
@@ -51,7 +51,7 @@ def main():
             import ctypes
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
                 "Penumbra.Penumbra")
-        except Exception:                       # noqa: BLE001 — cosmetic only
+        except Exception:                       # noqa: BLE001 – cosmetic only
             pass
 
     app = QApplication(sys.argv)

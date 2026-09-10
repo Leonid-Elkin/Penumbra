@@ -1,5 +1,5 @@
 """
-game.ui.tutorial — a practical, in-battle "first run" guide.
+game.ui.tutorial – a practical, in-battle "first run" guide.
 
 Instead of a wall of text, this is an overlay drawn over the battle the first time
 a new profile plays: it pauses the action, dims everything EXCEPT the real HUD
@@ -36,8 +36,8 @@ class TutorialOverlay(QWidget):
         self.canvas = getattr(hud, 'canvas', None)
         self.sprites = getattr(self.canvas, 'sprites', None)
         # When opened from the campaign's HOW TO PLAY button there is no battle to
-        # fight — the underlying battle only exists to give the guide a live HUD to
-        # point at — so the dismiss button leaves instead of starting the fight.
+        # fight – the underlying battle only exists to give the guide a live HUD to
+        # point at – so the dismiss button leaves instead of starting the fight.
         self._on_exit = on_exit
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
         self.setGeometry(parent.rect())
@@ -87,7 +87,7 @@ class TutorialOverlay(QWidget):
         res = [w for w in (getattr(h, 'gauge', None),) if w is not None]
         # The trailing flag asks for the box to sit ABOVE its section. The unit
         # rail and the upgrade cards run along the bottom of the HUD, so a label
-        # under them would hang off the screen — and the player is looking at the
+        # under them would hang off the screen – and the player is looking at the
         # row itself, so the explanation belongs directly over it.
         return [
             (vals('unit_btns'),    "DEPLOY UNITS",
@@ -157,7 +157,7 @@ class TutorialOverlay(QWidget):
         placed.append(fort_rect)                # reserve the BASE / COASTAL GUNS notes
 
         # Reserve every spotlit section too, before a single box is placed. The
-        # sections are the one thing the player must be able to see — a box laid
+        # sections are the one thing the player must be able to see – a box laid
         # over the minimap or the resource gauge hides exactly what its own text
         # is describing.
         for r, _, _, _ in sections:
@@ -169,13 +169,13 @@ class TutorialOverlay(QWidget):
             self._draw_callout(p, r, label, desc, placed, prefer_above=above)
 
     def _draw_fort_info(self, p, W, top):
-        """Two side-by-side notes on the player's own fort — what the base is and
-        what its coastal guns do — each box sized to its wrapped text so nothing is
+        """Two side-by-side notes on the player's own fort – what the base is and
+        what its coastal guns do – each box sized to its wrapped text so nothing is
         ever clipped. Returns the block's rect so callouts stay clear of it."""
         items = [
             ("YOUR BASE",
              "The fort on the left. It earns income every second, builds your whole "
-             "fleet and mounts your guns — hold it, and sink the enemy fort on the "
+             "fleet and mounts your guns. Hold it, and sink the enemy fort on the "
              "right to win."),
             ("COASTAL GUNS",
              "Fixed artillery built onto the fort. They shell the enemy line on "
@@ -296,7 +296,7 @@ class TutorialOverlay(QWidget):
             return best[1]
 
         # Genuinely no free space (a very small window). Take the least-covered
-        # spot rather than anything off-screen — on-screen and overlapping beats
+        # spot rather than anything off-screen – on-screen and overlapping beats
         # invisible.
         fallback = None
         for y in range(6, max(7, H - lh - 6), step):
@@ -316,8 +316,8 @@ class TutorialOverlay(QWidget):
 
         A straight run when the two line up, square corners when the box had to
         be shifted along the row to fit. The route is chosen to miss `obstacles`
-        — the other sections, the briefing bands and the callout boxes already
-        down — because a line that crosses the minimap reads as pointing at the
+        – the other sections, the briefing bands and the callout boxes already
+        down – because a line that crosses the minimap reads as pointing at the
         minimap, whichever box it started from. Only the elbow positions move;
         the ends stay pinned to the box and its own section."""
         p.setPen(QPen(QColor(theme.ACCENT), 2))
@@ -338,7 +338,7 @@ class TutorialOverlay(QWidget):
     def _route(self, box: QRect, r: QRect, obstacles) -> list:
         """Pick the simplest elbow route from box to section that hits nothing.
 
-        Candidates are tried cheapest-first — a straight run, then one dogleg
+        Candidates are tried cheapest-first – a straight run, then one dogleg
         with its crossbar at a range of offsets, then routes that leave the box
         from a different point along its edge. If every candidate is blocked the
         least-blocked one is drawn, so there is always a line."""
@@ -483,7 +483,7 @@ class TutorialOverlay(QWidget):
 
         s = (xi[start.x()], yi[start.y()])
         t = (xi[end.x()], yi[end.y()])
-        # (bends, length, node, incoming axis) — fewest corners first.
+        # (bends, length, node, incoming axis) – fewest corners first.
         pq = [(0, 0, s, -1, [s])]
         seen = {}
         while pq:
@@ -534,7 +534,7 @@ class TutorialOverlay(QWidget):
 
         # Everything the leader line has to miss: its own section is excluded
         # (the line ends on it) and so is the box (it starts there). Anything
-        # already overlapping the section goes too — on a short window a HUD
+        # already overlapping the section goes too – on a short window a HUD
         # section can sit across the briefing chart, and a line cannot reach a
         # target inside a rect without entering that rect.
         tpad = r.adjusted(-6, -6, 6, 6)
@@ -554,7 +554,7 @@ class TipOverlay(QWidget):
     """A single centred 'field note' card drawn over a running battle to teach one
     new mechanic the first time it appears (e.g. oil platforms). It pauses the
     action like the full battle guide, but is one focused card with an icon,
-    heading and a short brief — dismissed with the button to fight on.
+    heading and a short brief – dismissed with the button to fight on.
 
     Built from the plotting-table material set (chamfered plate, hazard bar,
     engraved labels, an instrument lamp), so it reads as part of the war-room."""
@@ -625,7 +625,7 @@ class TipOverlay(QWidget):
         x, y, w, h = c.x(), c.y(), c.width(), c.height()
         theme.plate(p, x, y, w, h, base=theme.PANEL_HI, lit=True,
                     riveted=True, border=theme.LINE_HI)
-        # Amber hazard header band — this is a live briefing, flagged as such.
+        # Amber hazard header band – this is a live briefing, flagged as such.
         theme.hazard_bar(p, QRectF(x + 9, y, w - 18, 8), color=theme.ACCENT,
                          bg=theme.BG_DEEP)
 
@@ -652,7 +652,7 @@ class TipOverlay(QWidget):
 
 class RulesOverlay(QWidget):
     """A standalone 'how to play' briefing drawn over a menu screen (no battle
-    behind it) — opened from the head-to-head setup's HOW TO PLAY button.
+    behind it) – opened from the head-to-head setup's HOW TO PLAY button.
 
     It teaches the two things that decide a multiplayer match: capturing the
     central oil platform for score, and the flagship bosses that score buys. Each
@@ -666,13 +666,13 @@ class RulesOverlay(QWidget):
     CARDS = [
         ("oilrig", "OBJECTIVE", "CAPTURE THE PLATFORM",
          "One oil platform stands between the two bases. Steer your "
-         "SURFACE ships into its ring to seize it — submarines run too deep and "
+         "SURFACE ships into its ring to seize it. Submarines run too deep and "
          "aircraft too high to plant a boarding crew. Crowd the ring to take it "
          "faster. Hold it and it pays you SCORE every second."),
         ("boss", "ESCALATION", "FLAGSHIP BOSSES",
          "Score buys firepower. The first flagship sails in about three minutes; "
          "after that, every 90 seconds the side LEADING on score is awarded the "
-         "next from the fleet ladder — Potemkin first, then ever-stronger "
+         "next from the fleet ladder. Potemkin comes first, then ever-stronger "
          "battleships. Match your guns to its type: an airborne flagship falls "
          "only to anti-air, a submerged one only to anti-sub."),
     ]
@@ -714,7 +714,7 @@ class RulesOverlay(QWidget):
 
     # ── layout (deterministic; shared by paint + button placement) ─────────────
     def _card_height(self, body_w: int) -> int:
-        """Height a card needs to show its heading row and fully-wrapped body — so
+        """Height a card needs to show its heading row and fully-wrapped body – so
         no text is ever clipped, whatever the longest card body is."""
         fm = QFontMetrics(theme.font(11))
         body_h = max(
@@ -783,7 +783,7 @@ class RulesOverlay(QWidget):
         theme.engraved_label(p, tag, ip.right() + 16, ip.y() + (self.ICON - 14) // 2,
                              r.right() - ip.right() - 26, theme.head(11, 4),
                              color=theme.TEXT_DIM)
-        # Heading across the full card width, then the body wrapped below it —
+        # Heading across the full card width, then the body wrapped below it –
         # full width so a long heading never crowds the icon or spills the card.
         theme.engraved_label(p, heading, r.x() + 16, ip.bottom() + 8,
                              r.width() - 32, theme.head(15, 2), color=theme.ACCENT)

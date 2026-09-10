@@ -1,5 +1,5 @@
 {
-  "_comment": "CAMPAIGN midfield income platforms (single-player only — multiplayer instead runs the single central boss-spawning platform). Three neutral rigs stand in the open water between the two bases. When only ONE side's mobile ships are in a rig's capture lane, it is slowly seized for that side; MORE ships nearby seize it faster. A rig must be dragged back through neutral before the other side can flip it. HOME-FIELD advantage means you hold the rig on YOUR half easily even when out-numbered, so the CENTRE rig is the real prize. Neither side snowballs: extra rigs give diminishing income and a side that's behind captures faster. Edit freely.",
+  "_comment": "CAMPAIGN midfield income platforms (single-player only – multiplayer instead runs the single central boss-spawning platform). Three neutral rigs stand in the open water between the two bases. When only ONE side's mobile ships are in a rig's capture lane, it is slowly seized for that side; MORE ships nearby seize it faster. A rig must be dragged back through neutral before the other side can flip it. HOME-FIELD advantage means you hold the rig on YOUR half easily even when out-numbered, so the CENTRE rig is the real prize. Neither side snowballs: extra rigs give diminishing income and a side that's behind captures faster. Edit freely.",
 
   "enabled_from_level": 5,
   "count": 3,

@@ -1,5 +1,5 @@
 """
-game.entities.base — the fortress as a real, targetable enemy.
+game.entities.base – the fortress as a real, targetable enemy.
 
 Instead of draining HP on contact, units now treat the base like any other
 target: they fire at it and projectiles deal damage. BaseTarget is a thin
@@ -33,7 +33,7 @@ class _BaseSDef:
         self.attacks      = []
         self.fire_points  = []
         self.description  = (
-            "Your seat of command — lose it and the battle is lost. Armour upgrades "
+            "Your seat of command. Lose it and the battle is lost. Armour upgrades "
             "add gun tiers and hull HP."
             if friendly else
             "The enemy stronghold. Batter down its HP to win the level; it is immune "
@@ -83,7 +83,7 @@ class BaseTarget:
     @property
     def mid_y(self): return self.water_y - 70.0
 
-    # Aim point for homing rounds — same fallback ships use when unmasked.
+    # Aim point for homing rounds – same fallback ships use when unmasked.
     @property
     def hit_com(self): return self.x, self.mid_y
 
@@ -106,6 +106,6 @@ class BaseTarget:
         l, r, t, b = self._fort.hit_bounds(self.water_y, self._hlv_fn())
         return l <= x <= r and t <= y <= b
 
-    # In the ships list but inert — the fort sprite is drawn elsewhere.
+    # In the ships list but inert – the fort sprite is drawn elsewhere.
     def update(self, *a, **k): pass
     def draw(self, *a, **k): pass

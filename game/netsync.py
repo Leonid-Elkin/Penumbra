@@ -1,5 +1,5 @@
 """
-game.netsync — world-state serialization for the LAN battle.
+game.netsync – world-state serialization for the LAN battle.
 
 The HOST runs the authoritative simulation and, a few dozen times a second,
 packs the on-screen world into a compact JSON snapshot (serialize). The CLIENT
@@ -9,11 +9,11 @@ draws from (ships / projectiles / effects / capture points) plus the two
 factions' economy. So the client renders through the unchanged paint path.
 
 Only what the client must SEE or COMMAND is sent:
-  · every ship/boss/bastion — position, hp, aim, a few animation flags
-  · projectiles — position, velocity, type + calibre + age/fade, so the client
+  · every ship/boss/bastion – position, hp, aim, a few animation flags
+  · projectiles – position, velocity, type + calibre + age/fade, so the client
     rebuilds a real Projectile and draws it through the SAME per-type ordnance
     art the host uses (identical shape, team colour and fade on both screens)
-  · fresh effects this frame (explosions, muzzle smoke, launch/exhaust plumes) —
+  · fresh effects this frame (explosions, muzzle smoke, launch/exhaust plumes) –
     spawned as real, self-animating effects so both players see the same bursts
   · both factions' economy, the enemy fort's free slots (for P2's placement),
     enemy production cooldowns / research, capture-point ownership, game state.
@@ -31,7 +31,7 @@ from .config import WORLD_W
 # The host simulates with itself as the "player" faction (left, black/amber) and
 # the joiner as the "enemy" (right, red). If the client drew those snapshots
 # verbatim it would see ITSELF on the right in red. So every snapshot is applied
-# through a horizontal mirror — world x → WORLD_W - x, horizontal motion negated —
+# through a horizontal mirror – world x → WORLD_W - x, horizontal motion negated –
 # together with a player↔enemy team swap, so the client's own side lands on the
 # LEFT in player colours and the opponent on the RIGHT in enemy red. The rest of
 # the paint / HUD path is then identical to the host's (see BattleCanvas.my_team).
@@ -126,7 +126,7 @@ def serialize(canvas) -> dict:
 
     # Fresh effects born since the last snapshot (client spawns real, self-
     # animating copies). Explosions, heavy-gun muzzle smoke and missile launch/
-    # exhaust plumes are all forwarded so both screens show the same bursts —
+    # exhaust plumes are all forwarded so both screens show the same bursts –
     # each row is tagged by type: "e"xplosion, "m"uzzle smoke, "l"aunch smoke,
     # "s"hell splash.
     sent = c._net_sent_fx
@@ -222,7 +222,7 @@ def apply(c, snap):
     # as its enemy; the opponent (right/red) is the host's player faction.
     _apply_fac(c.player, snap["ef"])
     _apply_fac(c.enemy,  snap["pf"])
-    # Extra fort tiers the fixed defensive guns need — on the host those belong to
+    # Extra fort tiers the fixed defensive guns need – on the host those belong to
     # its enemy fort, which is OUR own fort here (_draw_bases applies it there).
     c.enemy_def_tiers = snap["edt"]
 
@@ -233,14 +233,14 @@ def apply(c, snap):
     c.over_slots  = [_OCC if occ else None for occ in es["o"]]
     c.under_slots = [_OCC if occ else None for occ in es["u"]]
 
-    # OUR production cooldowns / research so our HUD reads true — the host tracked
+    # OUR production cooldowns / research so our HUD reads true – the host tracked
     # them under the enemy faction; locally we command the 'player' side.
     c.build_cd["player"]       = dict(snap["ecd"])
     c.build_cd_total["player"] = dict(snap["ecdt"])
     c.pending_upg["player"]    = {k: {"timer": t, "total": tot}
                                   for k, (t, tot) in snap["eup"].items()}
 
-    # Ships / bosses / bastions — reuse ghost entities across frames by nid so
+    # Ships / bosses / bastions – reuse ghost entities across frames by nid so
     # placement and hit-tests stay stable; rebuild the draw order each snapshot.
     # Each is team-swapped and its x mirrored so it lands on the correct side; the
     # swapped team makes the sprite draw flipped + recoloured for free (see Ship).
@@ -273,7 +273,7 @@ def apply(c, snap):
                 e.top_y = d["y"]
             except AttributeError:
                 pass
-            # aim_angle is barrel ELEVATION (vertical) — unchanged by a horizontal
+            # aim_angle is barrel ELEVATION (vertical) – unchanged by a horizontal
             # mirror. facing (heading) and aim_mirror (barrel left/right) both flip.
             e.aim_angle = d["a"]
             e.aim_mirror = (None if d["am"] < 0 else (not bool(d["am"])))
@@ -305,7 +305,7 @@ def apply(c, snap):
         else:
             c.effects.append(Explosion(WORLD_W - row[1], row[2]))
 
-    # Capture points exist locally already (mirrored at build time — see
+    # Capture points exist locally already (mirrored at build time – see
     # _build_capture_points); sync their meter. progress is signed toward the
     # PLAYER, so it flips under the swap; income_owner swaps sides too.
     for cp, (progress, inc, contested) in zip(c.capture_points, snap["caps"]):
@@ -330,7 +330,7 @@ _OCC = object()          # opaque "slot occupied" marker for client-side placeme
 
 
 def _net_attack(c, atp, pw, ph):
-    """A minimal Attack carrying only what Projectile.draw() reads — type and
+    """A minimal Attack carrying only what Projectile.draw() reads – type and
     calibre. Cached per (type, w, h) so rebuilding the projectile list every
     snapshot doesn't allocate a fresh Attack for each round."""
     cache = c._net_atk_cache
@@ -344,7 +344,7 @@ def _net_attack(c, atp, pw, ph):
 
 def _make_proj(c, row):
     """Rebuild a real Projectile from a snapshot row so it draws through the
-    host's identical per-type art. The client never simulates it — only the
+    host's identical per-type art. The client never simulates it – only the
     render-relevant fields (position, velocity, age, fade) are restored."""
     x, y, vx, vy, team, ph, pw, atp, age, fade = row
     # Mirror into our point of view: flip x and horizontal velocity, swap the team

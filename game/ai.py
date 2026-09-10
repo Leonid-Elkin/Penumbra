@@ -1,13 +1,13 @@
 """
-game.ai — EnemyDirector: decides what reinforcements the enemy sends and when.
+game.ai – EnemyDirector: decides what reinforcements the enemy sends and when.
 
 Responsibilities:
-  · Escalation   — spawn rate climbs with elapsed time.
-  · Difficulty   — a multiplier on how many units are sent.
-  · Counterattack— crossing base-HP thresholds triggers an immediate surge.
-  · Adaptation   — biases unit choice to counter the player's air / sub threats.
-  · Diversity    — penalises spamming the same unit.
-  · Boss escort  — a large wave is launched alongside the boss.
+  · Escalation   – spawn rate climbs with elapsed time.
+  · Difficulty   – a multiplier on how many units are sent.
+  · Counterattack– crossing base-HP thresholds triggers an immediate surge.
+  · Adaptation   – biases unit choice to counter the player's air / sub threats.
+  · Diversity    – penalises spamming the same unit.
+  · Boss escort  – a large wave is launched alongside the boss.
 
 The director never makes the units appear on-screen itself; it asks the canvas
 to spawn them off the map edge so they sail/fly in (see BattleCanvas.spawn_enemy).
@@ -23,7 +23,7 @@ _COUNTER_THRESHOLDS = [0.85, 0.65, 0.45]
 
 # Per-stage category weighting for unit choice. RESPONSE (player passive) leans on
 # cheap counters and light probes; ATTACK (player on the offensive) builds a varied
-# defensive fleet — expensive + support + light hulls and diverse aircraft.
+# defensive fleet – expensive + support + light hulls and diverse aircraft.
 _RESPONSE_W = {"light": 1.5, "support": 1.3, "air": 1.0, "sub": 1.0, "capital": 0.4}
 _ATTACK_W   = {"capital": 1.8, "support": 1.4, "air": 1.5, "sub": 1.1, "light": 0.8}
 
@@ -41,7 +41,7 @@ class EnemyDirector:
         self.recent_cat: list[str] = []   # last few spawned categories (role diversity)
         self.attacking = False            # latched once the player goes on the offensive
 
-        # Spawn-rate PULSES (counterattacks / boss waves) — config in waves.json.
+        # Spawn-rate PULSES (counterattacks / boss waves) – config in waves.json.
         cfg = self._load_waves()
         ca = cfg.get('counterattack', {}); bo = cfg.get('boss', {})
         self.ca_pulse   = (float(ca.get('peak', 4.0)),
@@ -78,7 +78,7 @@ class EnemyDirector:
 
     # ── Stages: RESPONSE (player passive) → ATTACK (player on the offensive) ──────
     def _update_stage(self):
-        """Latch into ATTACK mode once the player is obviously pushing — its base
+        """Latch into ATTACK mode once the player is obviously pushing – its base
         is taking real damage, or several player units are deep in enemy waters."""
         if self.attacking:
             return
@@ -110,7 +110,7 @@ class EnemyDirector:
                 self.triggered.add(th)
                 self._counterattack(th)
 
-        # Spend cadence — the spawn rate (incl. any pulse) sets how many units come.
+        # Spend cadence – the spawn rate (incl. any pulse) sets how many units come.
         # During a strong pulse, spawns are free and ignore cooldowns so the rate is
         # actually reached; the on-field unit cap still bounds the result.
         self.spawn_accum += self._spawn_rate() * dt
@@ -134,7 +134,7 @@ class EnemyDirector:
             return {}
 
     def _pulse_params(self, kind: str):
-        """Resolve a pulse's (peak, rise, fall) — the level's `waves` override (if
+        """Resolve a pulse's (peak, rise, fall) – the level's `waves` override (if
         any) layered over the global waves.json default."""
         peak, rise, fall = self.ca_pulse if kind == 'counterattack' else self.boss_pulse
         lvl = getattr(self.c.level, 'waves', None)
@@ -171,7 +171,7 @@ class EnemyDirector:
     def _spawn_rate(self) -> float:
         # Per-level base cadence (level JSON `spawn_rate`), falling back to engine
         # defaults: a sparse opening trickle that ramps up as the battle drags on.
-        # `multiplier` is a flat per-level scalar on the whole rate — the simplest
+        # `multiplier` is a flat per-level scalar on the whole rate – the simplest
         # knob to make one level harder or easier without retuning base/ramp.
         cfg = getattr(self.c.level, 'spawn_rate', None) or {}
         b0   = float(cfg.get('base', 0.14))
@@ -202,11 +202,11 @@ class EnemyDirector:
         peak, rise, fall = self._pulse_params('counterattack')
         self._trigger_pulse(peak, rise, fall)
         self.aggression = max(self.aggression, 2.2)
-        # Counterattacks are no longer announced — the surge happens silently.
+        # Counterattacks are no longer announced – the surge happens silently.
 
     def boss_escort(self):
         """The boss wave: a bigger spawn-rate pulse (peak scales with difficulty),
-        ramping up and then falling back to normal — same mechanic as a
+        ramping up and then falling back to normal – same mechanic as a
         counterattack, just heavier. Params are level-specific."""
         self.attacking = True                    # the boss fight is the attack stage
         peak, rise, fall = self._pulse_params('boss')
@@ -231,7 +231,7 @@ class EnemyDirector:
 
     def _available(self, ignore_reserve=False, free=False, ignore_cd=False) -> list[str]:
         # The enemy may only field units the campaign had unlocked by this level
-        # (BattleCanvas.enemy_unlocked), minus base turrets — fixed to the level's
+        # (BattleCanvas.enemy_unlocked), minus base turrets – fixed to the level's
         # place in the campaign, so a replay with everything unlocked still faces a
         # period-appropriate enemy. Units on production cooldown or that the enemy
         # cannot currently afford (after holding an upgrade reserve) are skipped, so
